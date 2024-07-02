@@ -1,3 +1,4 @@
+import 'package:example/chozo_flow/connections.dart';
 import 'package:flutter/material.dart';
 import 'package:defer_pointer/defer_pointer.dart';
 
@@ -76,7 +77,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
                                DragableCom(),
                               DragableCom(),
                               DragableCom(),
-
+                              CustomPaint(painter: ArrowPainter(from: Offset(100, 100), to: Offset(304, 564)),child: Container(),),
                               // draggable(),
                             ],
                           ),
@@ -164,7 +165,7 @@ class _DragableComState extends State<DragableCom> {
             Draggable(
               rootOverlay: false,
               onDragUpdate: (details) {
-                print(details.localPosition.toString());
+                print("${details.localPosition.toString()}  ${details.globalPosition.toString()}");
                 setState(() {
                   _offRed = _offRed + details.delta;
                 });
