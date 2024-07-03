@@ -1,13 +1,10 @@
-import 'package:example/chozo_flow/connections.dart';
 import 'package:flutter/material.dart';
 import 'package:defer_pointer/defer_pointer.dart';
+import 'package:uuid/uuid.dart';
+
+import 'connections.dart';
 
 final _deferredPointerLink = DeferredPointerHandlerLink();
-
-
-
-
-
 
 class ChozoFlow extends StatefulWidget {
   const ChozoFlow({super.key});
@@ -17,79 +14,124 @@ class ChozoFlow extends StatefulWidget {
 }
 
 class _ChozoFlowState extends State<ChozoFlow> {
-  int _counter = 0;
-  Offset _offGreen = Offset(0, 0);
-  Offset _offRed = Offset(0, 0);
-  AppBar _appBar = AppBar(
-    title: Text('Drag'),
-    leading: BackButton(onPressed: () {}),
-  );
   TransformationController controllerT = TransformationController();
   Matrix4? initialControllerValue;
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
+   GlobalKey key = GlobalKey();
+  // Map<String, Connection> _cooectionList = {
+  //   "ggg": Connection(id: "ggg", start: Offset(100, 100), end: Offset(456, 345))
+  // };
+  Connections _connections = Connections.instance;
+  @override
+  void initState() {
+    _connections.addListener(() {
+      setState(() {});
     });
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+     RenderBox box =
+                  key.currentContext?.findRenderObject() as RenderBox;
+              Offset position =
+                  box.globalToLocal(Offset.zero);
+            _connections.setGlobalOffset(position);
+    });
+    
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBody: true,
-        body: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextButton(
-                onPressed: () {
-                  print("${controllerT.value.toString()}");
-                  controllerT.value = initialControllerValue!;
-                },
-                child: Text("edffe")),
-            Expanded(
-              flex: 1,
-              child: Container(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        colors: [Colors.red, Colors.black12, Colors.yellow])),
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  child: DeferredPointerHandler(
-                    link: _deferredPointerLink,
-                    child: InteractiveViewer(
-                      boundaryMargin: EdgeInsets.all(double.infinity),
-                      minScale: 0.1,
-                      transformationController: controllerT,
-                      onInteractionStart: (details) {
-                        initialControllerValue ??= controllerT.value;
-                      },
-                      scaleEnabled: false,
-                      maxScale: 5.0,
-                      constrained: false,
-                      child: Container(
-                        color: Colors.transparent,
-                        height: 200,
-                        width: 200,
-                        child: Expanded(
-                          child: Stack(
-                            fit: StackFit.expand,
-                            clipBehavior: Clip.none,
-                            children: [
-                               DragableCom(),
-                              DragableCom(),
-                              DragableCom(),
-                              CustomPaint(painter: ArrowPainter(from: Offset(100, 100), to: Offset(304, 564)),child: Container(),),
-                              // draggable(),
-                            ],
-                          ),
-                        ),
-                      ),
+      appBar: AppBar(
+        title: const Text('Drag'),
+        leading: BackButton(onPressed: () {}),
+      ),
+      extendBody: true,
+      body: Column(mainAxisSize: MainAxisSize.min, children: [
+        TextButton(
+            onPressed: () {
+              print("${controllerT.value.toString()}");
+              controllerT.value = initialControllerValue!;
+            },
+            child: Text("edffe")),
+        Expanded(
+          flex: 1,
+          child: Container(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [Colors.red, Colors.black12, Colors.yellow])),
+            child: GestureDetector(
+              
+           
+              behavior: HitTestBehavior.translucent,
+              child: DeferredPointerHandler(
+                link: _deferredPointerLink,
+                child: InteractiveViewer(
+                  key: key,
+                  boundaryMargin: const EdgeInsets.all(double.infinity),
+                  
+                  transformationController: controllerT,
+                  onInteractionStart: (details) {
+                    
+                    initialControllerValue ??= controllerT.value;
+                  },
+                  onInteractionUpdate: (details) {
+                    print(details.scale);
+                     _connections.setGlobalOffset(details.focalPointDelta*(details.scale));
+                     
+                  },
+                 
+                  scaleEnabled: true,
+                 
+                  constrained: false,
+                  child: Container(
+                    color: Colors.transparent,
+                    height: 200,
+                    width: 200,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      clipBehavior: Clip.none,
+                      children: [
+                        DragableCom(
+                            id: "23423423",
+                            child: Container(
+                                width: 100,
+                                height: 100,
+                                color: Colors.red,
+                                child: Text("data"))),
+                        DragableCom(
+                            id: "23423423",
+                            child: Container(
+                                width: 100,
+                                height: 100,
+                                color: Colors.green,
+                                child: Text("data"))),
+                        DragableCom(
+                            id: "23423423",
+                            child: Container(
+                                width: 100,
+                                height: 100,
+                                color: Colors.black12,
+                                child: Text("data"))),
+                        DragableCom(
+                            id: "scdcd",
+                            child: Container(
+                                width: 100,
+                                height: 100,
+                                color: Colors.blue,
+                                child: Text("data"))),
+                        ..._connections.list.values.map((e) => CustomPaint(
+                              painter: ArrowPainter(from: e.start, to: e.end),
+                              child: Container(),
+                            )),
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
-          ],
-        ));
+          ),
+        ),
+      ]),
+    );
   }
 }
 
@@ -133,82 +175,119 @@ class Indi extends StatelessWidget {
 }
 
 class DragableCom extends StatefulWidget {
-  const DragableCom({super.key});
+  final String id;
+  final Widget child;
+  const DragableCom({super.key, required this.child, required this.id});
 
   @override
   State<DragableCom> createState() => _DragableComState();
 }
 
 class _DragableComState extends State<DragableCom> {
-  Offset _offRed = Offset(0, 0);
+  final Connections _connections = Connections.instance;
+  Offset _localPos = const Offset(0, 0);
+  List<String> inpLinks = [], outLinks = [];
+  String _tempLinkId = const Uuid().v1();
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: _offRed.dy,
-      left: _offRed.dx,
+      top: _localPos.dy,
+      left: _localPos.dx,
       child: DeferPointer(
         link: _deferredPointerLink,
         paintOnTop: false,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            DragTarget<Connection>(
-              onAcceptWithDetails: (details) {
-                print(details.data);
-              },
-              builder: (context, candidateItems, rejectedItems) {
-                return SizedBox(
-                  child: Text(" hello"),
-                );
-              },
-            ),
-            Draggable(
-              rootOverlay: false,
-              onDragUpdate: (details) {
-                print("${details.localPosition.toString()}  ${details.globalPosition.toString()}");
-                setState(() {
-                  _offRed = _offRed + details.delta;
-                });
-              },
-              feedback: Container(
-                height: 100,
-                width: 100,
-                color: Colors.red,
-              ),
-              child: Container(
-                height: 100,
-                width: 100,
-                color: Colors.red,
-                child: Text("Big red"),
-              ),
-            ),
-
-            Draggable<Connection>(
-              data: Connection(id: "hellonthere from out"),
-              rootOverlay: false,
-              onDragUpdate: (details) {
-                print(details.localPosition.toString());
-                
-              },
-              feedback: Container(
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          DragTarget<String>(
+            onAcceptWithDetails: (details) {
+              inpLinks.add(details.data);
+            },
+            builder: (context, candidateItems, rejectedItems) {
+              return Container(
                 height: 10,
                 width: 10,
-                color: Colors.purple,
+                color: Colors.yellowAccent,
+              );
+            },
+          ),
+          GestureDetector(
+            onTap: () {
+                print("""inp :$inpLinks  out: $outLinks
+              ${_connections.list}
+              """);
+              },
+            onPanUpdate: (details) {
+              setState(() {
+                _localPos = _localPos + details.delta;
+              });
+              
+              _connections.positionUpdate(details.delta, inpLinks, outLinks);
+            },
+            child: widget.child,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Draggable<String>(
+                data: _tempLinkId,
+                rootOverlay: false,
+                onDragUpdate: (details) {
+                  _connections.create(_tempLinkId, details.delta, details.globalPosition);
+                },
+                onDragCompleted: () {
+                  outLinks.add(_tempLinkId);
+                 setState(() {
+                    _tempLinkId = const Uuid().v1();
+                 });
+                },
+                onDraggableCanceled: (velocity, offset) {
+                  _connections.list.remove(_tempLinkId);
+                },
+                feedback: Container(
+                  height: 10,
+                  width: 10,
+                  color: Colors.purple,
+                ),
+                child: Container(
+                  
+                  height: 10,
+                  width: 10,
+                  color: Colors.purple,
+                ),
               ),
-              child: Container(
-                height: 10,
-                width: 10,
-                color: Colors.purple,
-              ),
-            ),
-          ],
-        ),
+              SizedBox(height: 30,),
+              Draggable<String>(
+                data: _tempLinkId,
+                rootOverlay: false,
+                onDragUpdate: (details) {
+                  _connections.create(_tempLinkId, details.delta, details.globalPosition);
+                },
+                onDragCompleted: () {
+                  outLinks.add(_tempLinkId);
+                 setState(() {
+                    _tempLinkId = const Uuid().v1();
+                 });
+                },
+                onDraggableCanceled: (velocity, offset) {
+                  _connections.list.remove(_tempLinkId);
+                },
+                feedback: Container(
+                  height: 10,
+                  width: 10,
+                  color: Colors.purple,
+                ),
+                child: Container(
+                  
+                  height: 10,
+                  width: 10,
+                  color: Colors.purple,
+                ),
+              )
+            ],
+          ),
+        ]),
       ),
     );
   }
-}
-
-class Connection {
-  final String id;
-  const Connection({required this.id});
 }
