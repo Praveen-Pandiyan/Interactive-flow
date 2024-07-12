@@ -15,7 +15,6 @@ class Connections extends ChangeNotifier {
     }
   }
   void create(String id,Offset delta,localPos){
-    print("crete: ${delta} ${localPos}");
     if(list[id]==null){
       list.addAll({id:Link(id: id,start: localPos+globalOffset,end: localPos+globalOffset)});
     }else{

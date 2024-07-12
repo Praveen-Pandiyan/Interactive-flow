@@ -1,6 +1,8 @@
+import 'package:chozo_ui_package/chozo_ui_package.dart';
 import 'package:flutter/material.dart';
 
-import 'chozo_flow/chozo_flow.dart';
+import 'chart/chart.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -33,7 +35,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const ChozoFlow(),
+      home:  const ChozoFlow(),
     );
   }
 }
