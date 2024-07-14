@@ -1,24 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class Connections extends ChangeNotifier {
   Connections._();
   static final instance = Connections._();
   Offset globalOffset = Offset.zero;
-  Map<String, Link> list = {};
-  void setGlobalOffset(Offset _offset) {
-    if (globalOffset == Offset.zero && _offset != Offset.zero) {
-      globalOffset = _offset;
+  Map<String, Link> linkList = {};
+  Map<String, Box> boxList = {
+    "de": Box(
+        id: "defe",
+        pos: Offset.zero,
+        inPins: [],
+        outPins: [],
+        refId: "cdfc")
+  };
+  void setGlobalOffset(Offset offset) {
+    if (globalOffset == Offset.zero && offset != Offset.zero) {
+      globalOffset = offset;
     } else {
-      globalOffset -= _offset;
+      globalOffset -= offset;
     }
   }
 
   void create(String id, fromId, Offset delta, localPos) {
-    if (list[id] == null) {
-      list.addAll({
+    if (linkList[id] == null) {
+      linkList.addAll({
         id: Link(
             id: id,
-            from: fromId,
+            fromPin: fromId,
             start: localPos + globalOffset,
             end: localPos + globalOffset)
       });
@@ -29,46 +38,69 @@ class Connections extends ChangeNotifier {
 
   void positionUpdate(Offset delta, List<String> inpConId, outConId) {
     for (var e in inpConId) {
-      if (list[e] != null) {
-        list[e]?.end += delta;
+      if (linkList[e] != null) {
+        linkList[e]?.end += delta;
       } else {
         // create
       }
     }
     for (var e in outConId) {
-      if (list[e] != null) {
-        list[e]?.start += delta;
+      if (linkList[e] != null) {
+        linkList[e]?.start += delta;
       } else {}
     }
     notifyListeners();
   }
 
   void onConnection(String id, toId, Offset pos) {
-    list[id]
+    linkList[id]
       ?..end = globalOffset + pos
-      ..to = toId;
+      ..toPin = toId;
     notifyListeners();
+  }
+
+
+  void addNewBox(){
+     String _boxId = const Uuid().v1();
+    boxList.addAll({_boxId: Box(
+        id: _boxId,
+        pos: Offset.zero,
+        inPins: [],
+        outPins: [],
+        refId: "cdfc")});
+        notifyListeners();
   }
 }
 
 class Link {
-  String id, from;
-  String? to;
+  String id, fromPin;
+  String? toPin;
   Offset start, end;
 
   Link({
     required this.id,
-    required this.from,
-    this.to,
+    required this.fromPin,
+    this.toPin,
     this.start = Offset.zero,
     this.end = Offset.zero,
   });
   @override
   String toString() {
-    // TODO: implement toString
-
     return "${start} ${end}";
   }
+}
+
+class Box {
+  String id, refId;
+  Offset pos;
+  List<String> inPins, outPins;
+
+  Box(
+      {required this.id,
+      required this.pos,
+      required this.inPins,
+      required this.outPins,
+      required this.refId});
 }
 
 class ArrowPainter extends CustomPainter {

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:defer_pointer/defer_pointer.dart';
 import 'package:flutter/widgets.dart';
@@ -41,9 +43,8 @@ class _ChozoFlowState extends State<ChozoFlow> {
   }
 
   _calibratePosition() {
-    print("calibration done");
     _connections.globalOffset =
-        _globalOffset - (getOffsetFromMatrix(controllerT.value) * _userScale);
+        _globalOffset - (getOffsetFromMatrix(controllerT.value) );
   }
 
   @override
@@ -65,12 +66,21 @@ class _ChozoFlowState extends State<ChozoFlow> {
       ),
       extendBody: true,
       body: Column(mainAxisSize: MainAxisSize.min, children: [
-        TextButton(
-            onPressed: () {
-              print("${controllerT.value.toString()}");
-              controllerT.value = initialControllerValue!;
-            },
-            child: Text("edffe")),
+        Row(
+          children: [
+            TextButton(
+                onPressed: () {
+                  print("${controllerT.value.toString()}");
+                  controllerT.value = initialControllerValue!;
+                },
+                child: Text("center")),
+            TextButton(
+                onPressed: () {
+                  _connections.addNewBox();
+                },
+                child: Text("add new")),
+          ],
+        ),
         Expanded(
           flex: 1,
           child: Container(
@@ -84,56 +94,38 @@ class _ChozoFlowState extends State<ChozoFlow> {
                 boundaryMargin: const EdgeInsets.all(double.infinity),
                 transformationController: controllerT,
                 onInteractionStart: (details) {
+                  _calibratePosition();
                   initialControllerValue ??= controllerT.value;
                 },
                 onInteractionUpdate: (details) {
                   _connections.setGlobalOffset(details.focalPointDelta);
                   _userScale = details.scale;
                 },
-                // onInteractionEnd: (details) {_calibratePosition();},
-                scaleEnabled: true,
+                onInteractionEnd: (details) {
+                  _calibratePosition();
+                },
+                scaleEnabled: false,
                 child: Container(
                   color: Colors.transparent,
                   child: Stack(
                     fit: StackFit.expand,
                     clipBehavior: Clip.none,
                     children: [
-                      ..._connections.list.values.map((e) => CustomPaint(
+                      ..._connections.linkList.values.map((e) => CustomPaint(
                             painter: ArrowPainter(from: e.start, to: e.end),
                             child: Container(),
                           )),
-                      FlowContainer(
-                          id: "23423423",
-                          refershPos: _calibratePosition,
+                      ..._connections.boxList.values.map((e) => FlowContainer(
+                          id: e.id,
+                          inPins: e.inPins,
+                          outPins: e.outPins,
+                          initialPos: e.pos,
+                          key: Key(e.id),
                           child: Container(
                               width: 100,
                               height: 100,
                               color: Colors.red,
-                              child: Text("data"))),
-                      FlowContainer(
-                          id: "23423423",
-                          refershPos: _calibratePosition,
-                          child: Container(
-                              width: 100,
-                              height: 100,
-                              color: Colors.green,
-                              child: Text("data"))),
-                      FlowContainer(
-                          id: "23423423",
-                          refershPos: _calibratePosition,
-                          child: Container(
-                              width: 100,
-                              height: 100,
-                              color: Colors.black12,
-                              child: Text("data"))),
-                      FlowContainer(
-                          id: "scdcd",
-                          refershPos: _calibratePosition,
-                          child: Container(
-                              width: 100,
-                              height: 100,
-                              color: Colors.blue,
-                              child: Text("data"))),
+                              child: Text("data"))))
                     ],
                   ),
                 ),
@@ -171,13 +163,16 @@ class DottedPatternPainter extends CustomPainter {
 
 class FlowContainer extends StatefulWidget {
   final String id;
+  final Offset initialPos;
+  final List<String>? inPins, outPins;
   final Widget child;
-  final Function refershPos;
   const FlowContainer(
       {super.key,
       required this.child,
-      required this.id,
-      required this.refershPos});
+      this.initialPos = Offset.zero,
+      this.inPins,
+      this.outPins,
+      required this.id});
 
   @override
   State<FlowContainer> createState() => _FlowContainerState();
@@ -187,11 +182,14 @@ class _FlowContainerState extends State<FlowContainer> {
   final Connections _connections = Connections.instance;
   Offset _localPos = const Offset(0, 0);
   List<String> inpLinks = [], outLinks = [];
-  String _tempLinkId = const Uuid().v1();
 // temp
-  final GlobalKey _key = GlobalKey();
-  final GlobalKey _key2 = GlobalKey();
-
+@override
+  void initState() {
+    _localPos=widget.initialPos;
+    inpLinks=widget.inPins??[];
+    outLinks=widget.outPins??[];
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -201,11 +199,12 @@ class _FlowContainerState extends State<FlowContainer> {
         link: _deferredPointerLink,
         paintOnTop: false,
         child: Row(mainAxisSize: MainAxisSize.min, children: [
-         FlowInPin(
-                boxId: "c",
-                pinId: "c1",
-                addInLink: inpLinks.add,
-              ),
+          // todo: dynamic pins
+          FlowInPin(
+            boxId: "c",
+            pinId: "c1",
+            addInLink: inpLinks.add,
+          ),
           GestureDetector(
             onPanUpdate: (details) {
               setState(() {
@@ -267,8 +266,8 @@ class _FlowOutPinState extends State<FlowOutPin> {
       data: _tempLinkId,
       rootOverlay: false,
       onDragStarted: () {
-        _connections.create(
-            _tempLinkId, widget.boxId,const  Offset(1, 1), -_getPositionOfBox(_key));
+        _connections.create(_tempLinkId, widget.boxId, const Offset(1, 1),
+            -_getPositionOfBox(_key));
       },
       onDragUpdate: (details) {
         _connections.create(
@@ -281,7 +280,7 @@ class _FlowOutPinState extends State<FlowOutPin> {
         });
       },
       onDraggableCanceled: (velocity, offset) {
-        _connections.list.remove(_tempLinkId);
+        _connections.linkList.remove(_tempLinkId);
       },
       feedback: Container(
         height: 10,
@@ -301,7 +300,6 @@ class _FlowOutPinState extends State<FlowOutPin> {
   }
 }
 
-
 class FlowInPin extends StatefulWidget {
   final String boxId, pinId;
   final void Function(String) addInLink;
@@ -317,28 +315,28 @@ class FlowInPin extends StatefulWidget {
 
 class _FlowInPinState extends State<FlowInPin> {
   final Connections _connections = Connections.instance;
-  String _tempLinkId = const Uuid().v1();
   final GlobalKey _key = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     return DragTarget<String>(
-            onAcceptWithDetails: (details) {
-              widget.addInLink(details.data);
-              _connections.onConnection(details.data,widget.boxId, -_getPositionOfBox(_key));
-            },
-            builder: (context, candidateItems, rejectedItems) {
-              return Container(
-                height: 10,
-                width: 10,
-                alignment: Alignment.center,
-                color: Colors.yellowAccent,
-                child: SizedBox(
-                  key: _key,
-                ),
-              );
-            },
-          );
+      onAcceptWithDetails: (details) {
+        widget.addInLink(details.data);
+        _connections.onConnection(
+            details.data, widget.boxId, -_getPositionOfBox(_key));
+      },
+      builder: (context, candidateItems, rejectedItems) {
+        return Container(
+          height: 10,
+          width: 10,
+          alignment: Alignment.center,
+          color: Colors.yellowAccent,
+          child: SizedBox(
+            key: _key,
+          ),
+        );
+      },
+    );
   }
 }
 // class FlowLine extends StatefulWidget {
