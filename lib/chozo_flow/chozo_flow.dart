@@ -23,6 +23,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
   // };
   final Connections _connections = Connections.instance;
   Offset _globalOffset = Offset.zero;
+  double _userScale = 1.0;
 
   Offset getOffsetFromMatrix(Matrix4 matrix) {
     // Extract the translation values from the matrix
@@ -42,7 +43,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
   _calibratePosition() {
     print("calibration done");
     _connections.globalOffset =
-        _globalOffset - getOffsetFromMatrix(controllerT.value);
+        _globalOffset - (getOffsetFromMatrix(controllerT.value) * _userScale);
   }
 
   @override
@@ -87,16 +88,21 @@ class _ChozoFlowState extends State<ChozoFlow> {
                 },
                 onInteractionUpdate: (details) {
                   _connections.setGlobalOffset(details.focalPointDelta);
+                  _userScale = details.scale;
                 },
-                onInteractionEnd: (details) {_calibratePosition();},
-                scaleEnabled: false,
+                // onInteractionEnd: (details) {_calibratePosition();},
+                scaleEnabled: true,
                 child: Container(
                   color: Colors.transparent,
                   child: Stack(
                     fit: StackFit.expand,
                     clipBehavior: Clip.none,
                     children: [
-                      DragableCom(
+                      ..._connections.list.values.map((e) => CustomPaint(
+                            painter: ArrowPainter(from: e.start, to: e.end),
+                            child: Container(),
+                          )),
+                      FlowContainer(
                           id: "23423423",
                           refershPos: _calibratePosition,
                           child: Container(
@@ -104,7 +110,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
                               height: 100,
                               color: Colors.red,
                               child: Text("data"))),
-                      DragableCom(
+                      FlowContainer(
                           id: "23423423",
                           refershPos: _calibratePosition,
                           child: Container(
@@ -112,7 +118,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
                               height: 100,
                               color: Colors.green,
                               child: Text("data"))),
-                      DragableCom(
+                      FlowContainer(
                           id: "23423423",
                           refershPos: _calibratePosition,
                           child: Container(
@@ -120,7 +126,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
                               height: 100,
                               color: Colors.black12,
                               child: Text("data"))),
-                      DragableCom(
+                      FlowContainer(
                           id: "scdcd",
                           refershPos: _calibratePosition,
                           child: Container(
@@ -128,10 +134,6 @@ class _ChozoFlowState extends State<ChozoFlow> {
                               height: 100,
                               color: Colors.blue,
                               child: Text("data"))),
-                      ..._connections.list.values.map((e) => CustomPaint(
-                            painter: ArrowPainter(from: e.start, to: e.end),
-                            child: Container(),
-                          )),
                     ],
                   ),
                 ),
@@ -167,41 +169,34 @@ class DottedPatternPainter extends CustomPainter {
   }
 }
 
-class Indi extends StatelessWidget {
-  const Indi({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      child: Container(
-        height: 100,
-        width: 100,
-        color: Colors.amber,
-        child: Text("hello tjhere"),
-      ),
-    );
-  }
-}
-
-class DragableCom extends StatefulWidget {
+class FlowContainer extends StatefulWidget {
   final String id;
   final Widget child;
   final Function refershPos;
-  const DragableCom(
+  const FlowContainer(
       {super.key,
       required this.child,
       required this.id,
       required this.refershPos});
 
   @override
-  State<DragableCom> createState() => _DragableComState();
+  State<FlowContainer> createState() => _FlowContainerState();
 }
 
-class _DragableComState extends State<DragableCom> {
+class _FlowContainerState extends State<FlowContainer> {
   final Connections _connections = Connections.instance;
   Offset _localPos = const Offset(0, 0);
   List<String> inpLinks = [], outLinks = [];
   String _tempLinkId = const Uuid().v1();
+// temp
+  final GlobalKey _key = GlobalKey();
+  final GlobalKey _key1 = GlobalKey();
+  final GlobalKey _key2 = GlobalKey();
+
+  _getPositionOfBox(GlobalKey inKey) {
+    RenderBox box = inKey.currentContext?.findRenderObject() as RenderBox;
+    return box.globalToLocal(Offset.zero);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -215,12 +210,17 @@ class _DragableComState extends State<DragableCom> {
           DragTarget<String>(
             onAcceptWithDetails: (details) {
               inpLinks.add(details.data);
+              _connections.onConnection(details.data, -_getPositionOfBox(_key));
             },
             builder: (context, candidateItems, rejectedItems) {
               return Container(
                 height: 10,
                 width: 10,
+                alignment: Alignment.center,
                 color: Colors.yellowAccent,
+                child: SizedBox(
+                  key: _key,
+                ),
               );
             },
           ),
@@ -249,6 +249,8 @@ class _DragableComState extends State<DragableCom> {
                 onDragUpdate: (details) {
                   _connections.create(
                       _tempLinkId, details.delta, details.globalPosition);
+                  print(
+                      "${_getPositionOfBox(_key1)} ${details.globalPosition}");
                 },
                 onDragCompleted: () {
                   outLinks.add(_tempLinkId);
@@ -265,10 +267,11 @@ class _DragableComState extends State<DragableCom> {
                   color: Colors.purple,
                 ),
                 child: Container(
-                  height: 10,
-                  width: 10,
-                  color: Colors.purple,
-                ),
+                    height: 10,
+                    width: 10,
+                    color: Colors.purple,
+                    alignment: Alignment.center,
+                    child: SizedBox(key: _key1)),
               ),
               SizedBox(
                 height: 30,
@@ -277,7 +280,8 @@ class _DragableComState extends State<DragableCom> {
                 data: _tempLinkId,
                 rootOverlay: false,
                 onDragStarted: () {
-                  widget.refershPos();
+                  _connections.create(
+                      _tempLinkId, Offset(1, 1), -_getPositionOfBox(_key2));
                 },
                 onDragUpdate: (details) {
                   _connections.create(
@@ -298,9 +302,13 @@ class _DragableComState extends State<DragableCom> {
                   color: Colors.purple,
                 ),
                 child: Container(
+                  alignment: Alignment.center,
                   height: 10,
                   width: 10,
                   color: Colors.purple,
+                  child: SizedBox(
+                    key: _key2,
+                  ),
                 ),
               )
             ],
@@ -310,3 +318,47 @@ class _DragableComState extends State<DragableCom> {
     );
   }
 }
+
+
+// class FlowLine extends StatefulWidget {
+//   final String likeId;
+//   final Connections connections;
+//   final void Function()? onDragStarted,onDragCompleted;
+//   final void Function(DragUpdateDetails)? onDragUpdate;
+//   final void Function(Velocity, Offset)? onDraggableCanceled;
+//   const FlowLine({super.key, required this.likeId, required this.connections, this.onDragStarted, this.onDragCompleted, this.onDragUpdate, this.onDraggableCanceled});
+
+//   @override
+//   State<FlowLine> createState() => _FlowLineState();
+// }
+
+// class _FlowLineState extends State<FlowLine> {
+  
+//   GlobalKey key = GlobalKey();
+//   @override
+//   Widget build(BuildContext context) {
+//     return Draggable<String>(
+//                 data: widget.likeId,
+//                 rootOverlay: false,
+//                 onDragUpdate: (details) {
+//                 widget.onDragUpdate?.call(details);
+//                 },
+//                 onDragCompleted: () {
+                 
+//                 },
+//                 onDraggableCanceled: (velocity, offset) {
+                
+//                 },
+//                 feedback: Container(
+//                   height: 10,
+//                   width: 10,
+//                   color: Colors.purple,
+//                 ),
+//                 child: Container(
+//                   height: 10,
+//                   width: 10,
+//                   color: Colors.purple,
+//                 ),
+//               ),;
+//   }
+// }
