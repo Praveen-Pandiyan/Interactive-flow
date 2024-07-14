@@ -4,9 +4,7 @@ class Connections extends ChangeNotifier {
   Connections._();
   static final instance = Connections._();
   Offset globalOffset = Offset.zero;
-  Map<String, Link> list = {
-    "ggg": Link(id: "ggg", start: Offset(0, 0), end: Offset(100, 100))
-  };
+  Map<String, Link> list = {};
   void setGlobalOffset(Offset _offset) {
     if (globalOffset == Offset.zero && _offset != Offset.zero) {
       globalOffset = _offset;
@@ -15,11 +13,12 @@ class Connections extends ChangeNotifier {
     }
   }
 
-  void create(String id, Offset delta, localPos) {
+  void create(String id, fromId, Offset delta, localPos) {
     if (list[id] == null) {
       list.addAll({
         id: Link(
             id: id,
+            from: fromId,
             start: localPos + globalOffset,
             end: localPos + globalOffset)
       });
@@ -44,8 +43,10 @@ class Connections extends ChangeNotifier {
     notifyListeners();
   }
 
-  void onConnection(String id, Offset pos) {
-    list[id]?.end = globalOffset + pos;
+  void onConnection(String id, toId, Offset pos) {
+    list[id]
+      ?..end = globalOffset + pos
+      ..to = toId;
     notifyListeners();
   }
 }

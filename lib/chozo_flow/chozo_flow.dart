@@ -190,13 +190,7 @@ class _FlowContainerState extends State<FlowContainer> {
   String _tempLinkId = const Uuid().v1();
 // temp
   final GlobalKey _key = GlobalKey();
-  final GlobalKey _key1 = GlobalKey();
   final GlobalKey _key2 = GlobalKey();
-
-  _getPositionOfBox(GlobalKey inKey) {
-    RenderBox box = inKey.currentContext?.findRenderObject() as RenderBox;
-    return box.globalToLocal(Offset.zero);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -207,29 +201,12 @@ class _FlowContainerState extends State<FlowContainer> {
         link: _deferredPointerLink,
         paintOnTop: false,
         child: Row(mainAxisSize: MainAxisSize.min, children: [
-          DragTarget<String>(
-            onAcceptWithDetails: (details) {
-              inpLinks.add(details.data);
-              _connections.onConnection(details.data, -_getPositionOfBox(_key));
-            },
-            builder: (context, candidateItems, rejectedItems) {
-              return Container(
-                height: 10,
-                width: 10,
-                alignment: Alignment.center,
-                color: Colors.yellowAccent,
-                child: SizedBox(
-                  key: _key,
-                ),
-              );
-            },
-          ),
+         FlowInPin(
+                boxId: "c",
+                pinId: "c1",
+                addInLink: inpLinks.add,
+              ),
           GestureDetector(
-            onTap: () {
-              print("""inp :$inpLinks  out: $outLinks
-              ${_connections.list}
-              """);
-            },
             onPanUpdate: (details) {
               setState(() {
                 _localPos = _localPos + details.delta;
@@ -243,74 +220,16 @@ class _FlowContainerState extends State<FlowContainer> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             mainAxisSize: MainAxisSize.max,
             children: [
-              Draggable<String>(
-                data: _tempLinkId,
-                rootOverlay: false,
-                onDragUpdate: (details) {
-                  _connections.create(
-                      _tempLinkId, details.delta, details.globalPosition);
-                  print(
-                      "${_getPositionOfBox(_key1)} ${details.globalPosition}");
-                },
-                onDragCompleted: () {
-                  outLinks.add(_tempLinkId);
-                  setState(() {
-                    _tempLinkId = const Uuid().v1();
-                  });
-                },
-                onDraggableCanceled: (velocity, offset) {
-                  _connections.list.remove(_tempLinkId);
-                },
-                feedback: Container(
-                  height: 10,
-                  width: 10,
-                  color: Colors.purple,
-                ),
-                child: Container(
-                    height: 10,
-                    width: 10,
-                    color: Colors.purple,
-                    alignment: Alignment.center,
-                    child: SizedBox(key: _key1)),
+              FlowOutPin(
+                boxId: "a",
+                pinId: "a1",
+                addOutLink: outLinks.add,
               ),
-              SizedBox(
-                height: 30,
+              FlowOutPin(
+                boxId: "a",
+                pinId: "a2",
+                addOutLink: outLinks.add,
               ),
-              Draggable<String>(
-                data: _tempLinkId,
-                rootOverlay: false,
-                onDragStarted: () {
-                  _connections.create(
-                      _tempLinkId, Offset(1, 1), -_getPositionOfBox(_key2));
-                },
-                onDragUpdate: (details) {
-                  _connections.create(
-                      _tempLinkId, details.delta, details.globalPosition);
-                },
-                onDragCompleted: () {
-                  outLinks.add(_tempLinkId);
-                  setState(() {
-                    _tempLinkId = const Uuid().v1();
-                  });
-                },
-                onDraggableCanceled: (velocity, offset) {
-                  _connections.list.remove(_tempLinkId);
-                },
-                feedback: Container(
-                  height: 10,
-                  width: 10,
-                  color: Colors.purple,
-                ),
-                child: Container(
-                  alignment: Alignment.center,
-                  height: 10,
-                  width: 10,
-                  color: Colors.purple,
-                  child: SizedBox(
-                    key: _key2,
-                  ),
-                ),
-              )
             ],
           ),
         ]),
@@ -319,7 +238,109 @@ class _FlowContainerState extends State<FlowContainer> {
   }
 }
 
+_getPositionOfBox(GlobalKey inKey) {
+  RenderBox box = inKey.currentContext?.findRenderObject() as RenderBox;
+  return box.globalToLocal(Offset.zero);
+}
 
+class FlowOutPin extends StatefulWidget {
+  final String boxId, pinId;
+  final void Function(String) addOutLink;
+  const FlowOutPin(
+      {super.key,
+      required this.boxId,
+      required this.pinId,
+      required this.addOutLink});
+
+  @override
+  State<FlowOutPin> createState() => _FlowOutPinState();
+}
+
+class _FlowOutPinState extends State<FlowOutPin> {
+  final Connections _connections = Connections.instance;
+  String _tempLinkId = const Uuid().v1();
+  final GlobalKey _key = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    return Draggable<String>(
+      data: _tempLinkId,
+      rootOverlay: false,
+      onDragStarted: () {
+        _connections.create(
+            _tempLinkId, widget.boxId,const  Offset(1, 1), -_getPositionOfBox(_key));
+      },
+      onDragUpdate: (details) {
+        _connections.create(
+            _tempLinkId, widget.boxId, details.delta, details.globalPosition);
+      },
+      onDragCompleted: () {
+        widget.addOutLink(_tempLinkId);
+        setState(() {
+          _tempLinkId = const Uuid().v1();
+        });
+      },
+      onDraggableCanceled: (velocity, offset) {
+        _connections.list.remove(_tempLinkId);
+      },
+      feedback: Container(
+        height: 10,
+        width: 10,
+        color: Colors.purple,
+      ),
+      child: Container(
+        alignment: Alignment.center,
+        height: 10,
+        width: 10,
+        color: Colors.purple,
+        child: SizedBox(
+          key: _key,
+        ),
+      ),
+    );
+  }
+}
+
+
+class FlowInPin extends StatefulWidget {
+  final String boxId, pinId;
+  final void Function(String) addInLink;
+  const FlowInPin(
+      {super.key,
+      required this.boxId,
+      required this.pinId,
+      required this.addInLink});
+
+  @override
+  State<FlowInPin> createState() => _FlowInPinState();
+}
+
+class _FlowInPinState extends State<FlowInPin> {
+  final Connections _connections = Connections.instance;
+  String _tempLinkId = const Uuid().v1();
+  final GlobalKey _key = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    return DragTarget<String>(
+            onAcceptWithDetails: (details) {
+              widget.addInLink(details.data);
+              _connections.onConnection(details.data,widget.boxId, -_getPositionOfBox(_key));
+            },
+            builder: (context, candidateItems, rejectedItems) {
+              return Container(
+                height: 10,
+                width: 10,
+                alignment: Alignment.center,
+                color: Colors.yellowAccent,
+                child: SizedBox(
+                  key: _key,
+                ),
+              );
+            },
+          );
+  }
+}
 // class FlowLine extends StatefulWidget {
 //   final String likeId;
 //   final Connections connections;
@@ -333,7 +354,7 @@ class _FlowContainerState extends State<FlowContainer> {
 // }
 
 // class _FlowLineState extends State<FlowLine> {
-  
+
 //   GlobalKey key = GlobalKey();
 //   @override
 //   Widget build(BuildContext context) {
@@ -344,10 +365,10 @@ class _FlowContainerState extends State<FlowContainer> {
 //                 widget.onDragUpdate?.call(details);
 //                 },
 //                 onDragCompleted: () {
-                 
+
 //                 },
 //                 onDraggableCanceled: (velocity, offset) {
-                
+
 //                 },
 //                 feedback: Container(
 //                   height: 10,
