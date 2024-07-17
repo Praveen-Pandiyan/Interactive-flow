@@ -1,6 +1,7 @@
 import 'package:chozo_ui_package/chart/chart.dart';
 import 'package:chozo_ui_package/chozo_ui_package.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 void main() {
   runApp(const MyApp());
@@ -49,7 +50,10 @@ class _HolderState extends State<Holder> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: ChartView(),
+      extendBody: false,
+      body: Column(
+        children: [SizedBox(height: 100), ChartView()],
+      ),
     );
   }
 }

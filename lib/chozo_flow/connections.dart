@@ -4,7 +4,14 @@ class Connections extends ChangeNotifier {
   Connections._();
   static final instance = Connections._();
   Offset globalOffset = Offset.zero;
-  Map<String, Link> list = {};
+  Map<String, Link> list = {
+    "frfrgt": Link(
+        from: "4r35",
+        to: "frwf",
+        start: Offset.zero,
+        end: Offset(100, 100),
+        id: "frfrgt")
+  };
   void setGlobalOffset(Offset _offset) {
     if (globalOffset == Offset.zero && _offset != Offset.zero) {
       globalOffset = _offset;
