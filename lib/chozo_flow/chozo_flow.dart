@@ -110,18 +110,20 @@ class _ChozoFlowState extends State<ChozoFlow> {
                 transformationController: controllerT,
                 onInteractionStart: (details) {
                   _calibratePosition();
-                  initialControllerValue = controllerT.value.clone();
+                  initialControllerValue ??= controllerT.value.clone();
                  
                 },
                 onInteractionUpdate: (details) {
                   _connections.setGlobalOffset(details.focalPointDelta);
+                  print("${controllerT.value}");
                   
                 },
                 onInteractionEnd: (details) {
                   _calibratePosition();
-                  _resetScale();
+                  // _resetScale();
                 },
                 scaleEnabled: true,
+                
                 child: Container(
                   color: Colors.transparent,
                   child: Stack(
