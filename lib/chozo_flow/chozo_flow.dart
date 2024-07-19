@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:defer_pointer/defer_pointer.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:uuid/uuid.dart';
 
@@ -25,7 +26,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
   // };
   final Connections _connections = Connections.instance;
   Offset _globalOffset = Offset.zero;
-  double _userScale = 1.0;
+ 
 
   Offset getOffsetFromMatrix(Matrix4 matrix) {
     // Extract the translation values from the matrix
@@ -44,7 +45,22 @@ class _ChozoFlowState extends State<ChozoFlow> {
 
   _calibratePosition() {
     _connections.globalOffset =
-        _globalOffset - (getOffsetFromMatrix(controllerT.value) );
+        _globalOffset - (getOffsetFromMatrix(controllerT.value));
+  }
+
+  _resetScale() {
+   
+    setState(() {
+      final matrix = initialControllerValue!.clone();
+      final translation = matrix.getTranslation();
+      
+      controllerT.value = Matrix4.identity()
+        ..translate(translation.x, translation.y)
+        ..scale(1.0);
+
+    });
+  
+
   }
 
   @override
@@ -53,7 +69,6 @@ class _ChozoFlowState extends State<ChozoFlow> {
       setState(() {});
     });
     _initCalibratePosition();
-
     super.initState();
   }
 
@@ -64,7 +79,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
         title: const Text('Drag'),
         leading: BackButton(onPressed: () {}),
       ),
-      extendBody: true,
+      extendBody: false,
       body: Column(mainAxisSize: MainAxisSize.min, children: [
         Row(
           children: [
@@ -95,16 +110,18 @@ class _ChozoFlowState extends State<ChozoFlow> {
                 transformationController: controllerT,
                 onInteractionStart: (details) {
                   _calibratePosition();
-                  initialControllerValue ??= controllerT.value;
+                  initialControllerValue = controllerT.value.clone();
+                 
                 },
                 onInteractionUpdate: (details) {
                   _connections.setGlobalOffset(details.focalPointDelta);
-                  _userScale = details.scale;
+                  
                 },
                 onInteractionEnd: (details) {
                   _calibratePosition();
+                  _resetScale();
                 },
-                scaleEnabled: false,
+                scaleEnabled: true,
                 child: Container(
                   color: Colors.transparent,
                   child: Stack(
@@ -165,6 +182,7 @@ class FlowContainer extends StatefulWidget {
   final String id;
   final Offset initialPos;
   final List<String>? inPins, outPins;
+  final List<String>? inLinks, outLinks;
   final Widget child;
   const FlowContainer(
       {super.key,
@@ -172,6 +190,8 @@ class FlowContainer extends StatefulWidget {
       this.initialPos = Offset.zero,
       this.inPins,
       this.outPins,
+      this.inLinks,
+      this.outLinks,
       required this.id});
 
   @override
@@ -183,13 +203,14 @@ class _FlowContainerState extends State<FlowContainer> {
   Offset _localPos = const Offset(0, 0);
   List<String> inpLinks = [], outLinks = [];
 // temp
-@override
+  @override
   void initState() {
-    _localPos=widget.initialPos;
-    inpLinks=widget.inPins??[];
-    outLinks=widget.outPins??[];
+    _localPos = widget.initialPos;
+    inpLinks = widget.inLinks ?? [];
+    outLinks = widget.outLinks ?? [];
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Positioned(

@@ -65,8 +65,8 @@ class Connections extends ChangeNotifier {
     boxList.addAll({_boxId: Box(
         id: _boxId,
         pos: Offset.zero,
-        inPins: [],
-        outPins: [],
+        inPins: ["srfreg"],
+        outPins: ["frwfef"],
         refId: "cdfc")});
         notifyListeners();
   }
