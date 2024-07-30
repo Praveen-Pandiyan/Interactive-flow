@@ -21,15 +21,12 @@ class _ChozoFlowState extends State<ChozoFlow> {
   TransformationController controllerT = TransformationController();
   Matrix4? initialControllerValue;
   GlobalKey key = GlobalKey();
-  // Map<String, Connection> _cooectionList = {
-  //   "ggg": Connection(id: "ggg", start: Offset(100, 100), end: Offset(456, 345))
-  // };
+
   final Connections _connections = Connections.instance;
   Offset _globalOffset = Offset.zero;
  
 
   Offset getOffsetFromMatrix(Matrix4 matrix) {
-    // Extract the translation values from the matrix
     final translation = matrix.getTranslation();
     return Offset(translation.x, translation.y);
   }
