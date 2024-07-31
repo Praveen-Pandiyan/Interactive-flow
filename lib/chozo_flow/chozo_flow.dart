@@ -1,9 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:defer_pointer/defer_pointer.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:uuid/uuid.dart';
 
 import 'connections.dart';
@@ -25,42 +21,14 @@ class _ChozoFlowState extends State<ChozoFlow> {
   //   "ggg": Connection(id: "ggg", start: Offset(100, 100), end: Offset(456, 345))
   // };
   final Connections _connections = Connections.instance;
-  Offset _globalOffset = Offset.zero;
- 
-
-  Offset getOffsetFromMatrix(Matrix4 matrix) {
-    // Extract the translation values from the matrix
-    final translation = matrix.getTranslation();
-    return Offset(translation.x, translation.y);
-  }
 
   _initCalibratePosition() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       RenderBox box = key.currentContext?.findRenderObject() as RenderBox;
       Offset position = box.globalToLocal(Offset.zero);
-      _globalOffset = position;
-      _connections.setGlobalOffset(position);
+
+      double pir = MediaQuery.devicePixelRatioOf(context);
     });
-  }
-
-  _calibratePosition() {
-    _connections.globalOffset =
-        _globalOffset - (getOffsetFromMatrix(controllerT.value));
-  }
-
-  _resetScale() {
-   
-    setState(() {
-      final matrix = initialControllerValue!.clone();
-      final translation = matrix.getTranslation();
-      
-      controllerT.value = Matrix4.identity()
-        ..translate(translation.x, translation.y)
-        ..scale(1.0);
-
-    });
-  
-
   }
 
   @override
@@ -106,24 +74,22 @@ class _ChozoFlowState extends State<ChozoFlow> {
             child: DeferredPointerHandler(
               link: _deferredPointerLink,
               child: InteractiveViewer(
+                // minScale: 1,
+                // maxScale: 1,
                 boundaryMargin: const EdgeInsets.all(double.infinity),
                 transformationController: controllerT,
                 onInteractionStart: (details) {
-                  _calibratePosition();
                   initialControllerValue ??= controllerT.value.clone();
-                 
                 },
                 onInteractionUpdate: (details) {
-                  _connections.setGlobalOffset(details.focalPointDelta);
+                  // _connections.setGlobalOffset(details.focalPointDelta);
+                  print("${details.scale}");
                   print("${controllerT.value}");
-                  
                 },
                 onInteractionEnd: (details) {
-                  _calibratePosition();
                   // _resetScale();
                 },
-                scaleEnabled: true,
-                
+                // scaleEnabled: false,
                 child: Container(
                   color: Colors.transparent,
                   child: Stack(
@@ -203,19 +169,27 @@ class FlowContainer extends StatefulWidget {
 class _FlowContainerState extends State<FlowContainer> {
   final Connections _connections = Connections.instance;
   Offset _localPos = const Offset(0, 0);
+  final GlobalKey _key = GlobalKey();
+  // these are links to other nodes
   List<String> inpLinks = [], outLinks = [];
+  // these are pin / edges for this node
+  List<String> inPins = [], outPins = [];
 // temp
   @override
   void initState() {
     _localPos = widget.initialPos;
     inpLinks = widget.inLinks ?? [];
     outLinks = widget.outLinks ?? [];
+    // for pins
+    inPins = widget.inPins ?? [];
+    outPins = widget.outPins ?? [];
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Positioned(
+      key: _key,
       top: _localPos.dy,
       left: _localPos.dx,
       child: DeferPointer(
@@ -223,17 +197,24 @@ class _FlowContainerState extends State<FlowContainer> {
         paintOnTop: false,
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           // todo: dynamic pins
-          FlowInPin(
-            boxId: "c",
-            pinId: "c1",
-            addInLink: inpLinks.add,
+          Column(
+            children: [
+              ...inPins.map(
+                (e) => FlowInPin(
+                  boxId: widget.id,
+                  pinId: e,
+                  parentKey: _key,
+                  parentOffset: _localPos,
+                  addInLink: inpLinks.add,
+                ),
+              )
+            ],
           ),
           GestureDetector(
             onPanUpdate: (details) {
               setState(() {
                 _localPos = _localPos + details.delta;
               });
-
               _connections.positionUpdate(details.delta, inpLinks, outLinks);
             },
             child: widget.child,
@@ -242,15 +223,14 @@ class _FlowContainerState extends State<FlowContainer> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             mainAxisSize: MainAxisSize.max,
             children: [
-              FlowOutPin(
-                boxId: "a",
-                pinId: "a1",
-                addOutLink: outLinks.add,
-              ),
-              FlowOutPin(
-                boxId: "a",
-                pinId: "a2",
-                addOutLink: outLinks.add,
+              ...outPins.map(
+                (e) => FlowOutPin(
+                  boxId: widget.id,
+                  pinId: e,
+                  parentKey: _key,
+                  parentOffset: _localPos,
+                  addOutLink: outLinks.add,
+                ),
               ),
             ],
           ),
@@ -262,17 +242,21 @@ class _FlowContainerState extends State<FlowContainer> {
 
 _getPositionOfBox(GlobalKey inKey) {
   RenderBox box = inKey.currentContext?.findRenderObject() as RenderBox;
-  return box.globalToLocal(Offset.zero);
+  return box.localToGlobal(Offset.zero);
 }
 
 class FlowOutPin extends StatefulWidget {
   final String boxId, pinId;
   final void Function(String) addOutLink;
+  final Offset parentOffset;
+  final GlobalKey parentKey;
   const FlowOutPin(
       {super.key,
       required this.boxId,
       required this.pinId,
-      required this.addOutLink});
+      required this.addOutLink,
+      required this.parentOffset,
+      required this.parentKey});
 
   @override
   State<FlowOutPin> createState() => _FlowOutPinState();
@@ -289,8 +273,10 @@ class _FlowOutPinState extends State<FlowOutPin> {
       data: _tempLinkId,
       rootOverlay: false,
       onDragStarted: () {
+        final Offset pinPos = _getPositionOfBox(_key);
+        final Offset boxPos = _getPositionOfBox(widget.parentKey);
         _connections.create(_tempLinkId, widget.boxId, const Offset(1, 1),
-            -_getPositionOfBox(_key));
+            widget.parentOffset - (boxPos - pinPos));
       },
       onDragUpdate: (details) {
         _connections.create(
@@ -325,12 +311,16 @@ class _FlowOutPinState extends State<FlowOutPin> {
 
 class FlowInPin extends StatefulWidget {
   final String boxId, pinId;
+  final Offset parentOffset;
+  final GlobalKey parentKey;
   final void Function(String) addInLink;
   const FlowInPin(
       {super.key,
       required this.boxId,
       required this.pinId,
-      required this.addInLink});
+      required this.addInLink,
+      required this.parentOffset,
+      required this.parentKey});
 
   @override
   State<FlowInPin> createState() => _FlowInPinState();
@@ -345,8 +335,10 @@ class _FlowInPinState extends State<FlowInPin> {
     return DragTarget<String>(
       onAcceptWithDetails: (details) {
         widget.addInLink(details.data);
-        _connections.onConnection(
-            details.data, widget.boxId, -_getPositionOfBox(_key));
+        final Offset pinPos = _getPositionOfBox(_key);
+        final Offset boxPos = _getPositionOfBox(widget.parentKey);
+        _connections.onConnection(details.data, widget.boxId,
+            widget.parentOffset - (boxPos - pinPos));
       },
       builder: (context, candidateItems, rejectedItems) {
         return Container(
@@ -361,6 +353,14 @@ class _FlowInPinState extends State<FlowInPin> {
       },
     );
   }
+}
+
+class Pin {
+  final String boxID;
+  final String id;
+  GlobalKey key;
+
+  Pin({required this.boxID, required this.id, required this.key});
 }
 // class FlowLine extends StatefulWidget {
 //   final String likeId;

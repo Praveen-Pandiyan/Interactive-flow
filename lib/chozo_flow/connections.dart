@@ -4,33 +4,16 @@ import 'package:uuid/uuid.dart';
 class Connections extends ChangeNotifier {
   Connections._();
   static final instance = Connections._();
-  Offset globalOffset = Offset.zero;
   Map<String, Link> linkList = {};
   Map<String, Box> boxList = {
     "de": Box(
-        id: "defe",
-        pos: Offset.zero,
-        inPins: [],
-        outPins: [],
-        refId: "cdfc")
+        id: "defe", pos: Offset.zero, inPins: [], outPins: [], refId: "cdfc")
   };
-  void setGlobalOffset(Offset offset) {
-    if (globalOffset == Offset.zero && offset != Offset.zero) {
-      globalOffset = offset;
-    } else {
-      globalOffset -= offset;
-    }
-  }
 
   void create(String id, fromId, Offset delta, localPos) {
     if (linkList[id] == null) {
-      linkList.addAll({
-        id: Link(
-            id: id,
-            fromPin: fromId,
-            start: localPos + globalOffset,
-            end: localPos + globalOffset)
-      });
+      linkList.addAll(
+          {id: Link(id: id, fromPin: fromId, start: localPos, end: localPos)});
     } else {
       positionUpdate(delta, [id], []);
     }
@@ -54,21 +37,22 @@ class Connections extends ChangeNotifier {
 
   void onConnection(String id, toId, Offset pos) {
     linkList[id]
-      ?..end = globalOffset + pos
+      ?..end = pos
       ..toPin = toId;
     notifyListeners();
   }
 
-
-  void addNewBox(){
-     String _boxId = const Uuid().v1();
-    boxList.addAll({_boxId: Box(
-        id: _boxId,
-        pos: Offset.zero,
-        inPins: ["srfreg"],
-        outPins: ["frwfef"],
-        refId: "cdfc")});
-        notifyListeners();
+  void addNewBox() {
+    String _boxId = const Uuid().v1();
+    boxList.addAll({
+      _boxId: Box(
+          id: _boxId,
+          pos: Offset.zero,
+          inPins: ["srfreg", "dewf"],
+          outPins: ["frwfef", "fer"],
+          refId: "cdfc")
+    });
+    notifyListeners();
   }
 }
 
