@@ -5,10 +5,7 @@ class Connections extends ChangeNotifier {
   Connections._();
   static final instance = Connections._();
   Map<String, Link> linkList = {};
-  Map<String, Box> boxList = {
-    "de": Box(
-        id: "defe", pos: Offset.zero, inPins: [], outPins: [], refId: "cdfc")
-  };
+  Map<String, Box> boxList = {};
 
   void create(String id, fromId, Offset delta, localPos) {
     if (linkList[id] == null) {
@@ -48,6 +45,10 @@ class Connections extends ChangeNotifier {
       _boxId: Box(
           id: _boxId,
           pos: Offset.zero,
+          data: [
+            ConfigData(name: "ema", type: DataType.number),
+            ConfigData(name: "sma", type: DataType.number)
+          ],
           inPins: ["srfreg", "dewf"],
           outPins: ["frwfef", "fer"],
           refId: "cdfc")
@@ -78,13 +79,39 @@ class Box {
   String id, refId;
   Offset pos;
   List<String> inPins, outPins;
+  List<ConfigData> data;
 
   Box(
       {required this.id,
       required this.pos,
       required this.inPins,
       required this.outPins,
+      required this.data,
       required this.refId});
+}
+
+enum DataType { number, text, color }
+
+class ConfigData {
+  final String name;
+  final DataType type;
+  dynamic value;
+
+  ConfigData({required this.name, required this.type, this.value = ''});
+  ConfigData fromJson(data) {
+    return ConfigData(
+        name: data['name'],
+        type: switch (data['type']) {
+          'number' => DataType.number,
+          'color' => DataType.color,
+          'text' || _ => DataType.text
+        },
+        value: data['value'] ?? '');
+  }
+
+  toJson() {
+    return {'name': name, 'type': type.name, 'value': value};
+  }
 }
 
 class ArrowPainter extends CustomPainter {

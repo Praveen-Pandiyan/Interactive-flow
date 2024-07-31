@@ -22,21 +22,11 @@ class _ChozoFlowState extends State<ChozoFlow> {
   // };
   final Connections _connections = Connections.instance;
 
-  _initCalibratePosition() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      RenderBox box = key.currentContext?.findRenderObject() as RenderBox;
-      Offset position = box.globalToLocal(Offset.zero);
-
-      double pir = MediaQuery.devicePixelRatioOf(context);
-    });
-  }
-
   @override
   void initState() {
     _connections.addListener(() {
       setState(() {});
     });
-    _initCalibratePosition();
     super.initState();
   }
 
@@ -53,7 +43,6 @@ class _ChozoFlowState extends State<ChozoFlow> {
           children: [
             TextButton(
                 onPressed: () {
-                  print("${controllerT.value.toString()}");
                   controllerT.value = initialControllerValue!;
                 },
                 child: Text("center")),
@@ -107,10 +96,19 @@ class _ChozoFlowState extends State<ChozoFlow> {
                           initialPos: e.pos,
                           key: Key(e.id),
                           child: Container(
-                              width: 100,
-                              height: 100,
+                              constraints: BoxConstraints(maxWidth: 200),
                               color: Colors.red,
-                              child: Text("data"))))
+                              child: Column(
+                                children: [
+                                  ...e.data.map((e) => Row(
+                                        children: [
+                                          Text(e.name),
+                                          Expanded(child: TextField())
+                                        ],
+                                      ))
+                                    ..toList()
+                                ],
+                              ))))
                     ],
                   ),
                 ),
@@ -195,9 +193,10 @@ class _FlowContainerState extends State<FlowContainer> {
       child: DeferPointer(
         link: _deferredPointerLink,
         paintOnTop: false,
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
+        child: Row(mainAxisSize: MainAxisSize.max, children: [
           // todo: dynamic pins
           Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ...inPins.map(
                 (e) => FlowInPin(
@@ -362,6 +361,15 @@ class Pin {
 
   Pin({required this.boxID, required this.id, required this.key});
 }
+
+
+
+
+
+
+
+
+
 // class FlowLine extends StatefulWidget {
 //   final String likeId;
 //   final Connections connections;
