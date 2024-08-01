@@ -6,6 +6,8 @@ import 'connections.dart';
 
 final _deferredPointerLink = DeferredPointerHandlerLink();
 
+double _canvasScale = 1.0;
+
 class ChozoFlow extends StatefulWidget {
   const ChozoFlow({super.key});
 
@@ -17,9 +19,6 @@ class _ChozoFlowState extends State<ChozoFlow> {
   TransformationController controllerT = TransformationController();
   Matrix4? initialControllerValue;
   GlobalKey key = GlobalKey();
-  // Map<String, Connection> _cooectionList = {
-  //   "ggg": Connection(id: "ggg", start: Offset(100, 100), end: Offset(456, 345))
-  // };
   final Connections _connections = Connections.instance;
 
   @override
@@ -63,22 +62,17 @@ class _ChozoFlowState extends State<ChozoFlow> {
             child: DeferredPointerHandler(
               link: _deferredPointerLink,
               child: InteractiveViewer(
-                // minScale: 1,
-                // maxScale: 1,
                 boundaryMargin: const EdgeInsets.all(double.infinity),
                 transformationController: controllerT,
                 onInteractionStart: (details) {
                   initialControllerValue ??= controllerT.value.clone();
                 },
                 onInteractionUpdate: (details) {
-                  // _connections.setGlobalOffset(details.focalPointDelta);
                   print("${details.scale}");
+                  _canvasScale = details.scale;
                   print("${controllerT.value}");
                 },
-                onInteractionEnd: (details) {
-                  // _resetScale();
-                },
-                // scaleEnabled: false,
+                onInteractionEnd: (details) {},
                 child: Container(
                   color: Colors.transparent,
                   child: Stack(
@@ -193,18 +187,22 @@ class _FlowContainerState extends State<FlowContainer> {
       child: DeferPointer(
         link: _deferredPointerLink,
         paintOnTop: false,
-        child: Row(mainAxisSize: MainAxisSize.max, children: [
+        child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
           // todo: dynamic pins
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.max,
             children: [
               ...inPins.map(
-                (e) => FlowInPin(
-                  boxId: widget.id,
-                  pinId: e,
-                  parentKey: _key,
-                  parentOffset: _localPos,
-                  addInLink: inpLinks.add,
+                (e) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: FlowInPin(
+                    boxId: widget.id,
+                    pinId: e,
+                    parentKey: _key,
+                    parentOffset: _localPos,
+                    addInLink: inpLinks.add,
+                  ),
                 ),
               )
             ],
@@ -223,12 +221,15 @@ class _FlowContainerState extends State<FlowContainer> {
             mainAxisSize: MainAxisSize.max,
             children: [
               ...outPins.map(
-                (e) => FlowOutPin(
-                  boxId: widget.id,
-                  pinId: e,
-                  parentKey: _key,
-                  parentOffset: _localPos,
-                  addOutLink: outLinks.add,
+                (e) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: FlowOutPin(
+                    boxId: widget.id,
+                    pinId: e,
+                    parentKey: _key,
+                    parentOffset: _localPos,
+                    addOutLink: outLinks.add,
+                  ),
                 ),
               ),
             ],
@@ -274,8 +275,8 @@ class _FlowOutPinState extends State<FlowOutPin> {
       onDragStarted: () {
         final Offset pinPos = _getPositionOfBox(_key);
         final Offset boxPos = _getPositionOfBox(widget.parentKey);
-        _connections.create(_tempLinkId, widget.boxId, const Offset(1, 1),
-            widget.parentOffset - (boxPos - pinPos));
+        _connections.create(_tempLinkId, widget.boxId, Offset.zero,
+            (widget.parentOffset - ((boxPos - pinPos))));
       },
       onDragUpdate: (details) {
         _connections.create(
@@ -337,7 +338,7 @@ class _FlowInPinState extends State<FlowInPin> {
         final Offset pinPos = _getPositionOfBox(_key);
         final Offset boxPos = _getPositionOfBox(widget.parentKey);
         _connections.onConnection(details.data, widget.boxId,
-            widget.parentOffset - (boxPos - pinPos));
+            (widget.parentOffset - (boxPos - pinPos)));
       },
       builder: (context, candidateItems, rejectedItems) {
         return Container(
