@@ -13,11 +13,11 @@ class Connections extends ChangeNotifier {
       linkList.addAll(
           {id: Link(id: id, fromPin: fromId, start: localPos, end: localPos)});
     } else {
-      positionUpdate(delta, [id], []);
+      positionUpdate(null,null,delta, [id], []);
     }
   }
 
-  void positionUpdate(Offset delta, List<String> inpConId, outConId) {
+  void positionUpdate(String? boxId,Offset? pos,Offset delta, List<String> inpConId, outConId) {
     for (var e in inpConId) {
       if (linkList[e] != null) {
         linkList[e]?.end += delta;
@@ -31,6 +31,9 @@ class Connections extends ChangeNotifier {
       } else {}
     }
     notifyListeners();
+    if(boxId!=null) {
+      boxList[boxId]?.pos=pos!;
+    }
   }
 
   void onConnection(String id, toId, Offset pos) {
@@ -173,8 +176,8 @@ class Box {
             id: json['id'],
             inPins: json['ipin'],
             outPins: json['opin'],
-            inLinks: json['ilinks'] ,
-            outLinks: json['olinks'],
+            inLinks: (json['ilinks'] as List).map((e)=>e.toString()).toList(),
+            outLinks: (json['olinks'] as List).map((e)=>e.toString()).toList(),
             refId: json['refId'],
             pos: toOffset(json['pos']),
             data: (json['data'] as List)

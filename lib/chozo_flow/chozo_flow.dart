@@ -60,41 +60,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
                 child: Text("print")),
             TextButton(
                 onPressed: () {
-                  print(_connections.loadFlow({
-                    "id": "dferf",
-                    "name": "chumma",
-                    "boxs": [
-                      {
-                        "id": "03ad3c00-4aa1-10c7-893c-457cae154441",
-                        "ipin": ["srfreg", "dewf"],
-                        "opin": ["frwfef", "fer"],
-                        "refId": "cdfc",
-                        "ilinks": ["2"],
-                        "olinks": ["2"],
-                        "pos": {"x": 37, "y": 282},
-                        "data": [
-                          {"name": "ema", "type": "number", "value": ""},
-                          {"name": "sma", "type": "number", "value": ""}
-                        ]
-                      },
-                      {
-                        "id": "42dc8c80-4aa3-10c7-893c-457cae154441",
-                        "ipin": ["srfreg", "dewf"],
-                        "opin": ["frwfef", "fer"],
-                        "refId": "cdfc",
-                        "ilinks": ["2"],
-                        "olinks": ["2"],
-                        "pos": {"x": 246, "y": 313},
-                        "data": [
-                          {"name": "ema", "type": "number", "value": ""},
-                          {"name": "sma", "type": "number", "value": ""}
-                        ]
-                      }
-                    ],
-                    "links": [],
-                    "cversion": "0.0.1",
-                    "version": "23432443"
-                  }));
+                  print(_connections.loadFlow({"id":"dferf","name":"chumma","boxs":[{"id":"50d37980-5b46-10c7-a6c7-9bfb6cd0b524","ipin":["srfreg","dewf"],"opin":["frwfef","fer"],"refId":"cdfc","ilinks":["27dad500-5b96-10c7-86f9-b1abd1147f78"],"olinks":["88dabc80-5b46-10c7-a6c7-9bfb6cd0b524","8bd5ad00-5b46-10c7-a6c7-9bfb6cd0b524","1db8d680-5b96-10c7-86f9-b1abd1147f78"],"pos":{"x":58,"y":117},"data":[{"name":"ema","type":"number","value":""},{"name":"sma","type":"number","value":""}]},{"id":"bf650700-5b47-10c7-a6c7-9bfb6cd0b524","ipin":["srfreg","dewf"],"opin":["frwfef","fer"],"refId":"cdfc","ilinks":["88dabc80-5b46-10c7-a6c7-9bfb6cd0b524","8bd5ad00-5b46-10c7-a6c7-9bfb6cd0b524","506bca80-5ba8-10c7-86f9-b1abd1147f78","506bca81-5ba8-10c7-86f9-b1abd1147f78","c8d18c01-5ba6-10c7-86f9-b1abd1147f78"],"olinks":["27dad500-5b96-10c7-86f9-b1abd1147f78"],"pos":{"x":398,"y":523},"data":[{"name":"ema","type":"number","value":""},{"name":"sma","type":"number","value":""}]},{"id":"b1929e80-5ba6-10c7-86f9-b1abd1147f78","ipin":["srfreg","dewf"],"opin":["frwfef","fer"],"refId":"cdfc","ilinks":["10b0dd00-5bc0-10c7-86f9-b1abd1147f78","1db8d680-5b96-10c7-86f9-b1abd1147f78","5910d080-5ba9-10c7-86f9-b1abd1147f78"],"olinks":["c8d18c01-5ba6-10c7-86f9-b1abd1147f78"],"pos":{"x":583,"y":371},"data":[{"name":"ema","type":"number","value":""},{"name":"sma","type":"number","value":""}]},{"id":"3fbb5480-5ba8-10c7-86f9-b1abd1147f78","ipin":["srfreg","dewf"],"opin":["frwfef","fer"],"refId":"cdfc","ilinks":[],"olinks":["506bca80-5ba8-10c7-86f9-b1abd1147f78","506bca81-5ba8-10c7-86f9-b1abd1147f78","89fefe80-5bc5-10c7-86f9-b1abd1147f78","10b0dd00-5bc0-10c7-86f9-b1abd1147f78"],"pos":{"x":97,"y":556},"data":[{"name":"ema","type":"number","value":""},{"name":"sma","type":"number","value":""}]},{"id":"3da5c580-5ba9-10c7-86f9-b1abd1147f78","ipin":["srfreg","dewf"],"opin":["frwfef","fer"],"refId":"cdfc","ilinks":["89fefe80-5bc5-10c7-86f9-b1abd1147f78"],"olinks":["5910d080-5ba9-10c7-86f9-b1abd1147f78"],"pos":{"x":470,"y":97},"data":[{"name":"ema","type":"number","value":""},{"name":"sma","type":"number","value":""}]}],"links":[{"id":"88dabc80-5b46-10c7-a6c7-9bfb6cd0b524","fpin":"50d37980-5b46-10c7-a6c7-9bfb6cd0b524","tpin":"bf650700-5b47-10c7-a6c7-9bfb6cd0b524","s":{"x":273,"y":150},"e":{"x":403,"y":556}},{"id":"8bd5ad00-5b46-10c7-a6c7-9bfb6cd0b524","fpin":"50d37980-5b46-10c7-a6c7-9bfb6cd0b524","tpin":"bf650700-5b47-10c7-a6c7-9bfb6cd0b524","s":{"x":273,"y":180},"e":{"x":403,"y":586}},{"id":"506bca80-5ba8-10c7-86f9-b1abd1147f78","fpin":"3fbb5480-5ba8-10c7-86f9-b1abd1147f78","tpin":"bf650700-5b47-10c7-a6c7-9bfb6cd0b524","s":{"x":312,"y":589},"e":{"x":403,"y":556}},{"id":"506bca81-5ba8-10c7-86f9-b1abd1147f78","fpin":"3fbb5480-5ba8-10c7-86f9-b1abd1147f78","tpin":"bf650700-5b47-10c7-a6c7-9bfb6cd0b524","s":{"x":312,"y":619},"e":{"x":403,"y":586}},{"id":"89fefe80-5bc5-10c7-86f9-b1abd1147f78","fpin":"3fbb5480-5ba8-10c7-86f9-b1abd1147f78","tpin":"3da5c580-5ba9-10c7-86f9-b1abd1147f78","s":{"x":312,"y":619},"e":{"x":475,"y":130}},{"id":"10b0dd00-5bc0-10c7-86f9-b1abd1147f78","fpin":"3fbb5480-5ba8-10c7-86f9-b1abd1147f78","tpin":"b1929e80-5ba6-10c7-86f9-b1abd1147f78","s":{"x":312,"y":589},"e":{"x":588,"y":404}},{"id":"1db8d680-5b96-10c7-86f9-b1abd1147f78","fpin":"50d37980-5b46-10c7-a6c7-9bfb6cd0b524","tpin":"b1929e80-5ba6-10c7-86f9-b1abd1147f78","s":{"x":273,"y":150},"e":{"x":588,"y":434}},{"id":"27dad500-5b96-10c7-86f9-b1abd1147f78","fpin":"bf650700-5b47-10c7-a6c7-9bfb6cd0b524","tpin":"50d37980-5b46-10c7-a6c7-9bfb6cd0b524","s":{"x":613,"y":586},"e":{"x":63,"y":150}},{"id":"c8d18c01-5ba6-10c7-86f9-b1abd1147f78","fpin":"b1929e80-5ba6-10c7-86f9-b1abd1147f78","tpin":"bf650700-5b47-10c7-a6c7-9bfb6cd0b524","s":{"x":798,"y":434},"e":{"x":403,"y":556}},{"id":"5910d080-5ba9-10c7-86f9-b1abd1147f78","fpin":"3da5c580-5ba9-10c7-86f9-b1abd1147f78","tpin":"b1929e80-5ba6-10c7-86f9-b1abd1147f78","s":{"x":685,"y":160},"e":{"x":588,"y":404}}],"cversion":"0.0.1","version":"23432443"}));
                 },
                 child: Text("load")),
           ],
@@ -257,6 +223,8 @@ class _FlowContainerState extends State<FlowContainer> {
                 _localPos = _localPos + details.delta;
               });
               _connections.positionUpdate(
+                widget.id,
+                _localPos,
                   details.delta,
                   _connections.boxList[widget.id]!.inLinks,
                   _connections.boxList[widget.id]?.outLinks);
