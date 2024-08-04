@@ -4,33 +4,13 @@ import 'package:uuid/uuid.dart';
 class Connections extends ChangeNotifier {
   Connections._();
   static final instance = Connections._();
-  Offset globalOffset = Offset.zero;
   Map<String, Link> linkList = {};
-  Map<String, Box> boxList = {
-    "de": Box(
-        id: "defe",
-        pos: Offset.zero,
-        inPins: [],
-        outPins: [],
-        refId: "cdfc")
-  };
-  void setGlobalOffset(Offset offset) {
-    if (globalOffset == Offset.zero && offset != Offset.zero) {
-      globalOffset = offset;
-    } else {
-      globalOffset -= offset;
-    }
-  }
+  Map<String, Box> boxList = {};
 
   void create(String id, fromId, Offset delta, localPos) {
     if (linkList[id] == null) {
-      linkList.addAll({
-        id: Link(
-            id: id,
-            fromPin: fromId,
-            start: localPos + globalOffset,
-            end: localPos + globalOffset)
-      });
+      linkList.addAll(
+          {id: Link(id: id, fromPin: fromId, start: localPos, end: localPos)});
     } else {
       positionUpdate(delta, [id], []);
     }
@@ -54,21 +34,26 @@ class Connections extends ChangeNotifier {
 
   void onConnection(String id, toId, Offset pos) {
     linkList[id]
-      ?..end = globalOffset + pos
+      ?..end = pos
       ..toPin = toId;
     notifyListeners();
   }
 
-
-  void addNewBox(){
-     String _boxId = const Uuid().v1();
-    boxList.addAll({_boxId: Box(
-        id: _boxId,
-        pos: Offset.zero,
-        inPins: ["srfreg"],
-        outPins: ["frwfef"],
-        refId: "cdfc")});
-        notifyListeners();
+  void addNewBox() {
+    String _boxId = const Uuid().v1();
+    boxList.addAll({
+      _boxId: Box(
+          id: _boxId,
+          pos: Offset.zero,
+          data: [
+            ConfigData(name: "ema", type: DataType.number),
+            ConfigData(name: "sma", type: DataType.number)
+          ],
+          inPins: ["srfreg", "dewf"],
+          outPins: ["frwfef", "fer"],
+          refId: "cdfc")
+    });
+    notifyListeners();
   }
 }
 
@@ -94,13 +79,39 @@ class Box {
   String id, refId;
   Offset pos;
   List<String> inPins, outPins;
+  List<ConfigData> data;
 
   Box(
       {required this.id,
       required this.pos,
       required this.inPins,
       required this.outPins,
+      required this.data,
       required this.refId});
+}
+
+enum DataType { number, text, color }
+
+class ConfigData {
+  final String name;
+  final DataType type;
+  dynamic value;
+
+  ConfigData({required this.name, required this.type, this.value = ''});
+  ConfigData fromJson(data) {
+    return ConfigData(
+        name: data['name'],
+        type: switch (data['type']) {
+          'number' => DataType.number,
+          'color' => DataType.color,
+          'text' || _ => DataType.text
+        },
+        value: data['value'] ?? '');
+  }
+
+  toJson() {
+    return {'name': name, 'type': type.name, 'value': value};
+  }
 }
 
 class ArrowPainter extends CustomPainter {
