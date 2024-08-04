@@ -1,8 +1,5 @@
-import 'package:chozo_ui_package/chart/chart.dart';
 import 'package:chozo_ui_package/chozo_ui_package.dart';
 import 'package:flutter/material.dart';
-
-import 'chart/chart.dart';
 
 
 void main() {
@@ -27,21 +24,3 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class Holder extends StatefulWidget {
-  const Holder({super.key});
-
-  @override
-  State<Holder> createState() => _HolderState();
-}
-
-class _HolderState extends State<Holder> {
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      extendBody: false,
-      body: Column(
-        children: [SizedBox(height: 100), ChartView()],
-      ),
-    );
-  }
-}
