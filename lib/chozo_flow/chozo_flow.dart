@@ -44,7 +44,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
                 onPressed: () {
                   controllerT.value = initialControllerValue!;
                 },
-                child: Text("center")),
+                child:  Text("center")),
             TextButton(
                 onPressed: () {
                   _connections.addNewBox();
@@ -63,6 +63,9 @@ class _ChozoFlowState extends State<ChozoFlow> {
               link: _deferredPointerLink,
               child: InteractiveViewer(
                 boundaryMargin: const EdgeInsets.all(double.infinity),
+                minScale: 1,
+                maxScale: 1,
+                scaleEnabled: false,
                 transformationController: controllerT,
                 onInteractionStart: (details) {
                   initialControllerValue ??= controllerT.value.clone();
