@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:defer_pointer/defer_pointer.dart';
 import 'package:uuid/uuid.dart';
@@ -44,12 +47,56 @@ class _ChozoFlowState extends State<ChozoFlow> {
                 onPressed: () {
                   controllerT.value = initialControllerValue!;
                 },
-                child:  Text("center")),
+                child: Text("center")),
             TextButton(
                 onPressed: () {
                   _connections.addNewBox();
                 },
                 child: Text("add new")),
+            TextButton(
+                onPressed: () {
+                  log(json.encode(_connections.toJson()));
+                },
+                child: Text("print")),
+            TextButton(
+                onPressed: () {
+                  print(_connections.loadFlow({
+                    "id": "dferf",
+                    "name": "chumma",
+                    "boxs": [
+                      {
+                        "id": "03ad3c00-4aa1-10c7-893c-457cae154441",
+                        "ipin": ["srfreg", "dewf"],
+                        "opin": ["frwfef", "fer"],
+                        "refId": "cdfc",
+                        "ilinks": ["2"],
+                        "olinks": ["2"],
+                        "pos": {"x": 37, "y": 282},
+                        "data": [
+                          {"name": "ema", "type": "number", "value": ""},
+                          {"name": "sma", "type": "number", "value": ""}
+                        ]
+                      },
+                      {
+                        "id": "42dc8c80-4aa3-10c7-893c-457cae154441",
+                        "ipin": ["srfreg", "dewf"],
+                        "opin": ["frwfef", "fer"],
+                        "refId": "cdfc",
+                        "ilinks": ["2"],
+                        "olinks": ["2"],
+                        "pos": {"x": 246, "y": 313},
+                        "data": [
+                          {"name": "ema", "type": "number", "value": ""},
+                          {"name": "sma", "type": "number", "value": ""}
+                        ]
+                      }
+                    ],
+                    "links": [],
+                    "cversion": "0.0.1",
+                    "version": "23432443"
+                  }));
+                },
+                child: Text("load")),
           ],
         ),
         Expanded(
@@ -71,9 +118,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
                   initialControllerValue ??= controllerT.value.clone();
                 },
                 onInteractionUpdate: (details) {
-                  print("${details.scale}");
                   _canvasScale = details.scale;
-                  print("${controllerT.value}");
                 },
                 onInteractionEnd: (details) {},
                 child: Container(
@@ -145,7 +190,6 @@ class FlowContainer extends StatefulWidget {
   final String id;
   final Offset initialPos;
   final List<String>? inPins, outPins;
-  final List<String>? inLinks, outLinks;
   final Widget child;
   const FlowContainer(
       {super.key,
@@ -153,8 +197,6 @@ class FlowContainer extends StatefulWidget {
       this.initialPos = Offset.zero,
       this.inPins,
       this.outPins,
-      this.inLinks,
-      this.outLinks,
       required this.id});
 
   @override
@@ -165,16 +207,13 @@ class _FlowContainerState extends State<FlowContainer> {
   final Connections _connections = Connections.instance;
   Offset _localPos = const Offset(0, 0);
   final GlobalKey _key = GlobalKey();
-  // these are links to other nodes
-  List<String> inpLinks = [], outLinks = [];
   // these are pin / edges for this node
   List<String> inPins = [], outPins = [];
 // temp
   @override
   void initState() {
     _localPos = widget.initialPos;
-    inpLinks = widget.inLinks ?? [];
-    outLinks = widget.outLinks ?? [];
+
     // for pins
     inPins = widget.inPins ?? [];
     outPins = widget.outPins ?? [];
@@ -204,7 +243,9 @@ class _FlowContainerState extends State<FlowContainer> {
                     pinId: e,
                     parentKey: _key,
                     parentOffset: _localPos,
-                    addInLink: inpLinks.add,
+                    addInLink: (id) {
+                      _connections.boxList[widget.id]?.inLinks.add(id);
+                    },
                   ),
                 ),
               )
@@ -215,7 +256,10 @@ class _FlowContainerState extends State<FlowContainer> {
               setState(() {
                 _localPos = _localPos + details.delta;
               });
-              _connections.positionUpdate(details.delta, inpLinks, outLinks);
+              _connections.positionUpdate(
+                  details.delta,
+                  _connections.boxList[widget.id]!.inLinks,
+                  _connections.boxList[widget.id]?.outLinks);
             },
             child: widget.child,
           ),
@@ -231,7 +275,9 @@ class _FlowContainerState extends State<FlowContainer> {
                     pinId: e,
                     parentKey: _key,
                     parentOffset: _localPos,
-                    addOutLink: outLinks.add,
+                    addOutLink: (id) {
+                      _connections.boxList[widget.id]?.outLinks.add(id);
+                    },
                   ),
                 ),
               ),

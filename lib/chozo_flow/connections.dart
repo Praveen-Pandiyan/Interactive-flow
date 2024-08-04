@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import '../utils/extensions/offset.dart';
 
 class Connections extends ChangeNotifier {
   Connections._();
@@ -46,14 +47,71 @@ class Connections extends ChangeNotifier {
           id: _boxId,
           pos: Offset.zero,
           data: [
-            ConfigData(name: "ema", type: DataType.number),
-            ConfigData(name: "sma", type: DataType.number)
+            InputData(name: "ema", type: DataType.number),
+            InputData(name: "sma", type: DataType.number)
           ],
           inPins: ["srfreg", "dewf"],
           outPins: ["frwfef", "fer"],
+          inLinks: [],
+          outLinks: [],
           refId: "cdfc")
     });
     notifyListeners();
+  }
+
+  loadFlow(Map<String, dynamic> json) {
+    final data = AlgoData.fromJson(json);
+    boxList.addEntries(data.boxs.map((e) => MapEntry(e.id, e)));
+    linkList.addEntries(data.links.map((e) => MapEntry(e.id, e)));
+    notifyListeners();
+  }
+
+  Map<String, dynamic> toJson() {
+    return AlgoData(
+            boxs: boxList.values.toList(),
+            links: linkList.values.toList(),
+            id: "dferf",
+            consoleVersion: "0.0.1",
+            version: "23432443",
+            name: "chumma")
+        .toJson();
+  }
+}
+
+class AlgoData {
+  final List<Link> links;
+  final List<Box> boxs;
+  final String id;
+  final String name;
+  final String consoleVersion;
+  final String version;
+
+  AlgoData(
+      {required this.links,
+      required this.boxs,
+      required this.id,
+      required this.name,
+      required this.consoleVersion,
+      required this.version});
+
+  AlgoData.fromJson(Map<String, dynamic> data)
+      : this(
+            links:
+                (data['links'] as List).map((e) => Link.fromJson(e)).toList(),
+            boxs: (data['boxs'] as List).map((e) => Box.fromJson(e)).toList(),
+            id: data['id'],
+            name: data['name'],
+            consoleVersion: data['cversion'],
+            version: data['version']);
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'boxs': boxs.map((e) => e.toJson()).toList(),
+      'links': links.map((e) => e.toJson()).toList(),
+      'cversion': consoleVersion,
+      'version': version
+    };
   }
 }
 
@@ -69,6 +127,24 @@ class Link {
     this.start = Offset.zero,
     this.end = Offset.zero,
   });
+  Link.fromJson(Map<String, dynamic> json)
+      : this(
+            id: json['id'],
+            fromPin: json['fpin'],
+            toPin: json['tpin'],
+            start: toOffset(json['s']),
+            end: toOffset(json['e']));
+
+  Map toJson() {
+    return {
+      'id': id,
+      'fpin': fromPin,
+      'tpin': toPin,
+      's': start.toJson(),
+      'e': end.toJson()
+    };
+  }
+
   @override
   String toString() {
     return "${start} ${end}";
@@ -79,35 +155,63 @@ class Box {
   String id, refId;
   Offset pos;
   List<String> inPins, outPins;
-  List<ConfigData> data;
+  List<String> inLinks, outLinks;
+  List<InputData> data;
 
   Box(
       {required this.id,
       required this.pos,
       required this.inPins,
       required this.outPins,
+      required this.inLinks,
+      required this.outLinks,
       required this.data,
       required this.refId});
+
+  Box.fromJson(json)
+      : this(
+            id: json['id'],
+            inPins: json['ipin'],
+            outPins: json['opin'],
+            inLinks: json['ilinks'] ,
+            outLinks: json['olinks'],
+            refId: json['refId'],
+            pos: toOffset(json['pos']),
+            data: (json['data'] as List)
+                .map((e) => InputData.fromJson(e))
+                .toList());
+
+              
+  toJson() {
+    return {
+      'id': id,
+      'ipin': inPins,
+      'opin': outPins,
+      'refId': refId,
+      'ilinks':inLinks,
+      'olinks':outLinks,
+      'pos': pos.toJson(),
+      'data': data.map((e) => e.toJson()).toList()
+    };
+  }
 }
 
 enum DataType { number, text, color }
-
-class ConfigData {
+class InputData {
   final String name;
   final DataType type;
   dynamic value;
 
-  ConfigData({required this.name, required this.type, this.value = ''});
-  ConfigData fromJson(data) {
-    return ConfigData(
-        name: data['name'],
-        type: switch (data['type']) {
-          'number' => DataType.number,
-          'color' => DataType.color,
-          'text' || _ => DataType.text
-        },
-        value: data['value'] ?? '');
-  }
+  InputData({required this.name, required this.type, this.value = ''});
+  InputData.fromJson(data)
+      : this(
+            name: data['name'],
+            type: switch (data['type']) {
+              'number' => DataType.number,
+              'color' => DataType.color,
+              'text' || _ => DataType.text
+            },
+            value: data['value'] ?? '');
 
   toJson() {
     return {'name': name, 'type': type.name, 'value': value};
