@@ -1,15 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:defer_pointer/defer_pointer.dart';
 import 'package:uuid/uuid.dart';
-
 import 'connections.dart';
 
 final _deferredPointerLink = DeferredPointerHandlerLink();
-
-double _canvasScale = 1.0;
 
 class ChozoFlow extends StatefulWidget {
   const ChozoFlow({super.key});
@@ -29,6 +25,8 @@ class _ChozoFlowState extends State<ChozoFlow> {
     _connections.addListener(() {
       setState(() {});
     });
+    _connections.viewerPosition = controllerT;
+    _connections.key = key;
     super.initState();
   }
 
@@ -60,7 +58,93 @@ class _ChozoFlowState extends State<ChozoFlow> {
                 child: Text("print")),
             TextButton(
                 onPressed: () {
-                  print(_connections.loadFlow({"id":"dferf","name":"chumma","boxs":[{"id":"50d37980-5b46-10c7-a6c7-9bfb6cd0b524","ipin":["srfreg","dewf"],"opin":["frwfef","fer"],"refId":"cdfc","ilinks":["27dad500-5b96-10c7-86f9-b1abd1147f78"],"olinks":["88dabc80-5b46-10c7-a6c7-9bfb6cd0b524","8bd5ad00-5b46-10c7-a6c7-9bfb6cd0b524","1db8d680-5b96-10c7-86f9-b1abd1147f78"],"pos":{"x":58,"y":117},"data":[{"name":"ema","type":"number","value":""},{"name":"sma","type":"number","value":""}]},{"id":"bf650700-5b47-10c7-a6c7-9bfb6cd0b524","ipin":["srfreg","dewf"],"opin":["frwfef","fer"],"refId":"cdfc","ilinks":["88dabc80-5b46-10c7-a6c7-9bfb6cd0b524","8bd5ad00-5b46-10c7-a6c7-9bfb6cd0b524","506bca80-5ba8-10c7-86f9-b1abd1147f78","506bca81-5ba8-10c7-86f9-b1abd1147f78","c8d18c01-5ba6-10c7-86f9-b1abd1147f78"],"olinks":["27dad500-5b96-10c7-86f9-b1abd1147f78"],"pos":{"x":398,"y":523},"data":[{"name":"ema","type":"number","value":""},{"name":"sma","type":"number","value":""}]},{"id":"b1929e80-5ba6-10c7-86f9-b1abd1147f78","ipin":["srfreg","dewf"],"opin":["frwfef","fer"],"refId":"cdfc","ilinks":["10b0dd00-5bc0-10c7-86f9-b1abd1147f78","1db8d680-5b96-10c7-86f9-b1abd1147f78","5910d080-5ba9-10c7-86f9-b1abd1147f78"],"olinks":["c8d18c01-5ba6-10c7-86f9-b1abd1147f78"],"pos":{"x":583,"y":371},"data":[{"name":"ema","type":"number","value":""},{"name":"sma","type":"number","value":""}]},{"id":"3fbb5480-5ba8-10c7-86f9-b1abd1147f78","ipin":["srfreg","dewf"],"opin":["frwfef","fer"],"refId":"cdfc","ilinks":[],"olinks":["506bca80-5ba8-10c7-86f9-b1abd1147f78","506bca81-5ba8-10c7-86f9-b1abd1147f78","89fefe80-5bc5-10c7-86f9-b1abd1147f78","10b0dd00-5bc0-10c7-86f9-b1abd1147f78"],"pos":{"x":97,"y":556},"data":[{"name":"ema","type":"number","value":""},{"name":"sma","type":"number","value":""}]},{"id":"3da5c580-5ba9-10c7-86f9-b1abd1147f78","ipin":["srfreg","dewf"],"opin":["frwfef","fer"],"refId":"cdfc","ilinks":["89fefe80-5bc5-10c7-86f9-b1abd1147f78"],"olinks":["5910d080-5ba9-10c7-86f9-b1abd1147f78"],"pos":{"x":470,"y":97},"data":[{"name":"ema","type":"number","value":""},{"name":"sma","type":"number","value":""}]}],"links":[{"id":"88dabc80-5b46-10c7-a6c7-9bfb6cd0b524","fpin":"50d37980-5b46-10c7-a6c7-9bfb6cd0b524","tpin":"bf650700-5b47-10c7-a6c7-9bfb6cd0b524","s":{"x":273,"y":150},"e":{"x":403,"y":556}},{"id":"8bd5ad00-5b46-10c7-a6c7-9bfb6cd0b524","fpin":"50d37980-5b46-10c7-a6c7-9bfb6cd0b524","tpin":"bf650700-5b47-10c7-a6c7-9bfb6cd0b524","s":{"x":273,"y":180},"e":{"x":403,"y":586}},{"id":"506bca80-5ba8-10c7-86f9-b1abd1147f78","fpin":"3fbb5480-5ba8-10c7-86f9-b1abd1147f78","tpin":"bf650700-5b47-10c7-a6c7-9bfb6cd0b524","s":{"x":312,"y":589},"e":{"x":403,"y":556}},{"id":"506bca81-5ba8-10c7-86f9-b1abd1147f78","fpin":"3fbb5480-5ba8-10c7-86f9-b1abd1147f78","tpin":"bf650700-5b47-10c7-a6c7-9bfb6cd0b524","s":{"x":312,"y":619},"e":{"x":403,"y":586}},{"id":"89fefe80-5bc5-10c7-86f9-b1abd1147f78","fpin":"3fbb5480-5ba8-10c7-86f9-b1abd1147f78","tpin":"3da5c580-5ba9-10c7-86f9-b1abd1147f78","s":{"x":312,"y":619},"e":{"x":475,"y":130}},{"id":"10b0dd00-5bc0-10c7-86f9-b1abd1147f78","fpin":"3fbb5480-5ba8-10c7-86f9-b1abd1147f78","tpin":"b1929e80-5ba6-10c7-86f9-b1abd1147f78","s":{"x":312,"y":589},"e":{"x":588,"y":404}},{"id":"1db8d680-5b96-10c7-86f9-b1abd1147f78","fpin":"50d37980-5b46-10c7-a6c7-9bfb6cd0b524","tpin":"b1929e80-5ba6-10c7-86f9-b1abd1147f78","s":{"x":273,"y":150},"e":{"x":588,"y":434}},{"id":"27dad500-5b96-10c7-86f9-b1abd1147f78","fpin":"bf650700-5b47-10c7-a6c7-9bfb6cd0b524","tpin":"50d37980-5b46-10c7-a6c7-9bfb6cd0b524","s":{"x":613,"y":586},"e":{"x":63,"y":150}},{"id":"c8d18c01-5ba6-10c7-86f9-b1abd1147f78","fpin":"b1929e80-5ba6-10c7-86f9-b1abd1147f78","tpin":"bf650700-5b47-10c7-a6c7-9bfb6cd0b524","s":{"x":798,"y":434},"e":{"x":403,"y":556}},{"id":"5910d080-5ba9-10c7-86f9-b1abd1147f78","fpin":"3da5c580-5ba9-10c7-86f9-b1abd1147f78","tpin":"b1929e80-5ba6-10c7-86f9-b1abd1147f78","s":{"x":685,"y":160},"e":{"x":588,"y":404}}],"cversion":"0.0.1","version":"23432443"}));
+                  print(_connections.loadFlow({
+                    "id": "dferf",
+                    "name": "chumma",
+                    "boxs": [
+                      {
+                        "id": "613f44e0-52fb-11ef-8213-d7a6f2e92a6a",
+                        "ipin": ["srfreg", "dewf"],
+                        "opin": ["frwfef", "fer"],
+                        "refId": "cdfc",
+                        "ilinks": [],
+                        "olinks": [
+                          "61438aa0-52fb-11ef-8213-d7a6f2e92a6a",
+                          "6143d8c0-52fb-11ef-8213-d7a6f2e92a6a",
+                          "69f7a140-52fb-11ef-8213-d7a6f2e92a6a"
+                        ],
+                        "pos": {"x": -8.75, "y": 237.5},
+                        "data": [
+                          {"name": "ema", "type": "number", "value": ""},
+                          {"name": "sma", "type": "number", "value": ""}
+                        ]
+                      },
+                      {
+                        "id": "6222a000-52fb-11ef-8213-d7a6f2e92a6a",
+                        "ipin": ["srfreg", "dewf"],
+                        "opin": ["frwfef", "fer"],
+                        "refId": "cdfc",
+                        "ilinks": [
+                          "61438aa0-52fb-11ef-8213-d7a6f2e92a6a",
+                          "62938a40-52fb-11ef-8213-d7a6f2e92a6a"
+                        ],
+                        "olinks": [],
+                        "pos": {"x": 326.5, "y": 444.25},
+                        "data": [
+                          {"name": "ema", "type": "number", "value": ""},
+                          {"name": "sma", "type": "number", "value": ""}
+                        ]
+                      },
+                      {
+                        "id": "628fe0c0-52fb-11ef-8213-d7a6f2e92a6a",
+                        "ipin": ["srfreg", "dewf"],
+                        "opin": ["frwfef", "fer"],
+                        "refId": "cdfc",
+                        "ilinks": [
+                          "6143d8c0-52fb-11ef-8213-d7a6f2e92a6a",
+                          "69f7a140-52fb-11ef-8213-d7a6f2e92a6a"
+                        ],
+                        "olinks": ["62938a40-52fb-11ef-8213-d7a6f2e92a6a"],
+                        "pos": {"x": 394.25, "y": 186},
+                        "data": [
+                          {"name": "ema", "type": "number", "value": ""},
+                          {"name": "sma", "type": "number", "value": ""}
+                        ]
+                      }
+                    ],
+                    "links": [
+                      {
+                        "id": "61438aa0-52fb-11ef-8213-d7a6f2e92a6a",
+                        "fpin": "613f44e0-52fb-11ef-8213-d7a6f2e92a6a",
+                        "tpin": "6222a000-52fb-11ef-8213-d7a6f2e92a6a",
+                        "s": {"x": 206.25, "y": 252.5},
+                        "e": {"x": 331.5, "y": 459.25}
+                      },
+                      {
+                        "id": "6143d8c0-52fb-11ef-8213-d7a6f2e92a6a",
+                        "fpin": "613f44e0-52fb-11ef-8213-d7a6f2e92a6a",
+                        "tpin": "628fe0c0-52fb-11ef-8213-d7a6f2e92a6a",
+                        "s": {"x": 206.25, "y": 282.5},
+                        "e": {"x": 399.25, "y": 201}
+                      },
+                      {
+                        "id": "62938a40-52fb-11ef-8213-d7a6f2e92a6a",
+                        "fpin": "628fe0c0-52fb-11ef-8213-d7a6f2e92a6a",
+                        "tpin": "6222a000-52fb-11ef-8213-d7a6f2e92a6a",
+                        "s": {"x": 609.25, "y": 231},
+                        "e": {"x": 331.5, "y": 489.25}
+                      },
+                      {
+                        "id": "69f7a140-52fb-11ef-8213-d7a6f2e92a6a",
+                        "fpin": "613f44e0-52fb-11ef-8213-d7a6f2e92a6a",
+                        "tpin": "628fe0c0-52fb-11ef-8213-d7a6f2e92a6a",
+                        "s": {"x": 206.25, "y": 282.5},
+                        "e": {"x": 399.25, "y": 231}
+                      }
+                    ],
+                    "cversion": "0.0.1",
+                    "version": "23432443"
+                  }));
                 },
                 child: Text("load")),
           ],
@@ -76,16 +160,12 @@ class _ChozoFlowState extends State<ChozoFlow> {
               link: _deferredPointerLink,
               child: InteractiveViewer(
                 boundaryMargin: const EdgeInsets.all(double.infinity),
-                minScale: 1,
-                maxScale: 1,
-                scaleEnabled: false,
+                scaleEnabled: true,
                 transformationController: controllerT,
                 onInteractionStart: (details) {
                   initialControllerValue ??= controllerT.value.clone();
                 },
-                onInteractionUpdate: (details) {
-                  _canvasScale = details.scale;
-                },
+                onInteractionUpdate: (details) {},
                 onInteractionEnd: (details) {},
                 child: Container(
                   color: Colors.transparent,
@@ -110,8 +190,8 @@ class _ChozoFlowState extends State<ChozoFlow> {
                                 children: [
                                   ...e.data.map((e) => Row(
                                         children: [
-                                          Text(e.name),
-                                          Expanded(child: TextField())
+                                          Text(
+                                              "${e.name} : ${e.value.toString()}"),
                                         ],
                                       ))
                                     ..toList()
@@ -223,8 +303,8 @@ class _FlowContainerState extends State<FlowContainer> {
                 _localPos = _localPos + details.delta;
               });
               _connections.positionUpdate(
-                widget.id,
-                _localPos,
+                  widget.id,
+                  _localPos,
                   details.delta,
                   _connections.boxList[widget.id]!.inLinks,
                   _connections.boxList[widget.id]?.outLinks);
@@ -257,11 +337,6 @@ class _FlowContainerState extends State<FlowContainer> {
   }
 }
 
-_getPositionOfBox(GlobalKey inKey) {
-  RenderBox box = inKey.currentContext?.findRenderObject() as RenderBox;
-  return box.localToGlobal(Offset.zero);
-}
-
 class FlowOutPin extends StatefulWidget {
   final String boxId, pinId;
   final void Function(String) addOutLink;
@@ -290,10 +365,8 @@ class _FlowOutPinState extends State<FlowOutPin> {
       data: _tempLinkId,
       rootOverlay: false,
       onDragStarted: () {
-        final Offset pinPos = _getPositionOfBox(_key);
-        final Offset boxPos = _getPositionOfBox(widget.parentKey);
-        _connections.create(_tempLinkId, widget.boxId, Offset.zero,
-            (widget.parentOffset - ((boxPos - pinPos))));
+        final Offset pinPos = _connections.getPosOfElement(_key);
+        _connections.create(_tempLinkId, widget.boxId, Offset.zero, pinPos);
       },
       onDragUpdate: (details) {
         _connections.create(
@@ -352,10 +425,8 @@ class _FlowInPinState extends State<FlowInPin> {
     return DragTarget<String>(
       onAcceptWithDetails: (details) {
         widget.addInLink(details.data);
-        final Offset pinPos = _getPositionOfBox(_key);
-        final Offset boxPos = _getPositionOfBox(widget.parentKey);
-        _connections.onConnection(details.data, widget.boxId,
-            (widget.parentOffset - (boxPos - pinPos)));
+        final Offset pinPos = _connections.getPosOfElement(_key);
+        _connections.onConnection(details.data, widget.boxId, pinPos);
       },
       builder: (context, candidateItems, rejectedItems) {
         return Container(

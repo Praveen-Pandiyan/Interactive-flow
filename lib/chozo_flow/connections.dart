@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import '../utils/extensions/offset.dart';
 
+// ignore: depend_on_referenced_packages
+import 'package:vector_math/vector_math_64.dart' as math;
+
 class Connections extends ChangeNotifier {
   Connections._();
   static final instance = Connections._();
+  late TransformationController viewerPosition;
+  late GlobalKey key;
   Map<String, Link> linkList = {};
   Map<String, Box> boxList = {};
 
@@ -13,11 +18,12 @@ class Connections extends ChangeNotifier {
       linkList.addAll(
           {id: Link(id: id, fromPin: fromId, start: localPos, end: localPos)});
     } else {
-      positionUpdate(null,null,delta, [id], []);
+      positionUpdate(null, null, delta, [id], []);
     }
   }
 
-  void positionUpdate(String? boxId,Offset? pos,Offset delta, List<String> inpConId, outConId) {
+  void positionUpdate(String? boxId, Offset? pos, Offset delta,
+      List<String> inpConId, outConId) {
     for (var e in inpConId) {
       if (linkList[e] != null) {
         linkList[e]?.end += delta;
@@ -31,8 +37,8 @@ class Connections extends ChangeNotifier {
       } else {}
     }
     notifyListeners();
-    if(boxId!=null) {
-      boxList[boxId]?.pos=pos!;
+    if (boxId != null) {
+      boxList[boxId]?.pos = pos!;
     }
   }
 
@@ -79,6 +85,22 @@ class Connections extends ChangeNotifier {
             name: "chumma")
         .toJson();
   }
+
+  getPosOfElement(elementKey) {
+    final Matrix4 matrix = viewerPosition.value;
+    final double scale = matrix.getMaxScaleOnAxis();
+    final math.Vector3 translation = matrix.getTranslation();
+    final double x = -translation.x / scale;
+    final double y = -translation.y / scale;
+    Offset gloablpos = -getPositionOfBox(key,
+        offset: -getPositionOfBox(elementKey, offset: Offset(x, y)));
+    return (gloablpos / scale);
+  }
+}
+
+getPositionOfBox(GlobalKey key, {Offset offset = Offset.zero}) {
+  RenderBox box = key.currentContext?.findRenderObject() as RenderBox;
+  return box.localToGlobal(offset);
 }
 
 class AlgoData {
@@ -176,23 +198,23 @@ class Box {
             id: json['id'],
             inPins: json['ipin'],
             outPins: json['opin'],
-            inLinks: (json['ilinks'] as List).map((e)=>e.toString()).toList(),
-            outLinks: (json['olinks'] as List).map((e)=>e.toString()).toList(),
+            inLinks: (json['ilinks'] as List).map((e) => e.toString()).toList(),
+            outLinks:
+                (json['olinks'] as List).map((e) => e.toString()).toList(),
             refId: json['refId'],
             pos: toOffset(json['pos']),
             data: (json['data'] as List)
                 .map((e) => InputData.fromJson(e))
                 .toList());
 
-              
   toJson() {
     return {
       'id': id,
       'ipin': inPins,
       'opin': outPins,
       'refId': refId,
-      'ilinks':inLinks,
-      'olinks':outLinks,
+      'ilinks': inLinks,
+      'olinks': outLinks,
       'pos': pos.toJson(),
       'data': data.map((e) => e.toJson()).toList()
     };
@@ -200,6 +222,7 @@ class Box {
 }
 
 enum DataType { number, text, color }
+
 class InputData {
   final String name;
   final DataType type;
