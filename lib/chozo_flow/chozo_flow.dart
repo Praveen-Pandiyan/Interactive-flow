@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:chozo_ui_package/components/eval.dart';
 import 'package:flutter/material.dart';
 import 'package:defer_pointer/defer_pointer.dart';
 import 'package:uuid/uuid.dart';
@@ -33,6 +34,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
   @override
   Widget build(BuildContext context) {
     return Column(mainAxisSize: MainAxisSize.min, children: [
+
       Row(
         children: [
           TextButton(
@@ -143,6 +145,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
               child: Text("load")),
         ],
       ),
+      EvalBox(onChange: print, onError: print),
       Expanded(
         flex: 1,
         child: Container(

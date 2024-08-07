@@ -10,12 +10,19 @@ String? isEvalValid(eval) {
   final matches = regExp.allMatches(eval);
 
   // Iterate over the matches and print the matched groups with their ranges
+
+  int cursor = 0;
+  List<MapEntry> errorRanges = [];
   for (final match in matches) {
+    if (cursor != match.start) {
+      errorRanges.add(MapEntry(cursor, match.start));
+    }
+    cursor = match.end;
     final comparison = match.namedGroup('comparison');
     final arithmetic = match.namedGroup('arithmetic');
     final numbers = match.namedGroup('numbers');
     final variables = match.namedGroup('variables');
-    final functions = match.namedGroup('functions');
+    final functions = match.namedGroup('function');
 
     if (comparison != null) {
       print('Comparison: $comparison, Range: ${match.start} - ${match.end}');
@@ -33,4 +40,6 @@ String? isEvalValid(eval) {
       print('Variables: $functions, Range: ${match.start} - ${match.end}');
     }
   }
+  print(errorRanges.toList());
+  return "";
 }
