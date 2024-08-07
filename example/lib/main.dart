@@ -19,8 +19,21 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:  const ChozoFlow(),
+      home:const MyHolder() ,
     );
   }
 }
 
+class MyHolder extends StatefulWidget {
+  const MyHolder({super.key});
+
+  @override
+  State<MyHolder> createState() => _MyHolderState();
+}
+
+class _MyHolderState extends State<MyHolder> {
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(body:   ChozoFlow(),);
+  }
+}

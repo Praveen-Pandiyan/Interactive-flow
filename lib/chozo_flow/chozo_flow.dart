@@ -32,180 +32,173 @@ class _ChozoFlowState extends State<ChozoFlow> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Drag'),
-        leading: BackButton(onPressed: () {}),
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      Row(
+        children: [
+          TextButton(
+              onPressed: () {
+                controllerT.value = initialControllerValue!;
+              },
+              child: Text("center")),
+          TextButton(
+              onPressed: () {
+                _connections.addNewBox();
+              },
+              child: Text("add new")),
+          TextButton(
+              onPressed: () {
+                log(json.encode(_connections.toJson()));
+              },
+              child: Text("print")),
+          TextButton(
+              onPressed: () {
+                print(_connections.loadFlow({
+                  "id": "dferf",
+                  "name": "chumma",
+                  "boxs": [
+                    {
+                      "id": "613f44e0-52fb-11ef-8213-d7a6f2e92a6a",
+                      "ipin": ["srfreg", "dewf"],
+                      "opin": ["frwfef", "fer"],
+                      "refId": "cdfc",
+                      "ilinks": [],
+                      "olinks": [
+                        "61438aa0-52fb-11ef-8213-d7a6f2e92a6a",
+                        "6143d8c0-52fb-11ef-8213-d7a6f2e92a6a",
+                        "69f7a140-52fb-11ef-8213-d7a6f2e92a6a"
+                      ],
+                      "pos": {"x": -8.75, "y": 237.5},
+                      "data": [
+                        {"name": "ema", "type": "number", "value": ""},
+                        {"name": "sma", "type": "number", "value": ""}
+                      ]
+                    },
+                    {
+                      "id": "6222a000-52fb-11ef-8213-d7a6f2e92a6a",
+                      "ipin": ["srfreg", "dewf"],
+                      "opin": ["frwfef", "fer"],
+                      "refId": "cdfc",
+                      "ilinks": [
+                        "61438aa0-52fb-11ef-8213-d7a6f2e92a6a",
+                        "62938a40-52fb-11ef-8213-d7a6f2e92a6a"
+                      ],
+                      "olinks": [],
+                      "pos": {"x": 326.5, "y": 444.25},
+                      "data": [
+                        {"name": "ema", "type": "number", "value": ""},
+                        {"name": "sma", "type": "number", "value": ""}
+                      ]
+                    },
+                    {
+                      "id": "628fe0c0-52fb-11ef-8213-d7a6f2e92a6a",
+                      "ipin": ["srfreg", "dewf"],
+                      "opin": ["frwfef", "fer"],
+                      "refId": "cdfc",
+                      "ilinks": [
+                        "6143d8c0-52fb-11ef-8213-d7a6f2e92a6a",
+                        "69f7a140-52fb-11ef-8213-d7a6f2e92a6a"
+                      ],
+                      "olinks": ["62938a40-52fb-11ef-8213-d7a6f2e92a6a"],
+                      "pos": {"x": 394.25, "y": 186},
+                      "data": [
+                        {"name": "ema", "type": "number", "value": ""},
+                        {"name": "sma", "type": "number", "value": ""}
+                      ]
+                    }
+                  ],
+                  "links": [
+                    {
+                      "id": "61438aa0-52fb-11ef-8213-d7a6f2e92a6a",
+                      "fpin": "613f44e0-52fb-11ef-8213-d7a6f2e92a6a",
+                      "tpin": "6222a000-52fb-11ef-8213-d7a6f2e92a6a",
+                      "s": {"x": 206.25, "y": 252.5},
+                      "e": {"x": 331.5, "y": 459.25}
+                    },
+                    {
+                      "id": "6143d8c0-52fb-11ef-8213-d7a6f2e92a6a",
+                      "fpin": "613f44e0-52fb-11ef-8213-d7a6f2e92a6a",
+                      "tpin": "628fe0c0-52fb-11ef-8213-d7a6f2e92a6a",
+                      "s": {"x": 206.25, "y": 282.5},
+                      "e": {"x": 399.25, "y": 201}
+                    },
+                    {
+                      "id": "62938a40-52fb-11ef-8213-d7a6f2e92a6a",
+                      "fpin": "628fe0c0-52fb-11ef-8213-d7a6f2e92a6a",
+                      "tpin": "6222a000-52fb-11ef-8213-d7a6f2e92a6a",
+                      "s": {"x": 609.25, "y": 231},
+                      "e": {"x": 331.5, "y": 489.25}
+                    },
+                    {
+                      "id": "69f7a140-52fb-11ef-8213-d7a6f2e92a6a",
+                      "fpin": "613f44e0-52fb-11ef-8213-d7a6f2e92a6a",
+                      "tpin": "628fe0c0-52fb-11ef-8213-d7a6f2e92a6a",
+                      "s": {"x": 206.25, "y": 282.5},
+                      "e": {"x": 399.25, "y": 231}
+                    }
+                  ],
+                  "cversion": "0.0.1",
+                  "version": "23432443"
+                }));
+              },
+              child: Text("load")),
+        ],
       ),
-      extendBody: false,
-      body: Column(mainAxisSize: MainAxisSize.min, children: [
-        Row(
-          children: [
-            TextButton(
-                onPressed: () {
-                  controllerT.value = initialControllerValue!;
-                },
-                child: Text("center")),
-            TextButton(
-                onPressed: () {
-                  _connections.addNewBox();
-                },
-                child: Text("add new")),
-            TextButton(
-                onPressed: () {
-                  log(json.encode(_connections.toJson()));
-                },
-                child: Text("print")),
-            TextButton(
-                onPressed: () {
-                  print(_connections.loadFlow({
-                    "id": "dferf",
-                    "name": "chumma",
-                    "boxs": [
-                      {
-                        "id": "613f44e0-52fb-11ef-8213-d7a6f2e92a6a",
-                        "ipin": ["srfreg", "dewf"],
-                        "opin": ["frwfef", "fer"],
-                        "refId": "cdfc",
-                        "ilinks": [],
-                        "olinks": [
-                          "61438aa0-52fb-11ef-8213-d7a6f2e92a6a",
-                          "6143d8c0-52fb-11ef-8213-d7a6f2e92a6a",
-                          "69f7a140-52fb-11ef-8213-d7a6f2e92a6a"
-                        ],
-                        "pos": {"x": -8.75, "y": 237.5},
-                        "data": [
-                          {"name": "ema", "type": "number", "value": ""},
-                          {"name": "sma", "type": "number", "value": ""}
-                        ]
-                      },
-                      {
-                        "id": "6222a000-52fb-11ef-8213-d7a6f2e92a6a",
-                        "ipin": ["srfreg", "dewf"],
-                        "opin": ["frwfef", "fer"],
-                        "refId": "cdfc",
-                        "ilinks": [
-                          "61438aa0-52fb-11ef-8213-d7a6f2e92a6a",
-                          "62938a40-52fb-11ef-8213-d7a6f2e92a6a"
-                        ],
-                        "olinks": [],
-                        "pos": {"x": 326.5, "y": 444.25},
-                        "data": [
-                          {"name": "ema", "type": "number", "value": ""},
-                          {"name": "sma", "type": "number", "value": ""}
-                        ]
-                      },
-                      {
-                        "id": "628fe0c0-52fb-11ef-8213-d7a6f2e92a6a",
-                        "ipin": ["srfreg", "dewf"],
-                        "opin": ["frwfef", "fer"],
-                        "refId": "cdfc",
-                        "ilinks": [
-                          "6143d8c0-52fb-11ef-8213-d7a6f2e92a6a",
-                          "69f7a140-52fb-11ef-8213-d7a6f2e92a6a"
-                        ],
-                        "olinks": ["62938a40-52fb-11ef-8213-d7a6f2e92a6a"],
-                        "pos": {"x": 394.25, "y": 186},
-                        "data": [
-                          {"name": "ema", "type": "number", "value": ""},
-                          {"name": "sma", "type": "number", "value": ""}
-                        ]
-                      }
-                    ],
-                    "links": [
-                      {
-                        "id": "61438aa0-52fb-11ef-8213-d7a6f2e92a6a",
-                        "fpin": "613f44e0-52fb-11ef-8213-d7a6f2e92a6a",
-                        "tpin": "6222a000-52fb-11ef-8213-d7a6f2e92a6a",
-                        "s": {"x": 206.25, "y": 252.5},
-                        "e": {"x": 331.5, "y": 459.25}
-                      },
-                      {
-                        "id": "6143d8c0-52fb-11ef-8213-d7a6f2e92a6a",
-                        "fpin": "613f44e0-52fb-11ef-8213-d7a6f2e92a6a",
-                        "tpin": "628fe0c0-52fb-11ef-8213-d7a6f2e92a6a",
-                        "s": {"x": 206.25, "y": 282.5},
-                        "e": {"x": 399.25, "y": 201}
-                      },
-                      {
-                        "id": "62938a40-52fb-11ef-8213-d7a6f2e92a6a",
-                        "fpin": "628fe0c0-52fb-11ef-8213-d7a6f2e92a6a",
-                        "tpin": "6222a000-52fb-11ef-8213-d7a6f2e92a6a",
-                        "s": {"x": 609.25, "y": 231},
-                        "e": {"x": 331.5, "y": 489.25}
-                      },
-                      {
-                        "id": "69f7a140-52fb-11ef-8213-d7a6f2e92a6a",
-                        "fpin": "613f44e0-52fb-11ef-8213-d7a6f2e92a6a",
-                        "tpin": "628fe0c0-52fb-11ef-8213-d7a6f2e92a6a",
-                        "s": {"x": 206.25, "y": 282.5},
-                        "e": {"x": 399.25, "y": 231}
-                      }
-                    ],
-                    "cversion": "0.0.1",
-                    "version": "23432443"
-                  }));
-                },
-                child: Text("load")),
-          ],
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(
-            key: key,
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [Colors.red, Colors.black12, Colors.yellow])),
-            child: DeferredPointerHandler(
-              link: _deferredPointerLink,
-              child: InteractiveViewer(
-                boundaryMargin: const EdgeInsets.all(double.infinity),
-                scaleEnabled: true,
-                transformationController: controllerT,
-                onInteractionStart: (details) {
-                  initialControllerValue ??= controllerT.value.clone();
-                },
-                onInteractionUpdate: (details) {},
-                onInteractionEnd: (details) {},
-                child: Container(
-                  color: Colors.transparent,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    clipBehavior: Clip.none,
-                    children: [
-                      ..._connections.linkList.values.map((e) => CustomPaint(
-                            painter: ArrowPainter(from: e.start, to: e.end),
-                            child: Container(),
-                          )),
-                      ..._connections.boxList.values.map((e) => FlowContainer(
-                          id: e.id,
-                          inPins: e.inPins,
-                          outPins: e.outPins,
-                          initialPos: e.pos,
-                          key: Key(e.id),
-                          child: Container(
-                              constraints: BoxConstraints(maxWidth: 200),
-                              color: Colors.red,
-                              child: Column(
-                                children: [
-                                  ...e.data.map((e) => Row(
-                                        children: [
-                                          Text(
-                                              "${e.name} : ${e.value.toString()}"),
-                                        ],
-                                      ))
-                                    ..toList()
-                                ],
-                              ))))
-                    ],
-                  ),
+      Expanded(
+        flex: 1,
+        child: Container(
+          key: key,
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Colors.red, Colors.black12, Colors.yellow])),
+          child: DeferredPointerHandler(
+            link: _deferredPointerLink,
+            child: InteractiveViewer(
+              boundaryMargin: const EdgeInsets.all(double.infinity),
+              scaleEnabled: true,
+              transformationController: controllerT,
+              onInteractionStart: (details) {
+                initialControllerValue ??= controllerT.value.clone();
+              },
+              onInteractionUpdate: (details) {},
+              onInteractionEnd: (details) {},
+              child: Container(
+                color: Colors.transparent,
+                child: Stack(
+                  fit: StackFit.expand,
+                  clipBehavior: Clip.none,
+                  children: [
+                    ..._connections.linkList.values.map((e) => CustomPaint(
+                          painter: ArrowPainter(from: e.start, to: e.end),
+                          child: Container(),
+                        )),
+                    ..._connections.boxList.values.map((e) => FlowContainer(
+                        id: e.id,
+                        inPins: e.inPins,
+                        outPins: e.outPins,
+                        initialPos: e.pos,
+                        key: Key(e.id),
+                        child: Container(
+                            constraints: BoxConstraints(maxWidth: 200),
+                            color: Colors.red,
+                            child: Column(
+                              children: [
+                                ...e.data.map((e) => Row(
+                                      children: [
+                                        Text(
+                                            "${e.name} : ${e.value.toString()}"),
+                                      ],
+                                    ))
+                                  ..toList()
+                              ],
+                            ))))
+                  ],
                 ),
               ),
             ),
           ),
         ),
-      ]),
-    );
+      ),
+    ]);
   }
 }
 
