@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:chozo_ui_package/components/eval.dart';
+import 'package:chozo_ui_package/components/inputs/eval.dart';
 import 'package:flutter/material.dart';
 import 'package:defer_pointer/defer_pointer.dart';
-import 'package:uuid/uuid.dart';
 import 'connections.dart';
+
+import '../components/pins/pins.dart';
 
 final _deferredPointerLink = DeferredPointerHandlerLink();
 
@@ -34,24 +35,23 @@ class _ChozoFlowState extends State<ChozoFlow> {
   @override
   Widget build(BuildContext context) {
     return Column(mainAxisSize: MainAxisSize.min, children: [
-
       Row(
         children: [
           TextButton(
               onPressed: () {
                 controllerT.value = initialControllerValue!;
               },
-              child: Text("center")),
+              child: const Text("center")),
           TextButton(
               onPressed: () {
                 _connections.addNewBox();
               },
-              child: Text("add new")),
+              child: const Text("add new")),
           TextButton(
               onPressed: () {
                 log(json.encode(_connections.toJson()));
               },
-              child: Text("print")),
+              child: const Text("print")),
           TextButton(
               onPressed: () {
                 print(_connections.loadFlow({
@@ -142,10 +142,10 @@ class _ChozoFlowState extends State<ChozoFlow> {
                   "version": "23432443"
                 }));
               },
-              child: Text("load")),
+              child: const Text("load")),
         ],
       ),
-      EvalBox(onChange: print, onError: print),
+      const EvalBox(onChange: print, onError: print),
       Expanded(
         flex: 1,
         child: Container(
@@ -181,7 +181,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
                         initialPos: e.pos,
                         key: Key(e.id),
                         child: Container(
-                            constraints: BoxConstraints(maxWidth: 200),
+                            constraints: const BoxConstraints(maxWidth: 200),
                             color: Colors.red,
                             child: Column(
                               children: [
@@ -280,15 +280,7 @@ class _FlowContainerState extends State<FlowContainer> {
               ...inPins.map(
                 (e) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: FlowInPin(
-                    boxId: widget.id,
-                    pinId: e,
-                    parentKey: _key,
-                    parentOffset: _localPos,
-                    addInLink: (id) {
-                      _connections.boxList[widget.id]?.inLinks.add(id);
-                    },
-                  ),
+                  child: FlowInPin(boxId: widget.id),
                 ),
               )
             ],
@@ -315,13 +307,7 @@ class _FlowContainerState extends State<FlowContainer> {
                 (e) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: FlowOutPin(
-                    boxId: widget.id,
-                    pinId: e,
-                    parentKey: _key,
-                    parentOffset: _localPos,
-                    addOutLink: (id) {
-                      _connections.boxList[widget.id]?.outLinks.add(id);
-                    },
+                    boxId: widget.id
                   ),
                 ),
               ),
@@ -333,119 +319,9 @@ class _FlowContainerState extends State<FlowContainer> {
   }
 }
 
-class FlowOutPin extends StatefulWidget {
-  final String boxId, pinId;
-  final void Function(String) addOutLink;
-  final Offset parentOffset;
-  final GlobalKey parentKey;
-  const FlowOutPin(
-      {super.key,
-      required this.boxId,
-      required this.pinId,
-      required this.addOutLink,
-      required this.parentOffset,
-      required this.parentKey});
 
-  @override
-  State<FlowOutPin> createState() => _FlowOutPinState();
-}
 
-class _FlowOutPinState extends State<FlowOutPin> {
-  final Connections _connections = Connections.instance;
-  String _tempLinkId = const Uuid().v1();
-  final GlobalKey _key = GlobalKey();
 
-  @override
-  Widget build(BuildContext context) {
-    return Draggable<String>(
-      data: _tempLinkId,
-      rootOverlay: false,
-      onDragStarted: () {
-        final Offset pinPos = _connections.getPosOfElement(_key);
-        _connections.create(_tempLinkId, widget.boxId, Offset.zero, pinPos);
-      },
-      onDragUpdate: (details) {
-        _connections.create(
-            _tempLinkId, widget.boxId, details.delta, details.globalPosition);
-      },
-      onDragCompleted: () {
-        widget.addOutLink(_tempLinkId);
-        setState(() {
-          _tempLinkId = const Uuid().v1();
-        });
-      },
-      onDraggableCanceled: (velocity, offset) {
-        _connections.linkList.remove(_tempLinkId);
-      },
-      feedback: Container(
-        height: 10,
-        width: 10,
-        color: Colors.purple,
-      ),
-      child: Container(
-        alignment: Alignment.center,
-        height: 10,
-        width: 10,
-        color: Colors.purple,
-        child: SizedBox(
-          key: _key,
-        ),
-      ),
-    );
-  }
-}
-
-class FlowInPin extends StatefulWidget {
-  final String boxId, pinId;
-  final Offset parentOffset;
-  final GlobalKey parentKey;
-  final void Function(String) addInLink;
-  const FlowInPin(
-      {super.key,
-      required this.boxId,
-      required this.pinId,
-      required this.addInLink,
-      required this.parentOffset,
-      required this.parentKey});
-
-  @override
-  State<FlowInPin> createState() => _FlowInPinState();
-}
-
-class _FlowInPinState extends State<FlowInPin> {
-  final Connections _connections = Connections.instance;
-  final GlobalKey _key = GlobalKey();
-
-  @override
-  Widget build(BuildContext context) {
-    return DragTarget<String>(
-      onAcceptWithDetails: (details) {
-        widget.addInLink(details.data);
-        final Offset pinPos = _connections.getPosOfElement(_key);
-        _connections.onConnection(details.data, widget.boxId, pinPos);
-      },
-      builder: (context, candidateItems, rejectedItems) {
-        return Container(
-          height: 10,
-          width: 10,
-          alignment: Alignment.center,
-          color: Colors.yellowAccent,
-          child: SizedBox(
-            key: _key,
-          ),
-        );
-      },
-    );
-  }
-}
-
-class Pin {
-  final String boxID;
-  final String id;
-  GlobalKey key;
-
-  Pin({required this.boxID, required this.id, required this.key});
-}
 
 
 

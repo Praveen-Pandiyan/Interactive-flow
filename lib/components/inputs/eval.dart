@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../utils/validate_eval.dart';
+import '../../utils/validate_eval.dart';
 
 class EvalBox extends StatefulWidget {
   final Function(String) onChange, onError;

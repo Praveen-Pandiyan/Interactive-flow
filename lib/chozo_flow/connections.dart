@@ -238,7 +238,9 @@ class InputData {
               'text' || _ => DataType.text
             },
             value: data['value'] ?? '');
-
+  change(v){
+    value=v;
+  }
   toJson() {
     return {'name': name, 'type': type.name, 'value': value};
   }
