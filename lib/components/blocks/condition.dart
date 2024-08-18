@@ -1,3 +1,4 @@
+import 'package:chozo_ui_package/components/inputs/eval.dart';
 import 'package:flutter/material.dart';
 
 import '../../chozo_flow/connections.dart';
@@ -22,8 +23,7 @@ class _ConditionState extends State<Condition> {
   final Connections _connections = Connections.instance;
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Column(
+    return Column(
       children: [
         Row(
           children: [
@@ -38,9 +38,23 @@ class _ConditionState extends State<Condition> {
               boxId: widget.boxId,
               data: e,
             )),
-        FlowOutPin(boxId: widget.boxId),
-        FlowOutPin(boxId: widget.boxId)
+        Text("Evaluation"),
+        EvalBox(onChange: (s){print(s);}, onError: (e)=>print),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const Text("True"),
+            FlowOutPin(boxId: widget.boxId),
+          ],
+        ),
+        Row(
+           mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const Text("False"),
+            FlowOutPin(boxId: widget.boxId),
+          ],
+        )
       ],
-    ));
+    );
   }
 }

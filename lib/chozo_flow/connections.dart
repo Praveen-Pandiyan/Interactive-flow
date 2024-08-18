@@ -59,7 +59,7 @@ class Connections extends ChangeNotifier {
             InputData(name: "ema", type: DataType.number),
             InputData(name: "sma", type: DataType.number)
           ],
-          inPins: ["srfreg", "dewf"],
+          inPins: ["srfreg"],
           outPins: ["frwfef", "fer"],
           inLinks: [],
           outLinks: [],
@@ -238,9 +238,10 @@ class InputData {
               'text' || _ => DataType.text
             },
             value: data['value'] ?? '');
-  change(v){
-    value=v;
+  change(v) {
+    value = v;
   }
+
   toJson() {
     return {'name': name, 'type': type.name, 'value': value};
   }

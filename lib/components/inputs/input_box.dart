@@ -19,10 +19,12 @@ class _InputBoxState extends State<InputBox> {
         const SizedBox(
           width: 3,
         ),
-        TextField(
-          onChanged: (s) {
-            widget.data.change(s);
-          },
+        Expanded(
+          child: TextField(
+            onChanged: (s) {
+              widget.data.change(s);
+            },
+          ),
         )
       ],
     );

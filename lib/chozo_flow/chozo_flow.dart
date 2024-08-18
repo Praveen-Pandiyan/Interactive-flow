@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:chozo_ui_package/components/blocks/condition.dart';
 import 'package:chozo_ui_package/components/inputs/eval.dart';
 import 'package:flutter/material.dart';
 import 'package:defer_pointer/defer_pointer.dart';
@@ -180,20 +181,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
                         outPins: e.outPins,
                         initialPos: e.pos,
                         key: Key(e.id),
-                        child: Container(
-                            constraints: const BoxConstraints(maxWidth: 200),
-                            color: Colors.red,
-                            child: Column(
-                              children: [
-                                ...e.data.map((e) => Row(
-                                      children: [
-                                        Text(
-                                            "${e.name} : ${e.value.toString()}"),
-                                      ],
-                                    ))
-                                  ..toList()
-                              ],
-                            ))))
+                        ))
                   ],
                 ),
               ),
@@ -232,10 +220,8 @@ class FlowContainer extends StatefulWidget {
   final String id;
   final Offset initialPos;
   final List<String>? inPins, outPins;
-  final Widget child;
   const FlowContainer(
       {super.key,
-      required this.child,
       this.initialPos = Offset.zero,
       this.inPins,
       this.outPins,
@@ -271,49 +257,24 @@ class _FlowContainerState extends State<FlowContainer> {
       child: DeferPointer(
         link: _deferredPointerLink,
         paintOnTop: false,
-        child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          // todo: dynamic pins
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              ...inPins.map(
-                (e) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: FlowInPin(boxId: widget.id),
-                ),
-              )
-            ],
-          ),
-          GestureDetector(
-            onPanUpdate: (details) {
-              setState(() {
-                _localPos = _localPos + details.delta;
-              });
-              _connections.positionUpdate(
-                  widget.id,
-                  _localPos,
-                  details.delta,
-                  _connections.boxList[widget.id]!.inLinks,
-                  _connections.boxList[widget.id]?.outLinks);
-            },
-            child: widget.child,
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              ...outPins.map(
-                (e) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: FlowOutPin(
-                    boxId: widget.id
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ]),
+        child: GestureDetector(
+          onPanUpdate: (details) {
+            setState(() {
+              _localPos = _localPos + details.delta;
+            });
+            _connections.positionUpdate(
+                widget.id,
+                _localPos,
+                details.delta,
+                _connections.boxList[widget.id]!.inLinks,
+                _connections.boxList[widget.id]?.outLinks);
+          },
+          child: Container(
+            width: 100,
+           
+            color: Colors.red,
+            child: Condition(boxId: widget.id, inPins: inPins, outPins: outPins)),
+        ),
       ),
     );
   }
