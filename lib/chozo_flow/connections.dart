@@ -12,7 +12,10 @@ class Connections extends ChangeNotifier {
   late GlobalKey key;
   Map<String, Link> linkList = {};
   Map<String, Box> boxList = {};
-
+  String?  selectedId;
+  void refresh(){
+    notifyListeners();
+  }
   void create(String id, fromId, Offset delta, localPos) {
     if (linkList[id] == null) {
       linkList.addAll(
@@ -63,7 +66,8 @@ class Connections extends ChangeNotifier {
           outPins: ["frwfef", "fer"],
           inLinks: [],
           outLinks: [],
-          refId: "cdfc")
+          details: BoxDetails(name: "if", type: BoxType.conditional),
+          refId: "ifififififif")
     });
     notifyListeners();
   }
@@ -179,6 +183,7 @@ class Link {
 class Box {
   String id, refId;
   Offset pos;
+  BoxDetails details;
   List<String> inPins, outPins;
   List<String> inLinks, outLinks;
   List<InputData> data;
@@ -191,6 +196,7 @@ class Box {
       required this.inLinks,
       required this.outLinks,
       required this.data,
+      required this.details,
       required this.refId});
 
   Box.fromJson(json)
@@ -203,6 +209,7 @@ class Box {
                 (json['olinks'] as List).map((e) => e.toString()).toList(),
             refId: json['refId'],
             pos: toOffset(json['pos']),
+            details: BoxDetails.fromJson(json['details']),
             data: (json['data'] as List)
                 .map((e) => InputData.fromJson(e))
                 .toList());
@@ -215,6 +222,7 @@ class Box {
       'refId': refId,
       'ilinks': inLinks,
       'olinks': outLinks,
+      'details': details.toJson(),
       'pos': pos.toJson(),
       'data': data.map((e) => e.toJson()).toList()
     };
@@ -244,6 +252,33 @@ class InputData {
 
   toJson() {
     return {'name': name, 'type': type.name, 'value': value};
+  }
+}
+
+enum BoxType { conditional, external, order, start, alert, store }
+
+class BoxDetails {
+  final String name;
+  final Color color;
+  final BoxType type;
+  BoxDetails(
+      {required this.name, this.color = Colors.grey, required this.type});
+  BoxDetails.fromJson(data)
+      : this(
+          name: data['name'],
+          color: Colors.red,
+          type: switch (data['type']) {
+            'conditional' => BoxType.conditional,
+            'external' => BoxType.external,
+            'order' => BoxType.order,
+            'start' => BoxType.start,
+            'alert' => BoxType.alert,
+            'store' => BoxType.store,
+            'text' || _ => BoxType.start
+          },
+        );
+  toJson() {
+    return {'name': name, 'color': color, 'type': type.name};
   }
 }
 

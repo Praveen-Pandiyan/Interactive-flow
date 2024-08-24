@@ -4,6 +4,7 @@ import 'package:chozo_ui_package/components/blocks/condition.dart';
 import 'package:chozo_ui_package/components/inputs/eval.dart';
 import 'package:flutter/material.dart';
 import 'package:defer_pointer/defer_pointer.dart';
+import 'config_box.dart';
 import 'connections.dart';
 
 import '../components/pins/pins.dart';
@@ -147,6 +148,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
         ],
       ),
       const EvalBox(onChange: print, onError: print),
+
       Expanded(
         flex: 1,
         child: Container(
@@ -156,39 +158,51 @@ class _ChozoFlowState extends State<ChozoFlow> {
                   colors: [Colors.red, Colors.black12, Colors.yellow])),
           child: DeferredPointerHandler(
             link: _deferredPointerLink,
-            child: InteractiveViewer(
-              boundaryMargin: const EdgeInsets.all(double.infinity),
-              scaleEnabled: true,
-              transformationController: controllerT,
-              onInteractionStart: (details) {
-                initialControllerValue ??= controllerT.value.clone();
-              },
-              onInteractionUpdate: (details) {},
-              onInteractionEnd: (details) {},
-              child: Container(
-                color: Colors.transparent,
-                child: Stack(
-                  fit: StackFit.expand,
-                  clipBehavior: Clip.none,
-                  children: [
-                    ..._connections.linkList.values.map((e) => CustomPaint(
-                          painter: ArrowPainter(from: e.start, to: e.end),
-                          child: Container(),
-                        )),
-                    ..._connections.boxList.values.map((e) => FlowContainer(
-                        id: e.id,
-                        inPins: e.inPins,
-                        outPins: e.outPins,
-                        initialPos: e.pos,
-                        key: Key(e.id),
-                        ))
-                  ],
+            child: Stack(
+              children: [
+                InteractiveViewer(
+                  boundaryMargin: const EdgeInsets.all(double.infinity),
+                  scaleEnabled: true,
+                  transformationController: controllerT,
+                  onInteractionStart: (details) {
+                    initialControllerValue ??= controllerT.value.clone();
+                  },
+                  onInteractionUpdate: (details) {},
+                  onInteractionEnd: (details) {},
+                  child: Container(
+                    color: Colors.transparent,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      clipBehavior: Clip.none,
+                      children: [
+                        ..._connections.linkList.values.map((e) => CustomPaint(
+                              painter: ArrowPainter(from: e.start, to: e.end),
+                              child: Container(),
+                            )),
+                        ..._connections.boxList.values.map((e) => FlowContainer(
+                              id: e.id,
+                              inPins: e.inPins,
+                              outPins: e.outPins,
+                              initialPos: e.pos,
+                              key: Key(e.id),
+                            )),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+                if (_connections.selectedId != null)
+                  Positioned(
+                      top: 0,
+                      right: 0,
+                      child: ConfigBox(
+                        details: _connections.boxList[_connections.selectedId]!,
+                      ))
+              ],
             ),
           ),
         ),
       ),
+      // Box config
     ]);
   }
 }
@@ -258,6 +272,10 @@ class _FlowContainerState extends State<FlowContainer> {
         link: _deferredPointerLink,
         paintOnTop: false,
         child: GestureDetector(
+          onDoubleTap: () {
+            _connections.selectedId = widget.id;
+            _connections.refresh();
+          },
           onPanUpdate: (details) {
             setState(() {
               _localPos = _localPos + details.delta;
@@ -270,10 +288,9 @@ class _FlowContainerState extends State<FlowContainer> {
                 _connections.boxList[widget.id]?.outLinks);
           },
           child: Container(
-            width: 100,
-           
-            color: Colors.red,
-            child: Condition(boxId: widget.id, inPins: inPins, outPins: outPins)),
+              color: Colors.red,
+              child: Condition(
+                  boxId: widget.id, inPins: inPins, outPins: outPins)),
         ),
       ),
     );
