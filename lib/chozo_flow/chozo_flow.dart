@@ -156,11 +156,11 @@ class _ChozoFlowState extends State<ChozoFlow> {
           decoration: const BoxDecoration(
               gradient: LinearGradient(
                   colors: [Colors.red, Colors.black12, Colors.yellow])),
-          child: DeferredPointerHandler(
-            link: _deferredPointerLink,
-            child: Stack(
-              children: [
-                InteractiveViewer(
+          child: Stack(
+            children: [
+              DeferredPointerHandler(
+                link: _deferredPointerLink,
+                child: InteractiveViewer(
                   boundaryMargin: const EdgeInsets.all(double.infinity),
                   scaleEnabled: true,
                   transformationController: controllerT,
@@ -190,18 +190,17 @@ class _ChozoFlowState extends State<ChozoFlow> {
                     ),
                   ),
                 ),
-                if (_connections.selectedId != null)
-                  Positioned(
-                      top: 0,
-                      right: 0,
-                      child: ConfigBox(
-                        details: _connections.boxList[_connections.selectedId]!,
-                      ))
-              ],
-            ),
+              ),
+              if (_connections.selectedId != null)
+                Center(
+                    child: ConfigBox(
+                  details: _connections.boxList[_connections.selectedId]!,
+                ))
+            ],
           ),
         ),
       ),
+
       // Box config
     ]);
   }

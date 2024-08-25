@@ -4,8 +4,8 @@ import 'package:uuid/uuid.dart';
 import '../../chozo_flow/connections.dart';
 
 class FlowOutPin extends StatefulWidget {
-  final String boxId;
-  const FlowOutPin({super.key, required this.boxId});
+  final String boxId, pinId;
+  const FlowOutPin({super.key, required this.pinId, required this.boxId});
 
   @override
   State<FlowOutPin> createState() => _FlowOutPinState();
@@ -23,14 +23,14 @@ class _FlowOutPinState extends State<FlowOutPin> {
       rootOverlay: false,
       onDragStarted: () {
         final Offset pinPos = _connections.getPosOfElement(_key);
-        _connections.create(_tempLinkId, widget.boxId, Offset.zero, pinPos);
+        _connections.create(_tempLinkId, widget.pinId,widget.boxId, Offset.zero, pinPos);
       },
       onDragUpdate: (details) {
         _connections.create(
-            _tempLinkId, widget.boxId, details.delta, details.globalPosition);
+            _tempLinkId, widget.pinId,widget.boxId, details.delta, details.globalPosition);
       },
       onDragCompleted: () {
-        _connections.boxList[widget.boxId]?.outLinks.add(_tempLinkId);
+        _connections.boxList[widget.pinId]?.outLinks.add(_tempLinkId);
         setState(() {
           _tempLinkId = const Uuid().v1();
         });

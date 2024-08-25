@@ -34,24 +34,21 @@ class _ConditionState extends State<Condition> {
             Text(" :Value")
           ],
         ),
-        // ..._connections.boxList[widget.boxId]!.data.map((e) => InputBox(
-        //       boxId: widget.boxId,
-        //       data: e,
-        //     )),
+        ..._connections.boxList[widget.boxId]!.data
+            .map((e) => Text("${e.name}: ${e.value}")),
         Text("Evaluation"),
-        
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             const Text("True"),
-            FlowOutPin(boxId: widget.boxId),
+            FlowOutPin( boxId: widget.boxId,pinId: widget.outPins.first),
           ],
         ),
         Row(
-           mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             const Text("False"),
-            FlowOutPin(boxId: widget.boxId),
+            FlowOutPin( boxId: widget.boxId,pinId: widget.outPins[1]),
           ],
         )
       ],

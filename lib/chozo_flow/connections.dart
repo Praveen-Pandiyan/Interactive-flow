@@ -12,14 +12,21 @@ class Connections extends ChangeNotifier {
   late GlobalKey key;
   Map<String, Link> linkList = {};
   Map<String, Box> boxList = {};
-  String?  selectedId;
-  void refresh(){
+  String? selectedId;
+  void refresh() {
     notifyListeners();
   }
-  void create(String id, fromId, Offset delta, localPos) {
+
+  void create(String id, fromPin, fromBox, Offset delta, localPos) {
     if (linkList[id] == null) {
-      linkList.addAll(
-          {id: Link(id: id, fromPin: fromId, start: localPos, end: localPos)});
+      linkList.addAll({
+        id: Link(
+            id: id,
+            fromPin: fromPin,
+            fromBox: fromBox,
+            start: localPos,
+            end: localPos)
+      });
     } else {
       positionUpdate(null, null, delta, [id], []);
     }
@@ -45,18 +52,19 @@ class Connections extends ChangeNotifier {
     }
   }
 
-  void onConnection(String id, toId, Offset pos) {
+  void onConnection(String id, toId, boxId, Offset pos) {
     linkList[id]
       ?..end = pos
-      ..toPin = toId;
+      ..toPin = toId
+      ..toBox = boxId;
     notifyListeners();
   }
 
   void addNewBox() {
-    String _boxId = const Uuid().v1();
+    String boxId = const Uuid().v1();
     boxList.addAll({
-      _boxId: Box(
-          id: _boxId,
+      boxId: Box(
+          id: boxId,
           pos: Offset.zero,
           data: [
             InputData(name: "ema", type: DataType.number),
@@ -145,14 +153,16 @@ class AlgoData {
 }
 
 class Link {
-  String id, fromPin;
-  String? toPin;
+  String id, fromPin, fromBox;
+  String? toPin, toBox;
   Offset start, end;
 
   Link({
     required this.id,
     required this.fromPin,
+    required this.fromBox,
     this.toPin,
+    this.toBox,
     this.start = Offset.zero,
     this.end = Offset.zero,
   });
@@ -160,7 +170,9 @@ class Link {
       : this(
             id: json['id'],
             fromPin: json['fpin'],
+            fromBox: json['fbox'],
             toPin: json['tpin'],
+            toBox: json['tbox'],
             start: toOffset(json['s']),
             end: toOffset(json['e']));
 
@@ -168,7 +180,9 @@ class Link {
     return {
       'id': id,
       'fpin': fromPin,
+      'fbox': fromBox,
       'tpin': toPin,
+      'tbox': toBox,
       's': start.toJson(),
       'e': end.toJson()
     };
@@ -258,8 +272,8 @@ class InputData {
 enum BoxType { conditional, external, order, start, alert, store }
 
 class BoxDetails {
-  final String name;
-  final Color color;
+  String name;
+  Color color;
   final BoxType type;
   BoxDetails(
       {required this.name, this.color = Colors.grey, required this.type});

@@ -24,7 +24,7 @@ class _FlowInPinState extends State<FlowInPin> {
       onAcceptWithDetails: (details) {
          _connections.boxList[widget.boxId]?.inLinks.add(details.data);
         final Offset pinPos = _connections.getPosOfElement(_key);
-        _connections.onConnection(details.data, widget.boxId, pinPos);
+        _connections.onConnection(details.data, widget.pinId,widget.boxId, pinPos);
       },
       builder: (context, candidateItems, rejectedItems) {
         return Container(

@@ -1,3 +1,4 @@
+
 import 'package:chozo_ui_package/chozo_flow/connections.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +12,7 @@ class InputBox extends StatefulWidget {
 }
 
 class _InputBoxState extends State<InputBox> {
+  final Connections _connections = Connections.instance;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -21,20 +23,22 @@ class _InputBoxState extends State<InputBox> {
         ),
         Expanded(
           child: Padding(
+
             padding: const EdgeInsets.all(2.0),
-            child: TextField(
-              decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: OutlineInputBorder(
-                      gapPadding: 1,
-                      borderSide: BorderSide(color: Colors.black45)),
-                  fillColor: Colors.amberAccent,
-                  isDense: true,
-                  filled: true),
-              onChanged: (s) {
-                widget.data.change(s);
-              },
+            child: ClipRRect(
+              borderRadius:  BorderRadius.circular(6),
+              child: TextFormField(
+                initialValue: widget.data.value,
+                decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    fillColor: Color.fromARGB(127, 221, 221, 221),
+                    isDense: true,
+                    filled: true),
+                onChanged: (s) {
+                  widget.data.change(s);
+                  _connections.refresh();
+                },
+              ),
             ),
           ),
         )
