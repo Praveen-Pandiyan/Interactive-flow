@@ -20,10 +20,22 @@ class _InputBoxState extends State<InputBox> {
           width: 3,
         ),
         Expanded(
-          child: TextField(
-            onChanged: (s) {
-              widget.data.change(s);
-            },
+          child: Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: TextField(
+              decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: OutlineInputBorder(
+                      gapPadding: 1,
+                      borderSide: BorderSide(color: Colors.black45)),
+                  fillColor: Colors.amberAccent,
+                  isDense: true,
+                  filled: true),
+              onChanged: (s) {
+                widget.data.change(s);
+              },
+            ),
           ),
         )
       ],
