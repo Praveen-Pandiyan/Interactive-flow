@@ -180,11 +180,11 @@ class _ChozoFlowState extends State<ChozoFlow> {
                               child: Container(),
                             )),
                         ..._connections.boxList.values.map((e) => FlowContainer(
-                              id: e.id,
+                              id: e.details.id,
                               inPins: e.inPins,
                               outPins: e.outPins,
-                              initialPos: e.pos,
-                              key: Key(e.id),
+                              initialPos: e.details.pos,
+                              key: Key(e.details.id),
                             )),
                       ],
                     ),
@@ -194,7 +194,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
               if (_connections.selectedId != null)
                 Center(
                     child: ConfigBox(
-                  details: _connections.boxList[_connections.selectedId]!,
+                  box: _connections.boxList[_connections.selectedId]!,
                 ))
             ],
           ),

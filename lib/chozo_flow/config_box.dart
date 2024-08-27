@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import '../components/inputs/input_box.dart';
 
 class ConfigBox extends StatefulWidget {
-  final Box details;
-  const ConfigBox({super.key, required this.details});
+  final Box box;
+  const ConfigBox({super.key, required this.box});
 
   @override
   State<ConfigBox> createState() => _ConfigBoxState();
@@ -18,7 +18,7 @@ class _ConfigBoxState extends State<ConfigBox> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      key: Key(widget.details.id),
+      key: Key(widget.box.details.id),
       constraints: BoxConstraints(
         maxHeight: MediaQuery.sizeOf(context).height,
         maxWidth: min(300, MediaQuery.sizeOf(context).width *.75),
@@ -39,16 +39,16 @@ class _ConfigBoxState extends State<ConfigBox> {
                     child: Column(
                       children: [
                         TextFormField(
-                          initialValue: widget.details.details.name,
+                          initialValue: widget.box.details.name,
                           decoration: const InputDecoration(
                               isDense: true, border: InputBorder.none),
                           onChanged: (value) {
-                            _connections.boxList[widget.details.id]!.details
+                            _connections.boxList[widget.box.details.id]!.details
                                 .name = value;
                           },
                         ),
                         Text(
-                          "id: ${widget.details.id}",
+                          "id: ${widget.box.details.id}",
                           overflow: TextOverflow.fade,
                           softWrap: false,
                           maxLines: 1,
@@ -76,8 +76,8 @@ class _ConfigBoxState extends State<ConfigBox> {
                 style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),
               ),
                const SizedBox(height: 10),
-              ...widget.details.data.map((e) => InputBox(
-                    boxId: widget.details.id,
+              ...widget.box.data.map((e) => InputBox(
+                    boxId: widget.box.details.id,
                     data: e,
                   )),
               const SizedBox(height: 20),
@@ -90,13 +90,17 @@ class _ConfigBoxState extends State<ConfigBox> {
                 "From",
                 style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12),
               ),
-              ...widget.details.inLinks.map((e)=>Text(e)),
+              ...widget.box.inPins.map((e)=>Column(children: [
+                ..._connections.linkList.values.where((l)=>l.toPin==e).map((e)=>Text(e.fromBox))
+              ],)),
               const SizedBox(height: 10),
               const Text(
                 "To",
                 style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12),
-              ),
-              ...widget.details.outLinks.map((e)=>Text(e))
+              ),  
+                ...widget.box.outPins.map((e)=>Column(children: [
+                ..._connections.linkList.values.where((l)=>l.fromPin==e).map((e)=>Text(e.toBox!))
+              ],)),
             ],
           ),
         ),

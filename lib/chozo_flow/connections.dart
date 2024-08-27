@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import '../utils/extensions/offset.dart';
@@ -48,7 +49,7 @@ class Connections extends ChangeNotifier {
     }
     notifyListeners();
     if (boxId != null) {
-      boxList[boxId]?.pos = pos!;
+      boxList[boxId]?.details.pos = pos!;
     }
   }
 
@@ -60,29 +61,39 @@ class Connections extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeConnection(String id) {
+    boxList[linkList[id]!.fromBox]?.outLinks.remove(id);
+    boxList[linkList[id]!.toBox]?.inLinks.remove(id);
+    linkList.remove(id);
+    notifyListeners();
+  }
+
   void addNewBox() {
     String boxId = const Uuid().v1();
     boxList.addAll({
       boxId: Box(
-          id: boxId,
-          pos: Offset.zero,
-          data: [
-            InputData(name: "ema", type: DataType.number),
-            InputData(name: "sma", type: DataType.number)
-          ],
-          inPins: ["srfreg"],
-          outPins: ["frwfef", "fer"],
-          inLinks: [],
-          outLinks: [],
-          details: BoxDetails(name: "if", type: BoxType.conditional),
-          refId: "ifififififif")
+        data: [
+          InputData(name: "ema", type: DataType.number),
+          InputData(name: "sma", type: DataType.number)
+        ],
+        inPins: ["srfreg"],
+        outPins: ["frwfef", "fer"],
+        inLinks: [],
+        outLinks: [],
+        details: BoxDetails(
+            id: boxId,
+            pos: Offset.zero,
+            name: "if",
+            type: BoxType.conditional,
+            refId: "ifififififif"),
+      )
     });
     notifyListeners();
   }
 
   loadFlow(Map<String, dynamic> json) {
     final data = AlgoData.fromJson(json);
-    boxList.addEntries(data.boxs.map((e) => MapEntry(e.id, e)));
+    boxList.addEntries(data.boxs.map((e) => MapEntry(e.details.id, e)));
     linkList.addEntries(data.links.map((e) => MapEntry(e.id, e)));
     notifyListeners();
   }
@@ -195,34 +206,26 @@ class Link {
 }
 
 class Box {
-  String id, refId;
-  Offset pos;
   BoxDetails details;
   List<String> inPins, outPins;
   List<String> inLinks, outLinks;
   List<InputData> data;
 
   Box(
-      {required this.id,
-      required this.pos,
-      required this.inPins,
+      {required this.inPins,
       required this.outPins,
       required this.inLinks,
       required this.outLinks,
       required this.data,
-      required this.details,
-      required this.refId});
+      required this.details});
 
   Box.fromJson(json)
       : this(
-            id: json['id'],
             inPins: json['ipin'],
             outPins: json['opin'],
             inLinks: (json['ilinks'] as List).map((e) => e.toString()).toList(),
             outLinks:
                 (json['olinks'] as List).map((e) => e.toString()).toList(),
-            refId: json['refId'],
-            pos: toOffset(json['pos']),
             details: BoxDetails.fromJson(json['details']),
             data: (json['data'] as List)
                 .map((e) => InputData.fromJson(e))
@@ -230,14 +233,11 @@ class Box {
 
   toJson() {
     return {
-      'id': id,
       'ipin': inPins,
       'opin': outPins,
-      'refId': refId,
       'ilinks': inLinks,
       'olinks': outLinks,
       'details': details.toJson(),
-      'pos': pos.toJson(),
       'data': data.map((e) => e.toJson()).toList()
     };
   }
@@ -272,15 +272,25 @@ class InputData {
 enum BoxType { conditional, external, order, start, alert, store }
 
 class BoxDetails {
+  final String id, refId;
+  Offset pos;
   String name;
   Color color;
   final BoxType type;
   BoxDetails(
-      {required this.name, this.color = Colors.grey, required this.type});
+      {required this.id,
+      required this.refId,
+      required this.name,
+      required this.pos,
+      this.color = Colors.grey,
+      required this.type});
   BoxDetails.fromJson(data)
       : this(
           name: data['name'],
+          id: data['id'],
           color: Colors.red,
+          refId: data['refId'],
+          pos: toOffset(data['pos']),
           type: switch (data['type']) {
             'conditional' => BoxType.conditional,
             'external' => BoxType.external,
@@ -292,7 +302,14 @@ class BoxDetails {
           },
         );
   toJson() {
-    return {'name': name, 'color': color, 'type': type.name};
+    return {
+      'id': id,
+      'name': name,
+      'color': color,
+      'type': type.name,
+      'refId': refId,
+      'pos': pos.toJson(),
+    };
   }
 }
 
