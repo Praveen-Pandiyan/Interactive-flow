@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import '../utils/extensions/offset.dart';
@@ -76,6 +75,7 @@ class Connections extends ChangeNotifier {
           InputData(name: "ema", type: DataType.number),
           InputData(name: "sma", type: DataType.number)
         ],
+        userVar: [],
         inPins: ["srfreg"],
         outPins: ["frwfef", "fer"],
         inLinks: [],
@@ -210,6 +210,7 @@ class Box {
   List<String> inPins, outPins;
   List<String> inLinks, outLinks;
   List<InputData> data;
+  List<UserVarData>? userVar;
 
   Box(
       {required this.inPins,
@@ -217,6 +218,7 @@ class Box {
       required this.inLinks,
       required this.outLinks,
       required this.data,
+      this.userVar,
       required this.details});
 
   Box.fromJson(json)
@@ -229,6 +231,9 @@ class Box {
             details: BoxDetails.fromJson(json['details']),
             data: (json['data'] as List)
                 .map((e) => InputData.fromJson(e))
+                .toList(),
+            userVar: (json['userVar'] as List)
+                .map((e) => UserVarData.fromJson(e))
                 .toList());
 
   toJson() {
@@ -238,12 +243,13 @@ class Box {
       'ilinks': inLinks,
       'olinks': outLinks,
       'details': details.toJson(),
-      'data': data.map((e) => e.toJson()).toList()
+      'data': data.map((e) => e.toJson()).toList(),
+      'userVar': userVar?.map((e) => e.toJson()).toList()
     };
   }
 }
 
-enum DataType { number, text, color }
+enum DataType { number, text, color, eval }
 
 class InputData {
   final String name;
@@ -266,6 +272,44 @@ class InputData {
 
   toJson() {
     return {'name': name, 'type': type.name, 'value': value};
+  }
+}
+
+class UserVarData {
+  final String id;
+  String name;
+  DataType type;
+  dynamic value;
+
+  UserVarData(
+      {required this.name,
+      required this.type,
+      this.value = '',
+      required this.id});
+  UserVarData.fromJson(data)
+      : this(
+            id: data['id'],
+            name: data['name'],
+            type: switch (data['type']) {
+              'number' => DataType.number,
+              'color' => DataType.color,
+              'text' || _ => DataType.text
+            },
+            value: data['value'] ?? '');
+  changeName(String v) {
+    name = v;
+  }
+
+  changeType(DataType v) {
+    type = v;
+  }
+
+  changeValue(v) {
+    value = v;
+  }
+
+  toJson() {
+    return {'id': id, 'name': name, 'type': type.name, 'value': value};
   }
 }
 

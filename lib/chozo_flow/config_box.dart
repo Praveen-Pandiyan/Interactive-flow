@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:chozo_ui_package/chozo_flow/connections.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
+import 'package:uuid/v1.dart';
 
 import '../components/inputs/input_box.dart';
 
@@ -21,7 +23,7 @@ class _ConfigBoxState extends State<ConfigBox> {
       key: Key(widget.box.details.id),
       constraints: BoxConstraints(
         maxHeight: MediaQuery.sizeOf(context).height,
-        maxWidth: min(300, MediaQuery.sizeOf(context).width *.75),
+        maxWidth: min(300, MediaQuery.sizeOf(context).width * .75),
       ),
       margin: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
@@ -32,6 +34,10 @@ class _ConfigBoxState extends State<ConfigBox> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                widget.box.details.id,
+                style: TextStyle(fontSize: 5),
+              ),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -75,9 +81,11 @@ class _ConfigBoxState extends State<ConfigBox> {
                 "Inputs",
                 style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),
               ),
-               const SizedBox(height: 10),
+              const SizedBox(height: 10),
+              if (widget.box.userVar != null)
+                UserDefindInps(boxId: widget.box.details.id),
+              const SizedBox(height: 10),
               ...widget.box.data.map((e) => InputBox(
-                    boxId: widget.box.details.id,
                     data: e,
                   )),
               const SizedBox(height: 20),
@@ -90,21 +98,63 @@ class _ConfigBoxState extends State<ConfigBox> {
                 "From",
                 style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12),
               ),
-              ...widget.box.inPins.map((e)=>Column(children: [
-                ..._connections.linkList.values.where((l)=>l.toPin==e).map((e)=>Text(e.fromBox))
-              ],)),
+              ...widget.box.inPins.map((e) => Column(
+                    children: [
+                      ..._connections.linkList.values
+                          .where((l) => l.toPin == e)
+                          .map((e) => Text(e.fromBox))
+                    ],
+                  )),
               const SizedBox(height: 10),
               const Text(
                 "To",
                 style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12),
-              ),  
-                ...widget.box.outPins.map((e)=>Column(children: [
-                ..._connections.linkList.values.where((l)=>l.fromPin==e).map((e)=>Text(e.toBox!))
-              ],)),
+              ),
+              ...widget.box.outPins.map((e) => Column(
+                    children: [
+                      ..._connections.linkList.values
+                          .where((l) => l.fromPin == e)
+                          .map((e) => Text(e.toBox!))
+                    ],
+                  )),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class UserDefindInps extends StatefulWidget {
+  final String boxId;
+  const UserDefindInps({super.key, required this.boxId});
+
+  @override
+  State<UserDefindInps> createState() => _UserDefindInpsState();
+}
+
+class _UserDefindInpsState extends State<UserDefindInps> {
+  final Connections _connections = Connections.instance;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        if (_connections.boxList[widget.boxId]?.userVar != null)
+          ...?_connections.boxList[widget.boxId]!.userVar
+              ?.map((e) => UserVarBox(data: e, boxId: widget.boxId,)),
+        InkWell(
+            onTap: () {
+              final i=_connections.boxList[widget.boxId]!.userVar?.length;
+              _connections.boxList[widget.boxId]!.userVar
+                  ?.add(UserVarData(name: "var${i??1}", type: DataType.text, id: const Uuid().v1()));
+                  _connections.refresh();
+            },
+            child: Container(
+              child: Row(
+                children: [Icon(Icons.add), Text("add")],
+              ),
+            ))
+      ],
     );
   }
 }
