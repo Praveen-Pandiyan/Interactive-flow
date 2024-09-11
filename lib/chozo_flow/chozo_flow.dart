@@ -4,10 +4,9 @@ import 'package:chozo_ui_package/components/blocks/condition.dart';
 import 'package:chozo_ui_package/components/inputs/eval.dart';
 import 'package:flutter/material.dart';
 import 'package:defer_pointer/defer_pointer.dart';
+import '../components/pins/pins.dart';
 import 'config_box.dart';
 import 'connections.dart';
-
-import '../components/pins/pins.dart';
 
 final _deferredPointerLink = DeferredPointerHandlerLink();
 
@@ -270,26 +269,57 @@ class _FlowContainerState extends State<FlowContainer> {
       child: DeferPointer(
         link: _deferredPointerLink,
         paintOnTop: false,
-        child: GestureDetector(
-          onDoubleTap: () {
-            _connections.selectedId = widget.id;
-            _connections.refresh();
-          },
-          onPanUpdate: (details) {
-            setState(() {
-              _localPos = _localPos + details.delta;
-            });
-            _connections.positionUpdate(
-                widget.id,
-                _localPos,
-                details.delta,
-                _connections.boxList[widget.id]!.inLinks,
-                _connections.boxList[widget.id]?.outLinks);
-          },
-          child: Container(
-              color: Colors.red,
-              child: Condition(
-                  boxId: widget.id, inPins: inPins, outPins: outPins)),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          
+          children: [
+            Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...?widget.inPins?.map((e) => FlowInPin(
+                    boxId: widget.id,
+                    pinId: e,
+                  )),
+            ],
+          ),
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+            
+              onDoubleTap: () {
+                _connections.selectedId = widget.id;
+                _connections.refresh();
+              },
+              onPanUpdate: (details) {
+                setState(() {
+                  _localPos = _localPos + details.delta;
+                });
+                _connections.positionUpdate(
+                    widget.id,
+                    _localPos,
+                    details.delta,
+                    _connections.boxList[widget.id]!.inLinks,
+                    _connections.boxList[widget.id]?.outLinks);
+                
+              },
+              child: Container(
+                  color: Colors.red,
+                  child: Condition(
+                      boxId: widget.id, inPins: inPins, outPins: outPins)),
+            ),
+            Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...?widget.outPins?.map((e) => FlowOutPin(
+                    boxId: widget.id,
+                    pinId: e,
+                  )),
+            ],
+          )
+          ],
         ),
       ),
     );

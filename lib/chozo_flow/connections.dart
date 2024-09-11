@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import '../utils/extensions/offset.dart';
@@ -46,10 +48,11 @@ class Connections extends ChangeNotifier {
         linkList[e]?.start += delta;
       } else {}
     }
-    notifyListeners();
+  
     if (boxId != null) {
       boxList[boxId]?.details.pos = pos!;
     }
+      notifyListeners();
   }
 
   void onConnection(String id, toId, boxId, Offset pos) {

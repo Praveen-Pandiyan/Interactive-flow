@@ -1,9 +1,6 @@
-import 'package:chozo_ui_package/components/inputs/eval.dart';
 import 'package:flutter/material.dart';
 
 import '../../chozo_flow/connections.dart';
-import '../inputs/input_box.dart';
-import '../pins/pins.dart';
 
 class Condition extends StatefulWidget {
   final String boxId;
@@ -23,35 +20,18 @@ class _ConditionState extends State<Condition> {
   final Connections _connections = Connections.instance;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
+    return Stack(clipBehavior: Clip.none, children: [
+      Container(
+        child: Column(
           children: [
-            ...widget.inPins.map((e) => FlowInPin(
-                  boxId: widget.boxId,
-                  pinId: e,
-                )),
-            Text(" :Value")
+            ..._connections.boxList[widget.boxId]!.data
+                .map((e) => Text("${e.name}: ${e.value}")),
+            Text("Evaluation"),
+         
           ],
         ),
-        ..._connections.boxList[widget.boxId]!.data
-            .map((e) => Text("${e.name}: ${e.value}")),
-        Text("Evaluation"),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            const Text("True"),
-            FlowOutPin( boxId: widget.boxId,pinId: widget.outPins.first),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            const Text("False"),
-            FlowOutPin( boxId: widget.boxId,pinId: widget.outPins[1]),
-          ],
-        )
-      ],
-    );
+      ),
+     
+    ]);
   }
 }

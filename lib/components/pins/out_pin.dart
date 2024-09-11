@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -29,8 +31,8 @@ class _FlowOutPinState extends State<FlowOutPin> {
         _connections.create(
             _tempLinkId, widget.pinId,widget.boxId, details.delta, details.globalPosition);
       },
-      onDragCompleted: () {
-        _connections.boxList[widget.pinId]?.outLinks.add(_tempLinkId);
+      onDragCompleted: () { 
+        _connections.boxList[widget.boxId]?.outLinks.add(_tempLinkId);
         setState(() {
           _tempLinkId = const Uuid().v1();
         });
