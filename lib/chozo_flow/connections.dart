@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import '../utils/extensions/offset.dart';
@@ -14,7 +12,7 @@ class Connections extends ChangeNotifier {
   late GlobalKey key;
   Map<String, Link> linkList = {};
   Map<String, Box> boxList = {};
-  String? selectedId;
+  String? selectedId,secondarySelectedId;
   void refresh() {
     notifyListeners();
   }
@@ -86,6 +84,7 @@ class Connections extends ChangeNotifier {
         details: BoxDetails(
             id: boxId,
             pos: Offset.zero,
+            color: Colors.white,
             name: "if",
             type: BoxType.conditional,
             refId: "ifififififif"),

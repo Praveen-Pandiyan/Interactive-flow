@@ -20,18 +20,28 @@ class _ConditionState extends State<Condition> {
   final Connections _connections = Connections.instance;
   @override
   Widget build(BuildContext context) {
-    return Stack(clipBehavior: Clip.none, children: [
-      Container(
-        child: Column(
-          children: [
-            ..._connections.boxList[widget.boxId]!.data
-                .map((e) => Text("${e.name}: ${e.value}")),
-            Text("Evaluation"),
-         
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (_connections.boxList[widget.boxId]!.userVar != null) ...[
+            Text(
+              "Variables",
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            ...?_connections.boxList[widget.boxId]!.userVar?.map((e) => Text(
+                  "${e.name}: ${e.value}",
+                  style: Theme.of(context).textTheme.labelSmall,
+                )),
           ],
-        ),
+          const SizedBox(height: 10),
+          ..._connections.boxList[widget.boxId]!.data.map((e) => Text(
+              "${e.name}: ${e.value}",
+              style: Theme.of(context).textTheme.labelSmall)),
+    
+        ],
       ),
-     
-    ]);
+    );
   }
 }

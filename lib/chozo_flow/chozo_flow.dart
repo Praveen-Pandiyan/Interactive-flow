@@ -168,25 +168,22 @@ class _ChozoFlowState extends State<ChozoFlow> {
                   },
                   onInteractionUpdate: (details) {},
                   onInteractionEnd: (details) {},
-                  child: Container(
-                    color: Colors.transparent,
-                    child: Stack(
-                      fit: StackFit.expand,
-                      clipBehavior: Clip.none,
-                      children: [
-                        ..._connections.linkList.values.map((e) => CustomPaint(
-                              painter: ArrowPainter(from: e.start, to: e.end),
-                              child: Container(),
-                            )),
-                        ..._connections.boxList.values.map((e) => FlowContainer(
-                              id: e.details.id,
-                              inPins: e.inPins,
-                              outPins: e.outPins,
-                              initialPos: e.details.pos,
-                              key: Key(e.details.id),
-                            )),
-                      ],
-                    ),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    clipBehavior: Clip.none,
+                    children: [
+                      ..._connections.linkList.values.map((e) => CustomPaint(
+                            painter: ArrowPainter(from: e.start, to: e.end),
+                            child: const SizedBox(),
+                          )),
+                      ..._connections.boxList.values.map((e) => FlowContainer(
+                            id: e.details.id,
+                            inPins: e.inPins,
+                            outPins: e.outPins,
+                            initialPos: e.details.pos,
+                            key: Key(e.details.id),
+                          )),
+                    ],
                   ),
                 ),
               ),
@@ -250,6 +247,7 @@ class _FlowContainerState extends State<FlowContainer> {
   // these are pin / edges for this node
   List<String> inPins = [], outPins = [];
 // temp
+
   @override
   void initState() {
     _localPos = widget.initialPos;
@@ -270,23 +268,28 @@ class _FlowContainerState extends State<FlowContainer> {
         link: _deferredPointerLink,
         paintOnTop: false,
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ...?widget.inPins?.map((e) => FlowInPin(
-                    boxId: widget.id,
-                    pinId: e,
-                  )),
-            ],
-          ),
+            Padding(
+              padding: const EdgeInsets.only(top: 12.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ...?widget.inPins?.map((e) => FlowInPin(
+                        boxId: widget.id,
+                        pinId: e,
+                      )),
+                ],
+              ),
+            ),
             GestureDetector(
               behavior: HitTestBehavior.opaque,
-            
+              onTap: () {
+                _connections.secondarySelectedId = widget.id;
+                _connections.refresh();
+              },
               onDoubleTap: () {
                 _connections.selectedId = widget.id;
                 _connections.refresh();
@@ -301,24 +304,58 @@ class _FlowContainerState extends State<FlowContainer> {
                     details.delta,
                     _connections.boxList[widget.id]!.inLinks,
                     _connections.boxList[widget.id]?.outLinks);
-                
               },
               child: Container(
-                  color: Colors.red,
-                  child: Condition(
-                      boxId: widget.id, inPins: inPins, outPins: outPins)),
-            ),
-            Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ...?widget.outPins?.map((e) => FlowOutPin(
-                    boxId: widget.id,
-                    pinId: e,
+                  width: 100,
+                  decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                    border: Border.all(
+                        color: _connections.secondarySelectedId == widget.id
+                            ? Colors.blue
+                            : Colors.grey),
+                    color: Colors.white,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(topLeft:Radius.circular(5),topRight: Radius.circular(5) ),
+                            color: _connections
+                                    .boxList[widget.id]?.details.color ??
+                                Colors.grey),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+
+                          children: [
+                            Text(
+                                "${_connections.boxList[widget.id]?.details.name}"),
+                          ],
+                        ),
+                      ),
+                      Condition(
+                          boxId: widget.id, inPins: inPins, outPins: outPins),
+                    ],
                   )),
-            ],
-          )
+            ),
+            Padding(
+               padding: const EdgeInsets.only(top: 12.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ...?widget.outPins?.map((e) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 7.0),
+                        child: FlowOutPin(
+                          boxId: widget.id,
+                          pinId: e,
+                        ),
+                      )),
+                ],
+              ),
+            )
           ],
         ),
       ),
