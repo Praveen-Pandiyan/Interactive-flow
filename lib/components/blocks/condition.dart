@@ -36,9 +36,14 @@ class _ConditionState extends State<Condition> {
                 )),
           ],
           const SizedBox(height: 10),
+          if (_connections.boxList[widget.boxId]!.userVar != null) ...[
+            Text(
+              "Inputs",
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
           ..._connections.boxList[widget.boxId]!.data.map((e) => Text(
               "${e.name}: ${e.value}",
-              style: Theme.of(context).textTheme.labelSmall)),
+              style: Theme.of(context).textTheme.labelSmall)),]
     
         ],
       ),

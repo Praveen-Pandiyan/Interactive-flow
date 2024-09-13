@@ -267,6 +267,7 @@ class _FlowContainerState extends State<FlowContainer> {
       child: DeferPointer(
         link: _deferredPointerLink,
         paintOnTop: false,
+        
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -306,7 +307,7 @@ class _FlowContainerState extends State<FlowContainer> {
                     _connections.boxList[widget.id]?.outLinks);
               },
               child: Container(
-                  width: 100,
+                  width: 150,
                   decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                     border: Border.all(
