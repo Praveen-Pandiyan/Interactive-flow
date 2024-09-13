@@ -12,7 +12,8 @@ class Connections extends ChangeNotifier {
   late GlobalKey key;
   Map<String, Link> linkList = {};
   Map<String, Box> boxList = {};
-  String? selectedId,secondarySelectedId;
+  String? selectedId, secondarySelectedId;
+  bool isAddBlockOpen =false;
   void refresh() {
     notifyListeners();
   }
@@ -46,11 +47,11 @@ class Connections extends ChangeNotifier {
         linkList[e]?.start += delta;
       } else {}
     }
-  
+
     if (boxId != null) {
       boxList[boxId]?.details.pos = pos!;
     }
-      notifyListeners();
+    notifyListeners();
   }
 
   void onConnection(String id, toId, boxId, Offset pos) {
@@ -68,27 +69,9 @@ class Connections extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addNewBox() {
-    String boxId = const Uuid().v1();
+  void addNewBox(Box box) {
     boxList.addAll({
-      boxId: Box(
-        data: [
-          InputData(name: "ema", type: DataType.number),
-          InputData(name: "sma", type: DataType.number)
-        ],
-        userVar: [],
-        inPins: ["srfreg"],
-        outPins: ["frwfef", "fer"],
-        inLinks: [],
-        outLinks: [],
-        details: BoxDetails(
-            id: boxId,
-            pos: Offset.zero,
-            color: Colors.white,
-            name: "if",
-            type: BoxType.conditional,
-            refId: "ifififififif"),
-      )
+      box.details.id: box
     });
     notifyListeners();
   }
@@ -315,7 +298,7 @@ class UserVarData {
   }
 }
 
-enum BoxType { conditional, external, order, start, alert, store }
+enum BoxType { basic, external, order, start, alert, store }
 
 class BoxDetails {
   final String id, refId;
@@ -338,7 +321,7 @@ class BoxDetails {
           refId: data['refId'],
           pos: toOffset(data['pos']),
           type: switch (data['type']) {
-            'conditional' => BoxType.conditional,
+            'basic' => BoxType.basic,
             'external' => BoxType.external,
             'order' => BoxType.order,
             'start' => BoxType.start,

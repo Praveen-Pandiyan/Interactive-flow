@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:chozo_ui_package/chozo_flow/add_function.dart';
 import 'package:chozo_ui_package/components/blocks/condition.dart';
 import 'package:chozo_ui_package/components/inputs/eval.dart';
 import 'package:flutter/material.dart';
@@ -43,11 +44,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
                 controllerT.value = initialControllerValue!;
               },
               child: const Text("center")),
-          TextButton(
-              onPressed: () {
-                _connections.addNewBox();
-              },
-              child: const Text("add new")),
+         
           TextButton(
               onPressed: () {
                 log(json.encode(_connections.toJson()));
@@ -187,11 +184,64 @@ class _ChozoFlowState extends State<ChozoFlow> {
                   ),
                 ),
               ),
+
+              // bottom menu
+              Positioned(
+                  bottom: 10,
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 10),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              _connections.isAddBlockOpen=true;
+                              _connections.refresh();
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 10),
+                              decoration: BoxDecoration(
+                                  color: Colors.redAccent,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Text(
+                                "+ Add Block",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(color: Colors.white),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )),
+
+              if (_connections.selectedId != null)
+                Positioned.fill(
+                    child: GestureDetector(
+                  onTap: () {
+                    _connections.selectedId = null;
+                     _connections.isAddBlockOpen=true;
+                    _connections.refresh();
+                  },
+                  child: Container(
+                    color: const Color.fromARGB(117, 68, 68, 68),
+                  ),
+                )),
               if (_connections.selectedId != null)
                 Center(
                     child: ConfigBox(
                   box: _connections.boxList[_connections.selectedId]!,
-                ))
+                )),
+              if (_connections.isAddBlockOpen)
+                const Center(child: AddFunction()),
             ],
           ),
         ),
@@ -267,7 +317,6 @@ class _FlowContainerState extends State<FlowContainer> {
       child: DeferPointer(
         link: _deferredPointerLink,
         paintOnTop: false,
-        
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -309,7 +358,7 @@ class _FlowContainerState extends State<FlowContainer> {
               child: Container(
                   width: 150,
                   decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
+                    borderRadius: BorderRadius.circular(5),
                     border: Border.all(
                         color: _connections.secondarySelectedId == widget.id
                             ? Colors.blue
@@ -322,13 +371,14 @@ class _FlowContainerState extends State<FlowContainer> {
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 5),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(topLeft:Radius.circular(5),topRight: Radius.circular(5) ),
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(5),
+                                topRight: Radius.circular(5)),
                             color: _connections
                                     .boxList[widget.id]?.details.color ??
                                 Colors.grey),
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
-
                           children: [
                             Text(
                                 "${_connections.boxList[widget.id]?.details.name}"),
@@ -341,7 +391,7 @@ class _FlowContainerState extends State<FlowContainer> {
                   )),
             ),
             Padding(
-               padding: const EdgeInsets.only(top: 12.0),
+              padding: const EdgeInsets.only(top: 12.0),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -363,18 +413,6 @@ class _FlowContainerState extends State<FlowContainer> {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 // class FlowLine extends StatefulWidget {
 //   final String likeId;

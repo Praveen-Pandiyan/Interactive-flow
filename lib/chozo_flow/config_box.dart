@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:chozo_ui_package/chozo_flow/connections.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-import 'package:uuid/v1.dart';
 
 import '../components/inputs/input_box.dart';
 
