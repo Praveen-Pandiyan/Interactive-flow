@@ -23,15 +23,17 @@ class _FlowOutPinState extends State<FlowOutPin> {
     return Draggable<String>(
       data: _tempLinkId,
       rootOverlay: false,
+
       onDragStarted: () {
         final Offset pinPos = _connections.getPosOfElement(_key);
-        _connections.create(_tempLinkId, widget.pinId,widget.boxId, Offset.zero, pinPos);
+        _connections.create(
+            _tempLinkId, widget.pinId, widget.boxId, Offset.zero, pinPos);
       },
       onDragUpdate: (details) {
-        _connections.create(
-            _tempLinkId, widget.pinId,widget.boxId, details.delta, details.globalPosition);
+        _connections.create(_tempLinkId, widget.pinId, widget.boxId,
+            details.delta, details.globalPosition);
       },
-      onDragCompleted: () { 
+      onDragCompleted: () {
         _connections.boxList[widget.boxId]?.outLinks.add(_tempLinkId);
         setState(() {
           _tempLinkId = const Uuid().v1();
@@ -41,17 +43,23 @@ class _FlowOutPinState extends State<FlowOutPin> {
         _connections.linkList.remove(_tempLinkId);
       },
       feedback: Container(
-        height: 10,
-        width: 10,
+        height: 15,
+        width: 15,
         color: Colors.purple,
       ),
       child: Container(
-        alignment: Alignment.center,
-        height: 10,
-        width: 10,
-        color: Colors.purple,
-        child: SizedBox(
-          key: _key,
+        height: 35,
+        width: 45,
+        color: const Color.fromARGB(0, 0, 0, 0),
+        alignment: Alignment.centerLeft,
+        child: Container(
+          alignment: Alignment.center,
+          height: 15,
+          width: 15,
+          color: Colors.purple,
+          child: SizedBox(
+            key: _key,
+          ),
         ),
       ),
     );

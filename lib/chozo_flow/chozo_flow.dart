@@ -188,13 +188,14 @@ class _ChozoFlowState extends State<ChozoFlow> {
               // bottom menu
               Positioned(
                   bottom: 10,
-                  child: Center(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 10),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8, horizontal: 10),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Center(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -217,6 +218,25 @@ class _ChozoFlowState extends State<ChozoFlow> {
                                     .copyWith(color: Colors.white),
                               ),
                             ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              print(_connections.toJson());
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 10),
+                              decoration: BoxDecoration(
+                                  color: Colors.redAccent,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Text(
+                                "Print",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(color: Colors.white),
+                              ),
+                            ),
                           )
                         ],
                       ),
@@ -228,7 +248,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
                     child: GestureDetector(
                   onTap: () {
                     _connections.selectedId = null;
-                     _connections.isAddBlockOpen=true;
+                     _connections.isAddBlockOpen=false;
                     _connections.refresh();
                   },
                   child: Container(

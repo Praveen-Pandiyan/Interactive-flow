@@ -42,6 +42,18 @@ class _AddFunctionState extends State<AddFunction> {
               type: BoxType.basic)),
       Box(
           inPins: ["val"],
+          outPins: ["out"],
+          inLinks: [],
+          outLinks: [],
+          data: [InputData(name: "Ema", type: DataType.number)],
+          details: BoxDetails(
+              id: boxId,
+              refId: "Ema",
+              name: "Ema",
+              pos: Offset.zero,
+              type: BoxType.basic)),
+      Box(
+          inPins: ["val"],
           outPins: ["true", "false"],
           inLinks: [],
           outLinks: [],

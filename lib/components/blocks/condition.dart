@@ -30,21 +30,25 @@ class _ConditionState extends State<Condition> {
               "Variables",
               style: Theme.of(context).textTheme.titleSmall,
             ),
-            ...?_connections.boxList[widget.boxId]!.userVar?.map((e) => Text(
-                  "${e.name}: ${e.value}",
-                  style: Theme.of(context).textTheme.labelSmall,
-                )),
+            if (_connections.boxList[widget.boxId]!.userVar!.isNotEmpty)
+              ..._connections.boxList[widget.boxId]!.userVar!.map((e) => Text(
+                    "${e.name}: ${e.value}",
+                    style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.grey),
+                  )),
+            if (_connections.boxList[widget.boxId]!.userVar!.isEmpty)
+              Text("No Variables specified",
+                  style: Theme.of(context).textTheme.labelSmall),
+            const SizedBox(height: 10),
           ],
-          const SizedBox(height: 10),
-          if (_connections.boxList[widget.boxId]!.userVar != null) ...[
+          if (_connections.boxList[widget.boxId]!.data.isNotEmpty) ...[
             Text(
               "Inputs",
               style: Theme.of(context).textTheme.titleSmall,
             ),
-          ..._connections.boxList[widget.boxId]!.data.map((e) => Text(
-              "${e.name}: ${e.value}",
-              style: Theme.of(context).textTheme.labelSmall)),]
-    
+            ..._connections.boxList[widget.boxId]!.data.map((e) => Text(
+                "${e.name}: ${e.value}",
+                style: Theme.of(context).textTheme.labelSmall)),
+          ]
         ],
       ),
     );
