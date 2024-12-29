@@ -97,25 +97,21 @@ class _ConfigBoxState extends State<ConfigBox> {
                 "From",
                 style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12),
               ),
-              ...widget.box.inPins.map((e) => Column(
-                    children: [
-                      ..._connections.linkList.values
-                          .where((l) => l.toPin == e)
-                          .map((e) => Text(e.fromBox))
-                    ],
-                  )),
+              Column(children: [
+                ..._connections.linkList.values
+                  .where((e) => e.toBox == widget.box.details.id)
+                  .map((e) => Text('${e.fromBox} > ${e.fromPin}')),
+              ],),
               const SizedBox(height: 10),
               const Text(
                 "To",
                 style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12),
               ),
-              ...widget.box.outPins.map((e) => Column(
-                    children: [
-                      ..._connections.linkList.values
-                          .where((l) => l.fromPin == e)
-                          .map((e) => Text(e.toBox!))
-                    ],
-                  )),
+                Column(children: [
+                  ..._connections.linkList.values
+                  .where((e) => e.fromBox == widget.box.details.id)
+                  .map((e) => Text('${e.toBox} > ${e.toPin}')),
+                ],)
             ],
           ),
         ),
@@ -140,13 +136,18 @@ class _UserDefindInpsState extends State<UserDefindInps> {
       children: [
         if (_connections.boxList[widget.boxId]?.userVar != null)
           ...?_connections.boxList[widget.boxId]!.userVar
-              ?.map((e) => UserVarBox(data: e, boxId: widget.boxId,)),
+              ?.map((e) => UserVarBox(
+                    data: e,
+                    boxId: widget.boxId,
+                  )),
         InkWell(
             onTap: () {
-              final i=_connections.boxList[widget.boxId]!.userVar?.length;
-              _connections.boxList[widget.boxId]!.userVar
-                  ?.add(UserVarData(name: "var${i??1}", type: DataType.text, id: const Uuid().v1()));
-                  _connections.refresh();
+              final i = _connections.boxList[widget.boxId]!.userVar?.length;
+              _connections.boxList[widget.boxId]!.userVar?.add(UserVarData(
+                  name: "var${i ?? 1}",
+                  type: DataType.text,
+                  id: const Uuid().v4()));
+              _connections.refresh();
             },
             child: Container(
               child: Row(

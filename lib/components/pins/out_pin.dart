@@ -15,7 +15,7 @@ class FlowOutPin extends StatefulWidget {
 
 class _FlowOutPinState extends State<FlowOutPin> {
   final Connections _connections = Connections.instance;
-  String _tempLinkId = const Uuid().v1();
+  String _tempLinkId = const Uuid().v4();
   final GlobalKey _key = GlobalKey();
 
   @override
@@ -36,7 +36,7 @@ class _FlowOutPinState extends State<FlowOutPin> {
       onDragCompleted: () {
         _connections.boxList[widget.boxId]?.outLinks.add(_tempLinkId);
         setState(() {
-          _tempLinkId = const Uuid().v1();
+          _tempLinkId = const Uuid().v4();
         });
       },
       onDraggableCanceled: (velocity, offset) {

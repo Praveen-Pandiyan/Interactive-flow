@@ -1,0 +1,153 @@
+{
+    "id": "dferf",
+    "name": "chumma",
+    "boxs": [
+        {
+            "ipin": [
+                "val"
+            ],
+            "opin": [
+                "out"
+            ],
+            "ilinks": [
+                "5e4c0ad0-9d09-128b-a656-ed5c50d3254a"
+            ],
+            "olinks": [
+                "b08792c0-9975-128b-a656-ed5c50d3254a"
+            ],
+            "details": {
+                "id": "68008e10-9972-128b-a656-ed5c50d3254a",
+                "name": "Ema",
+                "color": "MaterialColor(primary value: Color(0xff9e9e9e))",
+                "type": "basic",
+                "refId": "Ema",
+                "pos": {
+                    "x": 124.00111607142858,
+                    "y": 53.70535714285717
+                }
+            },
+            "data": [
+                {
+                    "name": "Ema",
+                    "type": "number",
+                    "value": ""
+                }
+            ],
+            "userVar": null
+        },
+        {
+            "ipin": [
+                "val"
+            ],
+            "opin": [
+                "out"
+            ],
+            "ilinks": [
+                "b08792c0-9975-128b-a656-ed5c50d3254a",
+                "5e91c660-9d09-128b-a656-ed5c50d3254a"
+            ],
+            "olinks": [],
+            "details": {
+                "id": "b0026b80-99e9-128b-a656-ed5c50d3254a",
+                "name": "Ema",
+                "color": "MaterialColor(primary value: Color(0xff9e9e9e))",
+                "type": "basic",
+                "refId": "Ema",
+                "pos": {
+                    "x": 202.8515625000002,
+                    "y": 326.58482142857065
+                }
+            },
+            "data": [
+                {
+                    "name": "Ema",
+                    "type": "number",
+                    "value": ""
+                }
+            ],
+            "userVar": null
+        },
+        {
+            "ipin": [
+                "val"
+            ],
+            "opin": [
+                "true",
+                "false"
+            ],
+            "ilinks": [],
+            "olinks": [
+                "5e4c0ad0-9d09-128b-a656-ed5c50d3254a",
+                "5e91c660-9d09-128b-a656-ed5c50d3254a"
+            ],
+            "details": {
+                "id": "00144170-9d00-128b-a656-ed5c50d3254a",
+                "name": "If",
+                "color": "MaterialColor(primary value: Color(0xff9e9e9e))",
+                "type": "basic",
+                "refId": "if",
+                "pos": {
+                    "x": -76.56529017857139,
+                    "y": 191.7187499999996
+                }
+            },
+            "data": [
+                {
+                    "name": "Eval",
+                    "type": "eval",
+                    "value": ""
+                }
+            ],
+            "userVar": []
+        }
+    ],
+    "links": [
+        {
+            "id": "b08792c0-9975-128b-a656-ed5c50d3254a",
+            "fpin": "out",
+            "fbox": "68008e10-9972-128b-a656-ed5c50d3254a",
+            "tpin": "val",
+            "tbox": "b0026b80-99e9-128b-a656-ed5c50d3254a",
+            "s": {
+                "x": 326.5011160714283,
+                "y": 90.20535714285717
+            },
+            "e": {
+                "x": 240.3515625000002,
+                "y": 363.5848214285707
+            }
+        },
+        {
+            "id": "5e4c0ad0-9d09-128b-a656-ed5c50d3254a",
+            "fpin": "true",
+            "fbox": "00144170-9d00-128b-a656-ed5c50d3254a",
+            "tpin": "val",
+            "tbox": "68008e10-9972-128b-a656-ed5c50d3254a",
+            "s": {
+                "x": 125.93470982142861,
+                "y": 228.2187499999996
+            },
+            "e": {
+                "x": 161.50111607142858,
+                "y": 90.70535714285717
+            }
+        },
+        {
+            "id": "5e91c660-9d09-128b-a656-ed5c50d3254a",
+            "fpin": "false",
+            "fbox": "00144170-9d00-128b-a656-ed5c50d3254a",
+            "tpin": "val",
+            "tbox": "b0026b80-99e9-128b-a656-ed5c50d3254a",
+            "s": {
+                "x": 125.93470982142861,
+                "y": 277.2187499999996
+            },
+            "e": {
+                "x": 240.3515625000002,
+                "y": 363.58482142857065
+            }
+        }
+    ],
+    "cversion": "0.0.1",
+    "version": "23432443"
+}

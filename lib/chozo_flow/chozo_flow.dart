@@ -221,7 +221,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
                           ),
                           InkWell(
                             onTap: () {
-                              print(_connections.toJson());
+                              log("${json.encode(_connections.toJson())}");
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(

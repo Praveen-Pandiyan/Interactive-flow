@@ -15,7 +15,7 @@ class AddFunction extends StatefulWidget {
 
 class _AddFunctionState extends State<AddFunction> {
   final Connections _connections = Connections.instance;
-  final String boxId = const Uuid().v1();
+  final String boxId = const Uuid().v4();
   late List<Box> funList;
 
   _onSelect(Box box) {

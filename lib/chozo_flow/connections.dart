@@ -334,7 +334,7 @@ class BoxDetails {
     return {
       'id': id,
       'name': name,
-      'color': color,
+      'color': color.toString(),
       'type': type.name,
       'refId': refId,
       'pos': pos.toJson(),
