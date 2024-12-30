@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
 import '../utils/extensions/offset.dart';
 
 // ignore: depend_on_referenced_packages
@@ -186,7 +185,7 @@ class Link {
 
   @override
   String toString() {
-    return "${start} ${end}";
+    return "$start $end";
   }
 }
 
@@ -377,7 +376,6 @@ class ArrowPainter extends CustomPainter {
 
   void drawCurve(Canvas canvas, Paint paint) {
     // mutable
-    double tension = 1.0;
     Alignment startArrowPosition = Alignment.centerRight;
     Alignment endArrowPosition = Alignment.centerLeft;
 
