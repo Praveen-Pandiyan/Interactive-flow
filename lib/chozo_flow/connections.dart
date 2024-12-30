@@ -12,7 +12,7 @@ class Connections extends ChangeNotifier {
   Map<String, Link> linkList = {};
   Map<String, Box> boxList = {};
   String? selectedId, secondarySelectedId;
-  bool isAddBlockOpen =false;
+  bool isAddBlockOpen = false;
   void refresh() {
     notifyListeners();
   }
@@ -54,12 +54,44 @@ class Connections extends ChangeNotifier {
   }
 
   void onConnection(String id, toId, boxId, Offset pos) {
-    linkList[id]
-      ?..end = pos
-      ..toPin = toId
-      ..toBox = boxId;
+// check if exist
+    if (((boxList[boxId]
+                ?.inLinks
+                .where((e) =>
+                    linkList[e]?.toPin == toId &&
+                    linkList[e]?.toBox == boxId &&
+                    linkList[e]?.fromPin == linkList[id]?.fromPin&&
+                    linkList[e]?.fromBox == linkList[id]?.fromBox
+                    )
+                .length ??
+            0) >
+        0)) {
+      removeConnection(id); // removes pending link
+    }
+     else if(_checkLoop(boxId,boxId)){
+      print("is loop");
+       removeConnection(id); // removes pending link
+    }
+    else {
+      linkList[id]
+        ?..end = pos
+        ..toPin = toId
+        ..toBox = boxId;
+    }
     notifyListeners();
   }
+
+  _checkLoop(String searchBoxId,String indexBoxId){
+    for (var link in boxList[indexBoxId]!.outLinks) {
+       if(linkList[link]!.toBox==searchBoxId){
+        return true;
+       }else if(linkList[link]!.toBox!=null){
+        var r= _checkLoop(searchBoxId, linkList[link]!.toBox!);
+        if(r) return true;
+       }
+    }
+  }
+
 
   void removeConnection(String id) {
     boxList[linkList[id]!.fromBox]?.outLinks.remove(id);
@@ -69,9 +101,7 @@ class Connections extends ChangeNotifier {
   }
 
   void addNewBox(Box box) {
-    boxList.addAll({
-      box.details.id: box
-    });
+    boxList.addAll({box.details.id: box});
     notifyListeners();
   }
 
