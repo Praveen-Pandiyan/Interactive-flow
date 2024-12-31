@@ -97,21 +97,46 @@ class _ConfigBoxState extends State<ConfigBox> {
                 "From",
                 style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12),
               ),
-              Column(children: [
-                ..._connections.linkList.values
-                  .where((e) => e.toBox == widget.box.details.id)
-                  .map((e) => Text('${e.fromBox} > ${e.fromPin}')),
-              ],),
+              Column(
+                children: [
+                  ..._connections.linkList.values
+                      .where((e) => e.toBox == widget.box.details.id)
+                      .map((e) => Row(
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    _connections.removeConnection(e.id);
+                                  },
+                                  icon: const Icon(Icons.close)),
+                              Expanded(
+                                  child: Text('${e.fromBox} > ${e.fromPin}')),
+                            ],
+                          )),
+                ],
+              ),
               const SizedBox(height: 10),
               const Text(
                 "To",
                 style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12),
               ),
-                Column(children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
                   ..._connections.linkList.values
-                  .where((e) => e.fromBox == widget.box.details.id)
-                  .map((e) => Text('${e.toBox} > ${e.toPin}')),
-                ],)
+                      .where((e) => e.fromBox == widget.box.details.id)
+                      .map((e) => Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    _connections.removeConnection(e.id);
+                                  },
+                                  icon: const Icon(Icons.close)),
+                              Expanded(child: Text('${e.toBox} > ${e.toPin}')),
+                            ],
+                          )),
+                ],
+              )
             ],
           ),
         ),

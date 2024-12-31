@@ -60,18 +60,17 @@ class Connections extends ChangeNotifier {
                 .where((e) =>
                     linkList[e]?.toPin == toId &&
                     linkList[e]?.toBox == boxId &&
-                    linkList[e]?.fromPin == linkList[id]?.fromPin&&
-                    linkList[e]?.fromBox == linkList[id]?.fromBox
-                    )
+                    linkList[e]?.fromPin == linkList[id]?.fromPin &&
+                    linkList[e]?.fromBox == linkList[id]?.fromBox)
                 .length ??
             0) >
         0)) {
       removeConnection(id); // removes pending link
     }
-     else if(_checkLoop(boxId,boxId)){
-      print("is loop");
-       removeConnection(id); // removes pending link
-    }
+    //  else if(_checkLoop(boxId,boxId)){
+    //   print("is loop");
+    //    removeConnection(id); // removes pending link
+    // }
     else {
       linkList[id]
         ?..end = pos
@@ -81,17 +80,16 @@ class Connections extends ChangeNotifier {
     notifyListeners();
   }
 
-  _checkLoop(String searchBoxId,String indexBoxId){
+  _checkLoop(String searchBoxId, String indexBoxId) {
     for (var link in boxList[indexBoxId]!.outLinks) {
-       if(linkList[link]!.toBox==searchBoxId){
+      if (linkList[link]!.toBox == searchBoxId) {
         return true;
-       }else if(linkList[link]!.toBox!=null){
-        var r= _checkLoop(searchBoxId, linkList[link]!.toBox!);
-        if(r) return true;
-       }
+      } else if (linkList[link]!.toBox != null) {
+        var r = _checkLoop(searchBoxId, linkList[link]!.toBox!);
+        if (r) return true;
+      }
     }
   }
-
 
   void removeConnection(String id) {
     boxList[linkList[id]!.fromBox]?.outLinks.remove(id);
