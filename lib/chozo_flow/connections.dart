@@ -66,12 +66,10 @@ class Connections extends ChangeNotifier {
             0) >
         0)) {
       removeConnection(id); // removes pending link
-    }
-    //  else if(_checkLoop(boxId,boxId)){
-    //   print("is loop");
-    //    removeConnection(id); // removes pending link
-    // }
-    else {
+    } else if (_checkLoop(linkList[id]!.fromBox, boxId) ?? false) {
+      print("is loop");
+      removeConnection(id); // removes pending link
+    } else {
       linkList[id]
         ?..end = pos
         ..toPin = toId
@@ -82,10 +80,13 @@ class Connections extends ChangeNotifier {
 
   _checkLoop(String searchBoxId, String indexBoxId) {
     for (var link in boxList[indexBoxId]!.outLinks) {
-      if (linkList[link]!.toBox == searchBoxId) {
+      if (linkList[link]?.toBox == searchBoxId) {
         return true;
       } else if (linkList[link]!.toBox != null) {
-        var r = _checkLoop(searchBoxId, linkList[link]!.toBox!);
+        if (linkList[link]!.toBox == null) {
+          return false;
+        }
+        var r = _checkLoop(searchBoxId, linkList[link]!.toBox!) ?? false;
         if (r) return true;
       }
     }
