@@ -1,11 +1,11 @@
+import 'package:chozo_ui_package/chozo_flow/config_box.dart';
 import 'package:flutter/material.dart';
 import '../utils/extensions/offset.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:vector_math/vector_math_64.dart' as math;
 
-
-enum OpenedView{addBlock,varPannel,none}
+enum OpenedView { addBlock, varPannel, none }
 
 class Connections extends ChangeNotifier {
   Connections._();
@@ -17,7 +17,7 @@ class Connections extends ChangeNotifier {
   Map<String, UserVarData> varList = {};
   String? selectedId, secondarySelectedId;
   OpenedView openedView = OpenedView.none;
-  
+
   void refresh() {
     notifyListeners();
   }
@@ -110,6 +110,7 @@ class Connections extends ChangeNotifier {
     final data = AlgoData.fromJson(json);
     boxList.addEntries(data.boxs.map((e) => MapEntry(e.details.id, e)));
     linkList.addEntries(data.links.map((e) => MapEntry(e.id, e)));
+    varList.addEntries(data.vars.map((e) => MapEntry(e.id, e)));
     notifyListeners();
   }
 
@@ -117,6 +118,7 @@ class Connections extends ChangeNotifier {
     return AlgoData(
             boxs: boxList.values.toList(),
             links: linkList.values.toList(),
+            vars: varList.values.toList(),
             id: "dferf",
             consoleVersion: "0.0.1",
             version: "23432443",
@@ -144,6 +146,7 @@ getPositionOfBox(GlobalKey key, {Offset offset = Offset.zero}) {
 class AlgoData {
   final List<Link> links;
   final List<Box> boxs;
+  final List<UserVarData> vars;
   final String id;
   final String name;
   final String consoleVersion;
@@ -153,6 +156,7 @@ class AlgoData {
       {required this.links,
       required this.boxs,
       required this.id,
+      required this.vars,
       required this.name,
       required this.consoleVersion,
       required this.version});
@@ -162,6 +166,9 @@ class AlgoData {
             links:
                 (data['links'] as List).map((e) => Link.fromJson(e)).toList(),
             boxs: (data['boxs'] as List).map((e) => Box.fromJson(e)).toList(),
+            vars: (data['vars'] as List)
+                .map((e) => UserVarData.fromJson(e))
+                .toList(),
             id: data['id'],
             name: data['name'],
             consoleVersion: data['cversion'],
@@ -172,6 +179,7 @@ class AlgoData {
       'name': name,
       'boxs': boxs.map((e) => e.toJson()).toList(),
       'links': links.map((e) => e.toJson()).toList(),
+      'vars': vars.map((e) => e.toJson()).toList(),
       'cversion': consoleVersion,
       'version': version
     };
@@ -259,7 +267,7 @@ class Box {
       'olinks': outLinks,
       'details': details.toJson(),
       'data': data.map((e) => e.toJson()).toList(),
-      'userVar': userVar?.map((e) => e.toJson()).toList()
+      'userVar': userVar?.map((e) => e.toJson()).toList() ?? []
     };
   }
 }
@@ -307,14 +315,17 @@ class UserVarData {
       this.isImmutable = false});
   UserVarData.fromJson(data)
       : this(
-            id: data['id'],
-            name: data['name'],
-            type: switch (data['type']) {
-              'number' => DataType.number,
-              'color' => DataType.color,
-              'text' || _ => DataType.text
-            },
-            value: data['value'] ?? '');
+          id: data['id'],
+          name: data['name'],
+          type: switch (data['type']) {
+            'number' => DataType.number,
+            'color' => DataType.color,
+            'text' || _ => DataType.text
+          },
+          value: data['value'] ?? '',
+          isImmutable: data['isImmutable'] ?? false,
+          isPersistent: data['isPersistent'] ?? false,
+        );
   changeName(String v) {
     name = v;
   }
@@ -328,7 +339,14 @@ class UserVarData {
   }
 
   toJson() {
-    return {'id': id, 'name': name, 'type': type.name, 'value': value};
+    return {
+      'id': id,
+      'name': name,
+      'type': type.name,
+      'value': value,
+      'isPersistent': isPersistent,
+      'isImmutable': isImmutable
+    };
   }
 }
 

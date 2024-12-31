@@ -42,7 +42,7 @@ class _VarPannelState extends State<VarPannel> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Storage"),
+                          const Text("Storage"),
                           IconButton(
                               onPressed: () {
                                 _connections.openedView = OpenedView.none;

@@ -57,83 +57,123 @@ class _ChozoFlowState extends State<ChozoFlow> {
                   "name": "chumma",
                   "boxs": [
                     {
-                      "id": "613f44e0-52fb-11ef-8213-d7a6f2e92a6a",
-                      "ipin": ["srfreg", "dewf"],
-                      "opin": ["frwfef", "fer"],
-                      "refId": "cdfc",
+                      "ipin": ["val"],
+                      "opin": ["out"],
+                      "ilinks": [],
+                      "olinks": ["95e6ee19-ec52-4af0-a3e1-013462b2d317"],
+                      "details": {
+                        "id": "293bf027-ed6a-443e-8c19-4c17fb5b26a6",
+                        "name": "Evaluation",
+                        "color":
+                            "MaterialColor(primary value: Color(alpha: 1.0000, red: 0.6196, green: 0.6196, blue: 0.6196, colorSpace: ColorSpace.sRGB))",
+                        "type": "basic",
+                        "refId": "eval",
+                        "pos": {"x": 50, "y": 33}
+                      },
+                      "data": [
+                        {"name": "Eval", "type": "eval", "value": ""}
+                      ],
+                      "userVar": []
+                    },
+                    {
+                      "ipin": ["val"],
+                      "opin": ["true", "false"],
                       "ilinks": [],
                       "olinks": [
-                        "61438aa0-52fb-11ef-8213-d7a6f2e92a6a",
-                        "6143d8c0-52fb-11ef-8213-d7a6f2e92a6a",
-                        "69f7a140-52fb-11ef-8213-d7a6f2e92a6a"
+                        "9b965083-da4d-4647-8673-fc9ed76963e6",
+                        "7dc56d82-b668-4723-96ac-ea8c86ba047a"
                       ],
-                      "pos": {"x": -8.75, "y": 237.5},
+                      "details": {
+                        "id": "68fb2eba-aca2-49c6-b92d-35034ea10034",
+                        "name": "If",
+                        "color":
+                            "MaterialColor(primary value: Color(alpha: 1.0000, red: 0.6196, green: 0.6196, blue: 0.6196, colorSpace: ColorSpace.sRGB))",
+                        "type": "basic",
+                        "refId": "if",
+                        "pos": {"x": 81, "y": 218}
+                      },
                       "data": [
-                        {"name": "ema", "type": "number", "value": ""},
-                        {"name": "sma", "type": "number", "value": ""}
-                      ]
+                        {"name": "Eval", "type": "eval", "value": ""}
+                      ],
+                      "userVar": []
                     },
                     {
-                      "id": "6222a000-52fb-11ef-8213-d7a6f2e92a6a",
-                      "ipin": ["srfreg", "dewf"],
-                      "opin": ["frwfef", "fer"],
-                      "refId": "cdfc",
+                      "ipin": ["val"],
+                      "opin": ["out"],
                       "ilinks": [
-                        "61438aa0-52fb-11ef-8213-d7a6f2e92a6a",
-                        "62938a40-52fb-11ef-8213-d7a6f2e92a6a"
+                        "95e6ee19-ec52-4af0-a3e1-013462b2d317",
+                        "9b965083-da4d-4647-8673-fc9ed76963e6",
+                        "7dc56d82-b668-4723-96ac-ea8c86ba047a"
                       ],
                       "olinks": [],
-                      "pos": {"x": 326.5, "y": 444.25},
+                      "details": {
+                        "id": "69968004-6f1c-4a5a-8e74-2627f0645cff",
+                        "name": "Ema",
+                        "color":
+                            "MaterialColor(primary value: Color(alpha: 1.0000, red: 0.6196, green: 0.6196, blue: 0.6196, colorSpace: ColorSpace.sRGB))",
+                        "type": "basic",
+                        "refId": "Ema",
+                        "pos": {"x": 354, "y": 208}
+                      },
                       "data": [
-                        {"name": "ema", "type": "number", "value": ""},
-                        {"name": "sma", "type": "number", "value": ""}
-                      ]
-                    },
-                    {
-                      "id": "628fe0c0-52fb-11ef-8213-d7a6f2e92a6a",
-                      "ipin": ["srfreg", "dewf"],
-                      "opin": ["frwfef", "fer"],
-                      "refId": "cdfc",
-                      "ilinks": [
-                        "6143d8c0-52fb-11ef-8213-d7a6f2e92a6a",
-                        "69f7a140-52fb-11ef-8213-d7a6f2e92a6a"
+                        {"name": "Ema", "type": "number", "value": "erfreferf"}
                       ],
-                      "olinks": ["62938a40-52fb-11ef-8213-d7a6f2e92a6a"],
-                      "pos": {"x": 394.25, "y": 186},
-                      "data": [
-                        {"name": "ema", "type": "number", "value": ""},
-                        {"name": "sma", "type": "number", "value": ""}
-                      ]
+                      "userVar": []
                     }
                   ],
                   "links": [
                     {
-                      "id": "61438aa0-52fb-11ef-8213-d7a6f2e92a6a",
-                      "fpin": "613f44e0-52fb-11ef-8213-d7a6f2e92a6a",
-                      "tpin": "6222a000-52fb-11ef-8213-d7a6f2e92a6a",
-                      "s": {"x": 206.25, "y": 252.5},
-                      "e": {"x": 331.5, "y": 459.25}
+                      "id": "95e6ee19-ec52-4af0-a3e1-013462b2d317",
+                      "fpin": "out",
+                      "fbox": "293bf027-ed6a-443e-8c19-4c17fb5b26a6",
+                      "tpin": "val",
+                      "tbox": "69968004-6f1c-4a5a-8e74-2627f0645cff",
+                      "s": {"x": 252.5, "y": 69.5},
+                      "e": {"x": 391.5, "y": 245}
                     },
                     {
-                      "id": "6143d8c0-52fb-11ef-8213-d7a6f2e92a6a",
-                      "fpin": "613f44e0-52fb-11ef-8213-d7a6f2e92a6a",
-                      "tpin": "628fe0c0-52fb-11ef-8213-d7a6f2e92a6a",
-                      "s": {"x": 206.25, "y": 282.5},
-                      "e": {"x": 399.25, "y": 201}
+                      "id": "9b965083-da4d-4647-8673-fc9ed76963e6",
+                      "fpin": "false",
+                      "fbox": "68fb2eba-aca2-49c6-b92d-35034ea10034",
+                      "tpin": "val",
+                      "tbox": "69968004-6f1c-4a5a-8e74-2627f0645cff",
+                      "s": {"x": 283.5, "y": 303.5},
+                      "e": {"x": 391.5, "y": 245}
                     },
                     {
-                      "id": "62938a40-52fb-11ef-8213-d7a6f2e92a6a",
-                      "fpin": "628fe0c0-52fb-11ef-8213-d7a6f2e92a6a",
-                      "tpin": "6222a000-52fb-11ef-8213-d7a6f2e92a6a",
-                      "s": {"x": 609.25, "y": 231},
-                      "e": {"x": 331.5, "y": 489.25}
+                      "id": "7dc56d82-b668-4723-96ac-ea8c86ba047a",
+                      "fpin": "true",
+                      "fbox": "68fb2eba-aca2-49c6-b92d-35034ea10034",
+                      "tpin": "val",
+                      "tbox": "69968004-6f1c-4a5a-8e74-2627f0645cff",
+                      "s": {"x": 283.5, "y": 254.5},
+                      "e": {"x": 391.5, "y": 245}
+                    }
+                  ],
+                  "vars": [
+                    {
+                      "id": "a817f5a0-a1bd-4da9-8ca5-023a360d0153",
+                      "name": "ewd",
+                      "type": "text",
+                      "value": "dew",
+                      "isPersistent": false,
+                      "isImmutable": false
                     },
                     {
-                      "id": "69f7a140-52fb-11ef-8213-d7a6f2e92a6a",
-                      "fpin": "613f44e0-52fb-11ef-8213-d7a6f2e92a6a",
-                      "tpin": "628fe0c0-52fb-11ef-8213-d7a6f2e92a6a",
-                      "s": {"x": 206.25, "y": 282.5},
-                      "e": {"x": 399.25, "y": 231}
+                      "id": "f3dd77bb-0eb6-4c4f-883b-20e98d8d991e",
+                      "name": "var1dwe",
+                      "type": "text",
+                      "value": "dw3424",
+                      "isPersistent": false,
+                      "isImmutable": false
+                    },
+                    {
+                      "id": "329d08a9-d2f3-4d51-ae22-20d7613769a8",
+                      "name": "var2432432",
+                      "type": "text",
+                      "value": "",
+                      "isPersistent": false,
+                      "isImmutable": false
                     }
                   ],
                   "cversion": "0.0.1",
@@ -471,46 +511,3 @@ class _FlowContainerState extends State<FlowContainer> {
     );
   }
 }
-
-// class FlowLine extends StatefulWidget {
-//   final String likeId;
-//   final Connections connections;
-//   final void Function()? onDragStarted,onDragCompleted;
-//   final void Function(DragUpdateDetails)? onDragUpdate;
-//   final void Function(Velocity, Offset)? onDraggableCanceled;
-//   const FlowLine({super.key, required this.likeId, required this.connections, this.onDragStarted, this.onDragCompleted, this.onDragUpdate, this.onDraggableCanceled});
-
-//   @override
-//   State<FlowLine> createState() => _FlowLineState();
-// }
-
-// class _FlowLineState extends State<FlowLine> {
-
-//   GlobalKey key = GlobalKey();
-//   @override
-//   Widget build(BuildContext context) {
-//     return Draggable<String>(
-//                 data: widget.likeId,
-//                 rootOverlay: false,
-//                 onDragUpdate: (details) {
-//                 widget.onDragUpdate?.call(details);
-//                 },
-//                 onDragCompleted: () {
-
-//                 },
-//                 onDraggableCanceled: (velocity, offset) {
-
-//                 },
-//                 feedback: Container(
-//                   height: 10,
-//                   width: 10,
-//                   color: Colors.purple,
-//                 ),
-//                 child: Container(
-//                   height: 10,
-//                   width: 10,
-//                   color: Colors.purple,
-//                 ),
-//               ),;
-//   }
-// }
