@@ -3,5 +3,6 @@
 
 ## todo
 
-connection remove
-loop identify and block
+variable pannel
+
+encode/decode

@@ -82,10 +82,7 @@ class Connections extends ChangeNotifier {
     for (var link in boxList[indexBoxId]!.outLinks) {
       if (linkList[link]?.toBox == searchBoxId) {
         return true;
-      } else if (linkList[link]!.toBox != null) {
-        if (linkList[link]!.toBox == null) {
-          return false;
-        }
+      } else if (linkList[link]?.toBox != null) {
         var r = _checkLoop(searchBoxId, linkList[link]!.toBox!) ?? false;
         if (r) return true;
       }
