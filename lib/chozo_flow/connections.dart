@@ -4,6 +4,9 @@ import '../utils/extensions/offset.dart';
 // ignore: depend_on_referenced_packages
 import 'package:vector_math/vector_math_64.dart' as math;
 
+
+enum OpenedView{addBlock,varPannel,none}
+
 class Connections extends ChangeNotifier {
   Connections._();
   static final instance = Connections._();
@@ -11,8 +14,10 @@ class Connections extends ChangeNotifier {
   late GlobalKey key;
   Map<String, Link> linkList = {};
   Map<String, Box> boxList = {};
+  Map<String, UserVarData> varList = {};
   String? selectedId, secondarySelectedId;
-  bool isAddBlockOpen = false;
+  OpenedView openedView = OpenedView.none;
+  
   void refresh() {
     notifyListeners();
   }
@@ -290,12 +295,16 @@ class UserVarData {
   String name;
   DataType type;
   dynamic value;
+  bool isPersistent;
+  bool isImmutable;
 
   UserVarData(
       {required this.name,
       required this.type,
       this.value = '',
-      required this.id});
+      required this.id,
+      this.isPersistent = false,
+      this.isImmutable = false});
   UserVarData.fromJson(data)
       : this(
             id: data['id'],

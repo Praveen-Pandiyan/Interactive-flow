@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:chozo_ui_package/chozo_flow/add_function.dart';
+import 'package:chozo_ui_package/chozo_flow/variable_pannel.dart';
 import 'package:chozo_ui_package/components/blocks/condition.dart';
 import 'package:chozo_ui_package/components/inputs/eval.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,6 @@ class _ChozoFlowState extends State<ChozoFlow> {
                 controllerT.value = initialControllerValue!;
               },
               child: const Text("center")),
-         
           TextButton(
               onPressed: () {
                 log(json.encode(_connections.toJson()));
@@ -190,56 +190,86 @@ class _ChozoFlowState extends State<ChozoFlow> {
                   bottom: 10,
                   child: Container(
                     alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8, horizontal: 10),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              _connections.isAddBlockOpen=true;
-                              _connections.refresh();
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 10),
-                              decoration: BoxDecoration(
-                                  color: Colors.redAccent,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Text(
-                                "+ Add Block",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(color: Colors.white),
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10)),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            spacing: 10,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  _connections.openedView = OpenedView.addBlock;
+                                  _connections.refresh();
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 10),
+                                  decoration: BoxDecoration(
+                                      color: Colors.redAccent,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Text(
+                                    "+ Add Block",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(color: Colors.white),
+                                  ),
+                                ),
                               ),
-                            ),
+                              InkWell(
+                                onTap: () {
+                                  log("${json.encode(_connections.toJson())}");
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 10),
+                                  decoration: BoxDecoration(
+                                      color: Colors.redAccent,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Text(
+                                    "Print",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  _connections.openedView =
+                                      OpenedView.varPannel;
+                                  _connections.refresh();
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 10),
+                                  decoration: BoxDecoration(
+                                      color: Colors.redAccent,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Text(
+                                    "Storage",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(color: Colors.white),
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
-                          InkWell(
-                            onTap: () {
-                              log("${json.encode(_connections.toJson())}");
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 10),
-                              decoration: BoxDecoration(
-                                  color: Colors.redAccent,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Text(
-                                "Print",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(color: Colors.white),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   )),
 
@@ -248,7 +278,7 @@ class _ChozoFlowState extends State<ChozoFlow> {
                     child: GestureDetector(
                   onTap: () {
                     _connections.selectedId = null;
-                     _connections.isAddBlockOpen=false;
+                    _connections.openedView = OpenedView.none;
                     _connections.refresh();
                   },
                   child: Container(
@@ -260,8 +290,16 @@ class _ChozoFlowState extends State<ChozoFlow> {
                     child: ConfigBox(
                   box: _connections.boxList[_connections.selectedId]!,
                 )),
-              if (_connections.isAddBlockOpen)
-                const Center(child: AddFunction()),
+
+              Center(
+                child: switch (_connections.openedView) {
+                  // ignore: prefer_const_constructors
+                  OpenedView.addBlock => AddFunction(),
+                  // ignore: prefer_const_constructors
+                  OpenedView.varPannel => VarPannel(),
+                  OpenedView.none => const SizedBox()
+                },
+              )
             ],
           ),
         ),

@@ -163,22 +163,22 @@ class _UserDefindInpsState extends State<UserDefindInps> {
           ...?_connections.boxList[widget.boxId]!.userVar
               ?.map((e) => UserVarBox(
                     data: e,
-                    boxId: widget.boxId,
+                    id: widget.boxId,
+                    isBelongsToBox: true,
                   )),
         InkWell(
-            onTap: () {
-              final i = _connections.boxList[widget.boxId]!.userVar?.length;
-              _connections.boxList[widget.boxId]!.userVar?.add(UserVarData(
-                  name: "var${i ?? 1}",
-                  type: DataType.text,
-                  id: const Uuid().v4()));
-              _connections.refresh();
-            },
-            child: Container(
-              child: Row(
-                children: [Icon(Icons.add), Text("add")],
-              ),
-            ))
+          onTap: () {
+            final i = _connections.boxList[widget.boxId]!.userVar?.length;
+            _connections.boxList[widget.boxId]!.userVar?.add(UserVarData(
+                name: "var${i ?? 1}",
+                type: DataType.text,
+                id: const Uuid().v4()));
+            _connections.refresh();
+          },
+          child: const Row(
+            children: [Icon(Icons.add), Text("add")],
+          ),
+        )
       ],
     );
   }

@@ -1,4 +1,3 @@
-
 import 'package:chozo_ui_package/chozo_flow/connections.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +23,7 @@ class _InputBoxState extends State<InputBox> {
           child: Padding(
             padding: const EdgeInsets.all(2.0),
             child: ClipRRect(
-              borderRadius:  BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(6),
               child: TextFormField(
                 initialValue: widget.data.value,
                 decoration: const InputDecoration(
@@ -44,10 +43,16 @@ class _InputBoxState extends State<InputBox> {
     );
   }
 }
+
 class UserVarBox extends StatefulWidget {
   final UserVarData data;
-  final String boxId;
-  const UserVarBox({super.key, required this.data, required this.boxId});
+  final String id;
+  final bool isBelongsToBox;
+  const UserVarBox(
+      {super.key,
+      required this.data,
+      required this.id,
+      this.isBelongsToBox = false});
 
   @override
   State<UserVarBox> createState() => _UserVarBoxState();
@@ -60,11 +65,11 @@ class _UserVarBoxState extends State<UserVarBox> {
     return Row(
       key: Key(widget.data.id),
       children: [
-       Expanded(
+        Expanded(
           child: Padding(
             padding: const EdgeInsets.all(2.0),
             child: ClipRRect(
-              borderRadius:  BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(6),
               child: TextFormField(
                 initialValue: widget.data.name,
                 decoration: const InputDecoration(
@@ -83,12 +88,11 @@ class _UserVarBoxState extends State<UserVarBox> {
         const SizedBox(
           width: 3,
         ),
-        Text(widget.data.id.split('-').first),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(2.0),
             child: ClipRRect(
-              borderRadius:  BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(6),
               child: TextFormField(
                 initialValue: widget.data.value,
                 decoration: const InputDecoration(
@@ -104,11 +108,27 @@ class _UserVarBoxState extends State<UserVarBox> {
             ),
           ),
         ),
-        IconButton(onPressed: (){
-          _connections.boxList[widget.boxId]!.userVar?.removeWhere((i)=>i.id==widget.data.id);
-          _connections.refresh();
-          print("${widget.data.id}, ${_connections.boxList[widget.boxId]!.userVar?.map((e)=>e.toJson())}");
-        }, icon: Icon(Icons.delete))
+        if (!widget.isBelongsToBox)
+          IconButton(
+              onPressed: () {
+                _connections.boxList[widget.id]!.userVar
+                    ?.removeWhere((i) => i.id == widget.data.id);
+                _connections.refresh();
+              },
+              icon: const Icon(Icons.lock)),
+        IconButton(
+            onPressed: () {
+              if (widget.isBelongsToBox) {
+                _connections.boxList[widget.id]!.userVar
+                    ?.removeWhere((i) => i.id == widget.data.id);
+              } else {
+                _connections.varList.remove(widget.id);
+              }
+              _connections.refresh();
+              print(
+                  "${widget.data.id}, ${_connections.boxList[widget.id]!.userVar?.map((e) => e.toJson())}");
+            },
+            icon: const Icon(Icons.delete))
       ],
     );
   }

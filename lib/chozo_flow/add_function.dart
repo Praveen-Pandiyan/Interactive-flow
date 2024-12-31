@@ -19,7 +19,7 @@ class _AddFunctionState extends State<AddFunction> {
   late List<Box> funList;
 
   _onSelect(Box box) {
-    _connections.isAddBlockOpen = false;
+    _connections.openedView = OpenedView.none;
     _connections.addNewBox(box);
   }
 
@@ -89,6 +89,17 @@ class _AddFunctionState extends State<AddFunction> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      Row(
+                        children: [
+                          Text("Select Block"),
+                          IconButton(
+                              onPressed: () {
+                                _connections.openedView = OpenedView.none;
+                                _connections.refresh();
+                              },
+                              icon: const Icon(Icons.close))
+                        ],
+                      ),
                       ...funList.map((e) => InkWell(
                             onTap: () {
                               _onSelect(e);
