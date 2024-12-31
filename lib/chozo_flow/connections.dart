@@ -1,4 +1,3 @@
-import 'package:chozo_ui_package/chozo_flow/config_box.dart';
 import 'package:flutter/material.dart';
 import '../utils/extensions/offset.dart';
 
@@ -72,7 +71,6 @@ class Connections extends ChangeNotifier {
         0)) {
       removeConnection(id); // removes pending link
     } else if (_checkLoop(linkList[id]!.fromBox, boxId) ?? false) {
-      print("is loop");
       removeConnection(id); // removes pending link
     } else {
       linkList[id]

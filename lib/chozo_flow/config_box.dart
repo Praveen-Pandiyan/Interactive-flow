@@ -35,7 +35,7 @@ class _ConfigBoxState extends State<ConfigBox> {
             children: [
               Text(
                 widget.box.details.id,
-                style: TextStyle(fontSize: 5),
+                style: const TextStyle(fontSize: 5),
               ),
               Row(
                 mainAxisSize: MainAxisSize.min,

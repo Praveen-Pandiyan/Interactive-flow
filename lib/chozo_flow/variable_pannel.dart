@@ -58,13 +58,13 @@ class _VarPannelState extends State<VarPannel> {
                           )),
                       InkWell(
                           onTap: () {
-                            final _id = const Uuid().v4();
+                            final id = const Uuid().v4();
 
                             _connections.varList.addAll({
-                              _id: UserVarData(
+                              id: UserVarData(
                                   name: "var${_connections.varList.length}",
                                   type: DataType.text,
-                                  id: _id)
+                                  id: id)
                             });
                             _connections.refresh();
                           },

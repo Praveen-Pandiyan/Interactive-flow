@@ -25,7 +25,6 @@ class _AddFunctionState extends State<AddFunction> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     funList = [
       Box(
@@ -91,7 +90,7 @@ class _AddFunctionState extends State<AddFunction> {
                     children: [
                       Row(
                         children: [
-                          Text("Select Block"),
+                          const Text("Select Block"),
                           IconButton(
                               onPressed: () {
                                 _connections.openedView = OpenedView.none;

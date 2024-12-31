@@ -13,16 +13,16 @@ class _ConnectionBarState extends State<ConnectionBar> {
   final Connections _connections = Connections.instance;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        children: [
-          Text("title"),
-          Text("id"),
-          IconButton(onPressed: () {
-            _connections.removeConnection(widget.connectionId);
-          }, icon: Icon(Icons.delete))
-        ],
-      ),
+    return Row(
+      children: [
+        const Text("title"),
+        const Text("id"),
+        IconButton(
+            onPressed: () {
+              _connections.removeConnection(widget.connectionId);
+            },
+            icon: const Icon(Icons.delete))
+      ],
     );
   }
 }

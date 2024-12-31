@@ -467,9 +467,9 @@ class _FlowContainerState extends State<FlowContainer> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const  BorderRadius.only(
                                 topLeft: Radius.circular(5),
                                 topRight: Radius.circular(5)),
                             color: _connections
