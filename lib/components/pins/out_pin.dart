@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -22,7 +21,6 @@ class _FlowOutPinState extends State<FlowOutPin> {
     return Draggable<String>(
       data: _tempLinkId,
       rootOverlay: false,
-
       onDragStarted: () {
         final Offset pinPos = _connections.getPosOfElement(_key);
         _connections.create(
@@ -34,9 +32,11 @@ class _FlowOutPinState extends State<FlowOutPin> {
       },
       onDragCompleted: () {
         _connections.boxList[widget.boxId]?.outLinks.add(_tempLinkId);
-        setState(() {
-          _tempLinkId = const Uuid().v4();
-        });
+        if (mounted) {
+          setState(() {
+            _tempLinkId = const Uuid().v4();
+          });
+        }
       },
       onDraggableCanceled: (velocity, offset) {
         _connections.linkList.remove(_tempLinkId);

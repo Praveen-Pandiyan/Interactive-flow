@@ -28,7 +28,8 @@ class _ChozoFlowState extends State<ChozoFlow> {
   @override
   void initState() {
     _connections.addListener(() {
-      setState(() {});
+      if(mounted)
+     { setState(() {});}
     });
     _connections.viewerPosition = controllerT;
     _connections.key = key;
@@ -443,9 +444,10 @@ class _FlowContainerState extends State<FlowContainer> {
                 _connections.refresh();
               },
               onPanUpdate: (details) {
-                setState(() {
+                if(mounted)
+               { setState(() {
                   _localPos = _localPos + details.delta;
-                });
+                });}
                 _connections.positionUpdate(
                     widget.id,
                     _localPos,
