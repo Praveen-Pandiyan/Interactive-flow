@@ -29,7 +29,7 @@ class _AddFunctionState extends State<AddFunction> {
     funList = [
       Box(
           inPins: ["val"],
-          outPins: ["out"],
+          outPins: ["default"],
           inLinks: [],
           outLinks: [],
           data: [InputData(name: "Eval", type: DataType.eval)],
@@ -41,7 +41,7 @@ class _AddFunctionState extends State<AddFunction> {
               type: BoxType.basic)),
       Box(
           inPins: ["val"],
-          outPins: ["out"],
+          outPins: ["default"],
           inLinks: [],
           outLinks: [],
           data: [InputData(name: "Ema", type: DataType.number)],

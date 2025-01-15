@@ -9,11 +9,13 @@ import 'package:defer_pointer/defer_pointer.dart';
 import '../components/pins/pins.dart';
 import 'config_box.dart';
 import 'connections.dart';
+import 'controller.dart';
 
 final _deferredPointerLink = DeferredPointerHandlerLink();
 
 class ChozoFlow extends StatefulWidget {
-  const ChozoFlow({super.key});
+  final ChozoFlowController controller;
+  const ChozoFlow({super.key, required this.controller});
 
   @override
   State<ChozoFlow> createState() => _ChozoFlowState();
@@ -23,13 +25,14 @@ class _ChozoFlowState extends State<ChozoFlow> {
   TransformationController controllerT = TransformationController();
   Matrix4? initialControllerValue;
   GlobalKey key = GlobalKey();
-  final Connections _connections = Connections.instance;
+  late final Connections _connections = widget.controller.connections;
 
   @override
   void initState() {
     _connections.addListener(() {
-      if(mounted)
-     { setState(() {});}
+      if (mounted) {
+        setState(() {});
+      }
     });
     _connections.viewerPosition = controllerT;
     _connections.key = key;
@@ -444,10 +447,11 @@ class _FlowContainerState extends State<FlowContainer> {
                 _connections.refresh();
               },
               onPanUpdate: (details) {
-                if(mounted)
-               { setState(() {
-                  _localPos = _localPos + details.delta;
-                });}
+                if (mounted) {
+                  setState(() {
+                    _localPos = _localPos + details.delta;
+                  });
+                }
                 _connections.positionUpdate(
                     widget.id,
                     _localPos,
@@ -471,7 +475,7 @@ class _FlowContainerState extends State<FlowContainer> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
                         decoration: BoxDecoration(
-                            borderRadius: const  BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(5),
                                 topRight: Radius.circular(5)),
                             color: _connections

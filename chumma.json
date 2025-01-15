@@ -10,30 +10,28 @@
                 "out"
             ],
             "ilinks": [
-                "5e4c0ad0-9d09-128b-a656-ed5c50d3254a"
+                "3fdbe68b-9940-4436-b45a-a4d7627c9dab"
             ],
-            "olinks": [
-                "b08792c0-9975-128b-a656-ed5c50d3254a"
-            ],
+            "olinks": [],
             "details": {
-                "id": "68008e10-9972-128b-a656-ed5c50d3254a",
-                "name": "Ema",
-                "color": "MaterialColor(primary value: Color(0xff9e9e9e))",
+                "id": "7746177f-6854-43d3-bf50-8a1ae3ae3a7c",
+                "name": "Evaluation",
+                "color": "MaterialColor(primary value: Color(alpha: 1.0000, red: 0.6196, green: 0.6196, blue: 0.6196, colorSpace: ColorSpace.sRGB))",
                 "type": "basic",
-                "refId": "Ema",
+                "refId": "eval",
                 "pos": {
-                    "x": 124.00111607142858,
-                    "y": 53.70535714285717
+                    "x": 272,
+                    "y": 213
                 }
             },
             "data": [
                 {
-                    "name": "Ema",
-                    "type": "number",
+                    "name": "Eval",
+                    "type": "eval",
                     "value": ""
                 }
             ],
-            "userVar": null
+            "userVar": []
         },
         {
             "ipin": [
@@ -43,19 +41,18 @@
                 "out"
             ],
             "ilinks": [
-                "b08792c0-9975-128b-a656-ed5c50d3254a",
-                "5e91c660-9d09-128b-a656-ed5c50d3254a"
+                "49fe9f44-eff9-476c-a60f-ee59448045bf"
             ],
             "olinks": [],
             "details": {
-                "id": "b0026b80-99e9-128b-a656-ed5c50d3254a",
+                "id": "5606ca84-388f-4ded-8ac6-87c00975ce78",
                 "name": "Ema",
-                "color": "MaterialColor(primary value: Color(0xff9e9e9e))",
+                "color": "MaterialColor(primary value: Color(alpha: 1.0000, red: 0.6196, green: 0.6196, blue: 0.6196, colorSpace: ColorSpace.sRGB))",
                 "type": "basic",
                 "refId": "Ema",
                 "pos": {
-                    "x": 202.8515625000002,
-                    "y": 326.58482142857065
+                    "x": 272,
+                    "y": 103
                 }
             },
             "data": [
@@ -65,7 +62,7 @@
                     "value": ""
                 }
             ],
-            "userVar": null
+            "userVar": []
         },
         {
             "ipin": [
@@ -77,18 +74,18 @@
             ],
             "ilinks": [],
             "olinks": [
-                "5e4c0ad0-9d09-128b-a656-ed5c50d3254a",
-                "5e91c660-9d09-128b-a656-ed5c50d3254a"
+                "49fe9f44-eff9-476c-a60f-ee59448045bf",
+                "3fdbe68b-9940-4436-b45a-a4d7627c9dab"
             ],
             "details": {
-                "id": "00144170-9d00-128b-a656-ed5c50d3254a",
+                "id": "eb312c06-caf2-45bf-b5d3-7d041474d364",
                 "name": "If",
-                "color": "MaterialColor(primary value: Color(0xff9e9e9e))",
+                "color": "MaterialColor(primary value: Color(alpha: 1.0000, red: 0.6196, green: 0.6196, blue: 0.6196, colorSpace: ColorSpace.sRGB))",
                 "type": "basic",
                 "refId": "if",
                 "pos": {
-                    "x": -76.56529017857139,
-                    "y": 191.7187499999996
+                    "x": -37,
+                    "y": 114
                 }
             },
             "data": [
@@ -103,49 +100,44 @@
     ],
     "links": [
         {
-            "id": "b08792c0-9975-128b-a656-ed5c50d3254a",
-            "fpin": "out",
-            "fbox": "68008e10-9972-128b-a656-ed5c50d3254a",
-            "tpin": "val",
-            "tbox": "b0026b80-99e9-128b-a656-ed5c50d3254a",
-            "s": {
-                "x": 326.5011160714283,
-                "y": 90.20535714285717
-            },
-            "e": {
-                "x": 240.3515625000002,
-                "y": 363.5848214285707
-            }
-        },
-        {
-            "id": "5e4c0ad0-9d09-128b-a656-ed5c50d3254a",
+            "id": "49fe9f44-eff9-476c-a60f-ee59448045bf",
             "fpin": "true",
-            "fbox": "00144170-9d00-128b-a656-ed5c50d3254a",
+            "fbox": "eb312c06-caf2-45bf-b5d3-7d041474d364",
             "tpin": "val",
-            "tbox": "68008e10-9972-128b-a656-ed5c50d3254a",
+            "tbox": "5606ca84-388f-4ded-8ac6-87c00975ce78",
             "s": {
-                "x": 125.93470982142861,
-                "y": 228.2187499999996
+                "x": 165.5,
+                "y": 150.5
             },
             "e": {
-                "x": 161.50111607142858,
-                "y": 90.70535714285717
+                "x": 309.5,
+                "y": 140
             }
         },
         {
-            "id": "5e91c660-9d09-128b-a656-ed5c50d3254a",
+            "id": "3fdbe68b-9940-4436-b45a-a4d7627c9dab",
             "fpin": "false",
-            "fbox": "00144170-9d00-128b-a656-ed5c50d3254a",
+            "fbox": "eb312c06-caf2-45bf-b5d3-7d041474d364",
             "tpin": "val",
-            "tbox": "b0026b80-99e9-128b-a656-ed5c50d3254a",
+            "tbox": "7746177f-6854-43d3-bf50-8a1ae3ae3a7c",
             "s": {
-                "x": 125.93470982142861,
-                "y": 277.2187499999996
+                "x": 165.5,
+                "y": 199.5
             },
             "e": {
-                "x": 240.3515625000002,
-                "y": 363.58482142857065
+                "x": 309.5,
+                "y": 250
             }
+        }
+    ],
+    "vars": [
+        {
+            "id": "c8adda5f-ac75-4a71-b092-4688fed81e13",
+            "name": "vardwd0",
+            "type": "text",
+            "value": "dwwd",
+            "isPersistent": false,
+            "isImmutable": false
         }
     ],
     "cversion": "0.0.1",
