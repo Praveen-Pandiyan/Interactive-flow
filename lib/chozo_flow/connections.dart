@@ -244,8 +244,8 @@ class Box {
 
   Box.fromJson(json)
       : this(
-            inPins: json['ipin'],
-            outPins: json['opin'],
+            inPins: json['ipin'] as List<String>,
+            outPins: json['opin'] as List<String>,
             inLinks: (json['ilinks'] as List).map((e) => e.toString()).toList(),
             outLinks:
                 (json['olinks'] as List).map((e) => e.toString()).toList(),
