@@ -42,152 +42,152 @@ class _ChozoFlowState extends State<ChozoFlow> {
   @override
   Widget build(BuildContext context) {
     return Column(mainAxisSize: MainAxisSize.min, children: [
-      Row(
-        children: [
-          TextButton(
-              onPressed: () {
-                controllerT.value = initialControllerValue!;
-              },
-              child: const Text("center")),
-          TextButton(
-              onPressed: () {
-                log(json.encode(_connections.toJson()));
-              },
-              child: const Text("print")),
-          TextButton(
-              onPressed: () {
-                print(_connections.loadFlow({
-                  "id": "dferf",
-                  "name": "chumma",
-                  "boxs": [
-                    {
-                      "ipin": ["val"],
-                      "opin": ["out"],
-                      "ilinks": [],
-                      "olinks": ["95e6ee19-ec52-4af0-a3e1-013462b2d317"],
-                      "details": {
-                        "id": "293bf027-ed6a-443e-8c19-4c17fb5b26a6",
-                        "name": "Evaluation",
-                        "color":
-                            "MaterialColor(primary value: Color(alpha: 1.0000, red: 0.6196, green: 0.6196, blue: 0.6196, colorSpace: ColorSpace.sRGB))",
-                        "type": "basic",
-                        "refId": "eval",
-                        "pos": {"x": 50, "y": 33}
-                      },
-                      "data": [
-                        {"name": "Eval", "type": "eval", "value": ""}
-                      ],
-                      "userVar": []
-                    },
-                    {
-                      "ipin": ["val"],
-                      "opin": ["true", "false"],
-                      "ilinks": [],
-                      "olinks": [
-                        "9b965083-da4d-4647-8673-fc9ed76963e6",
-                        "7dc56d82-b668-4723-96ac-ea8c86ba047a"
-                      ],
-                      "details": {
-                        "id": "68fb2eba-aca2-49c6-b92d-35034ea10034",
-                        "name": "If",
-                        "color":
-                            "MaterialColor(primary value: Color(alpha: 1.0000, red: 0.6196, green: 0.6196, blue: 0.6196, colorSpace: ColorSpace.sRGB))",
-                        "type": "basic",
-                        "refId": "if",
-                        "pos": {"x": 81, "y": 218}
-                      },
-                      "data": [
-                        {"name": "Eval", "type": "eval", "value": ""}
-                      ],
-                      "userVar": []
-                    },
-                    {
-                      "ipin": ["val"],
-                      "opin": ["out"],
-                      "ilinks": [
-                        "95e6ee19-ec52-4af0-a3e1-013462b2d317",
-                        "9b965083-da4d-4647-8673-fc9ed76963e6",
-                        "7dc56d82-b668-4723-96ac-ea8c86ba047a"
-                      ],
-                      "olinks": [],
-                      "details": {
-                        "id": "69968004-6f1c-4a5a-8e74-2627f0645cff",
-                        "name": "Ema",
-                        "color":
-                            "MaterialColor(primary value: Color(alpha: 1.0000, red: 0.6196, green: 0.6196, blue: 0.6196, colorSpace: ColorSpace.sRGB))",
-                        "type": "basic",
-                        "refId": "Ema",
-                        "pos": {"x": 354, "y": 208}
-                      },
-                      "data": [
-                        {"name": "Ema", "type": "number", "value": "erfreferf"}
-                      ],
-                      "userVar": []
-                    }
-                  ],
-                  "links": [
-                    {
-                      "id": "95e6ee19-ec52-4af0-a3e1-013462b2d317",
-                      "fpin": "out",
-                      "fbox": "293bf027-ed6a-443e-8c19-4c17fb5b26a6",
-                      "tpin": "val",
-                      "tbox": "69968004-6f1c-4a5a-8e74-2627f0645cff",
-                      "s": {"x": 252.5, "y": 69.5},
-                      "e": {"x": 391.5, "y": 245}
-                    },
-                    {
-                      "id": "9b965083-da4d-4647-8673-fc9ed76963e6",
-                      "fpin": "false",
-                      "fbox": "68fb2eba-aca2-49c6-b92d-35034ea10034",
-                      "tpin": "val",
-                      "tbox": "69968004-6f1c-4a5a-8e74-2627f0645cff",
-                      "s": {"x": 283.5, "y": 303.5},
-                      "e": {"x": 391.5, "y": 245}
-                    },
-                    {
-                      "id": "7dc56d82-b668-4723-96ac-ea8c86ba047a",
-                      "fpin": "true",
-                      "fbox": "68fb2eba-aca2-49c6-b92d-35034ea10034",
-                      "tpin": "val",
-                      "tbox": "69968004-6f1c-4a5a-8e74-2627f0645cff",
-                      "s": {"x": 283.5, "y": 254.5},
-                      "e": {"x": 391.5, "y": 245}
-                    }
-                  ],
-                  "vars": [
-                    {
-                      "id": "a817f5a0-a1bd-4da9-8ca5-023a360d0153",
-                      "name": "ewd",
-                      "type": "text",
-                      "value": "dew",
-                      "isPersistent": false,
-                      "isImmutable": false
-                    },
-                    {
-                      "id": "f3dd77bb-0eb6-4c4f-883b-20e98d8d991e",
-                      "name": "var1dwe",
-                      "type": "text",
-                      "value": "dw3424",
-                      "isPersistent": false,
-                      "isImmutable": false
-                    },
-                    {
-                      "id": "329d08a9-d2f3-4d51-ae22-20d7613769a8",
-                      "name": "var2432432",
-                      "type": "text",
-                      "value": "",
-                      "isPersistent": false,
-                      "isImmutable": false
-                    }
-                  ],
-                  "cversion": "0.0.1",
-                  "version": "23432443"
-                }));
-              },
-              child: const Text("load")),
-        ],
-      ),
-      const EvalBox(onChange: print, onError: print),
+      // Row(
+      //   children: [
+      //     TextButton(
+      //         onPressed: () {
+      //           controllerT.value = initialControllerValue!;
+      //         },
+      //         child: const Text("center")),
+      //     TextButton(
+      //         onPressed: () {
+      //           log(json.encode(_connections.toJson()));
+      //         },
+      //         child: const Text("print")),
+      //     TextButton(
+      //         onPressed: () {
+      //           print(_connections.loadFlow({
+      //             "id": "dferf",
+      //             "name": "chumma",
+      //             "boxs": [
+      //               {
+      //                 "ipin": ["val"],
+      //                 "opin": ["out"],
+      //                 "ilinks": [],
+      //                 "olinks": ["95e6ee19-ec52-4af0-a3e1-013462b2d317"],
+      //                 "details": {
+      //                   "id": "293bf027-ed6a-443e-8c19-4c17fb5b26a6",
+      //                   "name": "Evaluation",
+      //                   "color":
+      //                       "MaterialColor(primary value: Color(alpha: 1.0000, red: 0.6196, green: 0.6196, blue: 0.6196, colorSpace: ColorSpace.sRGB))",
+      //                   "type": "basic",
+      //                   "refId": "eval",
+      //                   "pos": {"x": 50, "y": 33}
+      //                 },
+      //                 "data": [
+      //                   {"name": "Eval", "type": "eval", "value": ""}
+      //                 ],
+      //                 "userVar": []
+      //               },
+      //               {
+      //                 "ipin": ["val"],
+      //                 "opin": ["true", "false"],
+      //                 "ilinks": [],
+      //                 "olinks": [
+      //                   "9b965083-da4d-4647-8673-fc9ed76963e6",
+      //                   "7dc56d82-b668-4723-96ac-ea8c86ba047a"
+      //                 ],
+      //                 "details": {
+      //                   "id": "68fb2eba-aca2-49c6-b92d-35034ea10034",
+      //                   "name": "If",
+      //                   "color":
+      //                       "MaterialColor(primary value: Color(alpha: 1.0000, red: 0.6196, green: 0.6196, blue: 0.6196, colorSpace: ColorSpace.sRGB))",
+      //                   "type": "basic",
+      //                   "refId": "if",
+      //                   "pos": {"x": 81, "y": 218}
+      //                 },
+      //                 "data": [
+      //                   {"name": "Eval", "type": "eval", "value": ""}
+      //                 ],
+      //                 "userVar": []
+      //               },
+      //               {
+      //                 "ipin": ["val"],
+      //                 "opin": ["out"],
+      //                 "ilinks": [
+      //                   "95e6ee19-ec52-4af0-a3e1-013462b2d317",
+      //                   "9b965083-da4d-4647-8673-fc9ed76963e6",
+      //                   "7dc56d82-b668-4723-96ac-ea8c86ba047a"
+      //                 ],
+      //                 "olinks": [],
+      //                 "details": {
+      //                   "id": "69968004-6f1c-4a5a-8e74-2627f0645cff",
+      //                   "name": "Ema",
+      //                   "color":
+      //                       "MaterialColor(primary value: Color(alpha: 1.0000, red: 0.6196, green: 0.6196, blue: 0.6196, colorSpace: ColorSpace.sRGB))",
+      //                   "type": "basic",
+      //                   "refId": "Ema",
+      //                   "pos": {"x": 354, "y": 208}
+      //                 },
+      //                 "data": [
+      //                   {"name": "Ema", "type": "number", "value": "erfreferf"}
+      //                 ],
+      //                 "userVar": []
+      //               }
+      //             ],
+      //             "links": [
+      //               {
+      //                 "id": "95e6ee19-ec52-4af0-a3e1-013462b2d317",
+      //                 "fpin": "out",
+      //                 "fbox": "293bf027-ed6a-443e-8c19-4c17fb5b26a6",
+      //                 "tpin": "val",
+      //                 "tbox": "69968004-6f1c-4a5a-8e74-2627f0645cff",
+      //                 "s": {"x": 252.5, "y": 69.5},
+      //                 "e": {"x": 391.5, "y": 245}
+      //               },
+      //               {
+      //                 "id": "9b965083-da4d-4647-8673-fc9ed76963e6",
+      //                 "fpin": "false",
+      //                 "fbox": "68fb2eba-aca2-49c6-b92d-35034ea10034",
+      //                 "tpin": "val",
+      //                 "tbox": "69968004-6f1c-4a5a-8e74-2627f0645cff",
+      //                 "s": {"x": 283.5, "y": 303.5},
+      //                 "e": {"x": 391.5, "y": 245}
+      //               },
+      //               {
+      //                 "id": "7dc56d82-b668-4723-96ac-ea8c86ba047a",
+      //                 "fpin": "true",
+      //                 "fbox": "68fb2eba-aca2-49c6-b92d-35034ea10034",
+      //                 "tpin": "val",
+      //                 "tbox": "69968004-6f1c-4a5a-8e74-2627f0645cff",
+      //                 "s": {"x": 283.5, "y": 254.5},
+      //                 "e": {"x": 391.5, "y": 245}
+      //               }
+      //             ],
+      //             "vars": [
+      //               {
+      //                 "id": "a817f5a0-a1bd-4da9-8ca5-023a360d0153",
+      //                 "name": "ewd",
+      //                 "type": "text",
+      //                 "value": "dew",
+      //                 "isPersistent": false,
+      //                 "isImmutable": false
+      //               },
+      //               {
+      //                 "id": "f3dd77bb-0eb6-4c4f-883b-20e98d8d991e",
+      //                 "name": "var1dwe",
+      //                 "type": "text",
+      //                 "value": "dw3424",
+      //                 "isPersistent": false,
+      //                 "isImmutable": false
+      //               },
+      //               {
+      //                 "id": "329d08a9-d2f3-4d51-ae22-20d7613769a8",
+      //                 "name": "var2432432",
+      //                 "type": "text",
+      //                 "value": "",
+      //                 "isPersistent": false,
+      //                 "isImmutable": false
+      //               }
+      //             ],
+      //             "cversion": "0.0.1",
+      //             "version": "23432443"
+      //           }));
+      //         },
+      //         child: const Text("load")),
+      //   ],
+      // ),
+      // const EvalBox(onChange: print, onError: print),
 
       Expanded(
         flex: 1,
