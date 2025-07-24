@@ -38,32 +38,46 @@ class _FlowChartExampleState extends State<FlowChartExample> {
       position: const Offset(100, 100),
       label: 'Start',
       color: Colors.green,
+      
     ));
     controller.addNode(FlowNode(
       id: 'node2',
       position: const Offset(300, 200),
       label: 'Middle',
       color: Colors.blue,
+      
     ));
     controller.addNode(FlowNode(
       id: 'node3',
       position: const Offset(500, 300),
       label: 'End',
       color: Colors.orange,
+      
+    ));
+    // Example: Add a custom node widget
+    controller.addNode(FlowNode(
+      id: 'custom1',
+      position: const Offset(200, 400),
+      label: 'Custom',
+      color: Colors.purple,
+     
+      data: {
+        'customBuilder': (BuildContext context, FlowNode node) => ExampleCustomNode(node: node),
+      },
     ));
     controller.addEdge(FlowEdge(
       id: 'edge1',
       sourceNodeId: 'node1',
-      sourcePinId: 'out',
+      sourcePinId: 'a',
       targetNodeId: 'node2',
-      targetPinId: 'in',
+      targetPinId: 'a',
     ));
     controller.addEdge(FlowEdge(
       id: 'edge2',
       sourceNodeId: 'node2',
-      sourcePinId: 'out',
+      sourcePinId: 'b',
       targetNodeId: 'node3',
-      targetPinId: 'in',
+      targetPinId: 'a',
     ));
   }
 
@@ -77,6 +91,34 @@ class _FlowChartExampleState extends State<FlowChartExample> {
           height: 600,
           child: FlowChart(controller: controller),
         ),
+      ),
+    );
+  }
+}
+
+// Example custom node widget
+class ExampleCustomNode extends StatelessWidget {
+  final FlowNode node;
+  const ExampleCustomNode({super.key, required this.node});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 160,
+      height: 60,
+      decoration: BoxDecoration(
+        color: Colors.purple.shade100,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.purple, width: 2),
+      ),
+      padding: const EdgeInsets.all(12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.star, color: Colors.purple, size: 28),
+          const SizedBox(width: 8),
+          Text('Custom Node!', style: TextStyle(color: Colors.purple.shade900, fontWeight: FontWeight.bold)),
+        ],
       ),
     );
   }
