@@ -17,6 +17,8 @@ class FlowChart extends StatefulWidget {
 }
 
 class _FlowChartState extends State<FlowChart> {
+  final TransformationController _transformationController = TransformationController();
+
   @override
   void initState() {
     super.initState();
@@ -35,20 +37,29 @@ class _FlowChartState extends State<FlowChart> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey[200],
+    return InteractiveViewer(
+      transformationController: _transformationController,
+      minScale: 0.2,
+      maxScale: 2.5,
+      boundaryMargin: const EdgeInsets.all(double.infinity),
       child: Stack(
         children: [
-          // Draw edges
+          // Draw permanent edges
           ...widget.controller.edges.values.map((edge) {
             final fromNode = widget.controller.nodes[edge.sourceNodeId];
             final toNode = widget.controller.nodes[edge.targetNodeId];
             if (fromNode == null || toNode == null) return const SizedBox();
             // For simplicity, use node center as pin position
-            final from = fromNode.position + const Offset(75, 25);
-            final to = toNode.position + const Offset(75, 25);
+            final from = fromNode.position + const Offset(150, 25);
+            final to = toNode.position + const Offset(0, 25);
             return CustomPaint(
               painter: EdgePainter(from: from, to: to),
+            );
+          }),
+          // Draw temporary (dragging) edges
+          ...widget.controller.tempEdges.values.map((tempEdge) {
+            return CustomPaint(
+              painter: EdgePainter(from: tempEdge.start, to: tempEdge.end, color: Colors.blueAccent),
             );
           }),
           // Draw nodes
@@ -57,6 +68,7 @@ class _FlowChartState extends State<FlowChart> {
                 top: node.position.dy,
                 child: NodeWidget(
                   node: node,
+                  controller: widget.controller,
                   onDrag: (delta) {
                     setState(() {
                       node.position += delta;

@@ -32,7 +32,7 @@ class _FlowChartExampleState extends State<FlowChartExample> {
   void initState() {
     super.initState();
     controller = FlowController();
-    // Add two nodes and an edge for demonstration
+    // Add nodes with both input and output pins
     controller.addNode(FlowNode(
       id: 'node1',
       position: const Offset(100, 100),
@@ -43,6 +43,14 @@ class _FlowChartExampleState extends State<FlowChartExample> {
     controller.addNode(FlowNode(
       id: 'node2',
       position: const Offset(300, 200),
+      label: 'Middle',
+      color: Colors.blue,
+      inputPins: ['in'],
+      outputPins: ['out'],
+    ));
+    controller.addNode(FlowNode(
+      id: 'node3',
+      position: const Offset(500, 300),
       label: 'End',
       color: Colors.orange,
       inputPins: ['in'],
@@ -54,6 +62,13 @@ class _FlowChartExampleState extends State<FlowChartExample> {
       targetNodeId: 'node2',
       targetPinId: 'in',
     ));
+    controller.addEdge(FlowEdge(
+      id: 'edge2',
+      sourceNodeId: 'node2',
+      sourcePinId: 'out',
+      targetNodeId: 'node3',
+      targetPinId: 'in',
+    ));
   }
 
   @override
@@ -62,8 +77,8 @@ class _FlowChartExampleState extends State<FlowChartExample> {
       appBar: AppBar(title: const Text('Intractive Flow Example')),
       body: Center(
         child: SizedBox(
-          width: 600,
-          height: 400,
+          width: 900,
+          height: 600,
           child: FlowChart(controller: controller),
         ),
       ),
