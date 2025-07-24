@@ -10,7 +10,7 @@ class NodeWidget extends StatelessWidget {
   final VoidCallback? onTap;
   final Function(Offset)? onDrag;
 
-  const NodeWidget({Key? key, required this.node, required this.controller, this.onTap, this.onDrag}) : super(key: key);
+  const NodeWidget({super.key, required this.node, required this.controller, this.onTap, this.onDrag});
 
   @override
   Widget build(BuildContext context) {
@@ -21,47 +21,33 @@ class NodeWidget extends StatelessWidget {
           onDrag!(details.delta);
         }
       },
-      child: Container(
-        width: 150,
-        decoration: BoxDecoration(
-          color: node.color,
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
-        ),
-        padding: const EdgeInsets.all(8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Input pins
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ...node.inputPins.map((e) => InPinWidget(nodeId: node.id, pinId: e, controller: controller)),
-              ],
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            width: 150,
+            decoration: BoxDecoration(
+              color: node.color,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
             ),
-            // Node content
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(node.label, style: Theme.of(context).textTheme.titleMedium),
-                  // TODO: Add custom content
-                ],
-              ),
+            padding: const EdgeInsets.all(8),
+            child: Center(
+              child: Text(node.label, style: Theme.of(context).textTheme.titleMedium),
             ),
-            // Output pins
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                ...node.outputPins.map((e) => OutPinWidget(nodeId: node.id, pinId: e, controller: controller)),
-              ],
-            ),
-          ],
-        ),
+          ),
+          // Input pin (left, vertically centered)
+          Positioned(
+            
+            left: 0,
+            child: InPinWidget(nodeId: node.id, pinId: 'in', controller: controller),
+          ),
+          // Output pin (right, vertically centered)
+          Positioned(
+            right: 0,
+            child: OutPinWidget(nodeId: node.id, pinId: 'out', controller: controller),
+          ),
+        ],
       ),
     );
   }

@@ -6,8 +6,6 @@ class FlowNode {
   Offset position;
   String label;
   Color color;
-  List<String> inputPins;
-  List<String> outputPins;
   Map<String, dynamic> data;
 
   FlowNode({
@@ -15,8 +13,6 @@ class FlowNode {
     required this.position,
     required this.label,
     required this.color,
-    this.inputPins = const [],
-    this.outputPins = const [],
     this.data = const {},
   });
 } 

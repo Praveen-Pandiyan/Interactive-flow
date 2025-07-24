@@ -19,6 +19,17 @@ class FlowChart extends StatefulWidget {
 class _FlowChartState extends State<FlowChart> {
   final TransformationController _transformationController = TransformationController();
 
+  static const nodeWidth = 150.0;
+  static const nodeHeight = 48.0;
+  static const pinOffsetY = nodeHeight / 2;
+  static const pinOffsetX = 0.0;
+
+  Offset getPinPosition(FlowNode node, bool isInput) {
+    final dx = node.position.dx + (isInput ? -8 : nodeWidth + 8);
+    final dy = node.position.dy + pinOffsetY;
+    return Offset(dx, dy);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -49,9 +60,8 @@ class _FlowChartState extends State<FlowChart> {
             final fromNode = widget.controller.nodes[edge.sourceNodeId];
             final toNode = widget.controller.nodes[edge.targetNodeId];
             if (fromNode == null || toNode == null) return const SizedBox();
-            // For simplicity, use node center as pin position
-            final from = fromNode.position + const Offset(150, 25);
-            final to = toNode.position + const Offset(0, 25);
+            final from = getPinPosition(fromNode, false);
+            final to = getPinPosition(toNode, true);
             return CustomPaint(
               painter: EdgePainter(from: from, to: to),
             );

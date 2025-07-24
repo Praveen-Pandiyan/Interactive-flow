@@ -32,28 +32,24 @@ class _FlowChartExampleState extends State<FlowChartExample> {
   void initState() {
     super.initState();
     controller = FlowController();
-    // Add nodes with both input and output pins
+    // Add nodes
     controller.addNode(FlowNode(
       id: 'node1',
       position: const Offset(100, 100),
       label: 'Start',
       color: Colors.green,
-      outputPins: ['out'],
     ));
     controller.addNode(FlowNode(
       id: 'node2',
       position: const Offset(300, 200),
       label: 'Middle',
       color: Colors.blue,
-      inputPins: ['in'],
-      outputPins: ['out'],
     ));
     controller.addNode(FlowNode(
       id: 'node3',
       position: const Offset(500, 300),
       label: 'End',
       color: Colors.orange,
-      inputPins: ['in'],
     ));
     controller.addEdge(FlowEdge(
       id: 'edge1',
