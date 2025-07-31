@@ -51,6 +51,27 @@ class FlowController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Get the absolute position of a pin
+  Offset? getPinPosition(String nodeId, String pinId) {
+    final node = nodes[nodeId];
+    if (node == null) return null;
+    
+    final pin = node.getPin(pinId);
+    if (pin == null) return null;
+    
+    return pin.getAbsolutePosition(node.position);
+  }
+
+  /// Get the source pin position for an edge
+  Offset? getEdgeSourcePosition(FlowEdge edge) {
+    return getPinPosition(edge.sourceNodeId, edge.sourcePinId);
+  }
+
+  /// Get the target pin position for an edge
+  Offset? getEdgeTargetPosition(FlowEdge edge) {
+    return getPinPosition(edge.targetNodeId, edge.targetPinId);
+  }
+
   // Interactive connection logic
   void startEdgeDrag(String edgeId, String fromNodeId, String fromPinId, GlobalKey pinKey) {
     final RenderBox? box = pinKey.currentContext?.findRenderObject() as RenderBox?;

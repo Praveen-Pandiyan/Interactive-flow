@@ -19,17 +19,6 @@ class FlowChart extends StatefulWidget {
 class _FlowChartState extends State<FlowChart> {
   final TransformationController _transformationController = TransformationController();
 
-  static const nodeWidth = 150.0;
-  static const nodeHeight = 48.0;
-  static const pinOffsetY = nodeHeight / 2;
-  static const pinOffsetX = 0.0;
-
-  Offset getPinPosition(FlowNode node, bool isInput) {
-    final dx = node.position.dx + (isInput ? -8 : nodeWidth + 8);
-    final dy = node.position.dy + pinOffsetY;
-    return Offset(dx, dy);
-  }
-
   @override
   void initState() {
     super.initState();
@@ -55,15 +44,15 @@ class _FlowChartState extends State<FlowChart> {
       boundaryMargin: const EdgeInsets.all(double.infinity),
       child: Stack(
         children: [
-          // Draw permanent edges
+          // Draw permanent edges connecting to individual pins
           ...widget.controller.edges.values.map((edge) {
-            final fromNode = widget.controller.nodes[edge.sourceNodeId];
-            final toNode = widget.controller.nodes[edge.targetNodeId];
-            if (fromNode == null || toNode == null) return const SizedBox();
-            final from = getPinPosition(fromNode, false);
-            final to = getPinPosition(toNode, true);
+            final fromPosition = widget.controller.getEdgeSourcePosition(edge);
+            final toPosition = widget.controller.getEdgeTargetPosition(edge);
+            
+            if (fromPosition == null || toPosition == null) return const SizedBox();
+            
             return CustomPaint(
-              painter: EdgePainter(from: from, to: to),
+              painter: EdgePainter(from: fromPosition, to: toPosition),
             );
           }),
           // Draw temporary (dragging) edges

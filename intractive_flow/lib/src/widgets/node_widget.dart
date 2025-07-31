@@ -36,17 +36,16 @@ class NodeWidget extends StatelessWidget {
               child: Text(node.label, style: Theme.of(context).textTheme.titleMedium),
             ),
           ),
-          // Input pin (left, vertically centered)
-          Positioned(
-            
-            left: 0,
-            child: InPinWidget(nodeId: node.id, pinId: 'in', controller: controller),
-          ),
-          // Output pin (right, vertically centered)
-          Positioned(
-            right: 0,
-            child: OutPinWidget(nodeId: node.id, pinId: 'out', controller: controller),
-          ),
+          // Render individual pins based on their relative positions
+          ...node.pins.map((pin) {
+            return Positioned(
+              left: pin.relativePosition.dx,
+              top: pin.relativePosition.dy,
+              child: pin.isInput 
+                ? InPinWidget(nodeId: node.id, pinId: pin.id, controller: controller, pin: pin)
+                : OutPinWidget(nodeId: node.id, pinId: pin.id, controller: controller, pin: pin),
+            );
+          }),
         ],
       ),
     );

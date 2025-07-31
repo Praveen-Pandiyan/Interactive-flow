@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import '../core/flow_controller.dart';
+import '../core/node_model.dart';
 
 class OutPinWidget extends StatefulWidget {
   final String nodeId, pinId;
   final FlowController controller;
-  const OutPinWidget({Key? key, required this.nodeId, required this.pinId, required this.controller}) : super(key: key);
+  final FlowPin pin;
+  
+  const OutPinWidget({
+    Key? key, 
+    required this.nodeId, 
+    required this.pinId, 
+    required this.controller,
+    required this.pin,
+  }) : super(key: key);
 
   @override
   State<OutPinWidget> createState() => _OutPinWidgetState();
@@ -40,7 +49,7 @@ class _OutPinWidgetState extends State<OutPinWidget> {
       feedback: Container(
         height: 15,
         width: 15,
-        color: Colors.purple,
+        color: widget.pin.color,
       ),
       child: Container(
         height: 35,
@@ -51,7 +60,7 @@ class _OutPinWidgetState extends State<OutPinWidget> {
           alignment: Alignment.center,
           height: 15,
           width: 15,
-          color: Colors.purple,
+          color: widget.pin.color,
           child: SizedBox(key: _key),
         ),
       ),

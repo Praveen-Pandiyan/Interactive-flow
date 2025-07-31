@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import '../core/flow_controller.dart';
+import '../core/node_model.dart';
 
 class InPinWidget extends StatefulWidget {
   final String nodeId, pinId;
   final FlowController controller;
-  const InPinWidget({Key? key, required this.nodeId, required this.pinId, required this.controller}) : super(key: key);
+  final FlowPin pin;
+  
+  const InPinWidget({
+    Key? key, 
+    required this.nodeId, 
+    required this.pinId, 
+    required this.controller,
+    required this.pin,
+  }) : super(key: key);
 
   @override
   State<InPinWidget> createState() => _InPinWidgetState();
@@ -29,7 +38,7 @@ class _InPinWidgetState extends State<InPinWidget> {
             height: 15,
             width: 15,
             alignment: Alignment.center,
-            color: Colors.yellowAccent,
+            color: widget.pin.color,
             child: SizedBox(key: _key),
           ),
         );

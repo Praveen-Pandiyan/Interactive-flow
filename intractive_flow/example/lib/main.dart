@@ -32,52 +32,102 @@ class _FlowChartExampleState extends State<FlowChartExample> {
   void initState() {
     super.initState();
     controller = FlowController();
-    // Add nodes
+    
+    // Create custom pins for a multi-pin node
+    final customPins = [
+      FlowPin(
+        id: 'input1',
+        nodeId: 'custom1',
+        isInput: true,
+        relativePosition: const Offset(-8, 20),
+        color: Colors.green,
+      ),
+      FlowPin(
+        id: 'input2',
+        nodeId: 'custom1',
+        isInput: true,
+        relativePosition: const Offset(-8, 40),
+        color: Colors.blue,
+      ),
+      FlowPin(
+        id: 'output1',
+        nodeId: 'custom1',
+        isInput: false,
+        relativePosition: const Offset(158, 20),
+        color: Colors.red,
+      ),
+      FlowPin(
+        id: 'output2',
+        nodeId: 'custom1',
+        isInput: false,
+        relativePosition: const Offset(158, 40),
+        color: Colors.orange,
+      ),
+    ];
+
+    // Add nodes with different pin configurations
     controller.addNode(FlowNode(
       id: 'node1',
       position: const Offset(100, 100),
       label: 'Start',
       color: Colors.green,
-      
     ));
+    
     controller.addNode(FlowNode(
       id: 'node2',
       position: const Offset(300, 200),
       label: 'Middle',
       color: Colors.blue,
-      
     ));
+    
     controller.addNode(FlowNode(
       id: 'node3',
       position: const Offset(500, 300),
       label: 'End',
       color: Colors.orange,
-      
     ));
-    // Example: Add a custom node widget
+    
+    // Add a custom node with multiple pins
     controller.addNode(FlowNode(
       id: 'custom1',
       position: const Offset(200, 400),
-      label: 'Custom',
+      label: 'Multi-Pin',
       color: Colors.purple,
-     
-      data: {
-        'customBuilder': (BuildContext context, FlowNode node) => ExampleCustomNode(node: node),
-      },
+      pins: customPins,
     ));
+
+    // Add edges connecting to specific pins
     controller.addEdge(FlowEdge(
       id: 'edge1',
       sourceNodeId: 'node1',
-      sourcePinId: 'a',
+      sourcePinId: 'out',
       targetNodeId: 'node2',
-      targetPinId: 'a',
+      targetPinId: 'in',
     ));
+    
     controller.addEdge(FlowEdge(
       id: 'edge2',
       sourceNodeId: 'node2',
-      sourcePinId: 'b',
+      sourcePinId: 'out',
       targetNodeId: 'node3',
-      targetPinId: 'a',
+      targetPinId: 'in',
+    ));
+    
+    // Connect to custom multi-pin node
+    controller.addEdge(FlowEdge(
+      id: 'edge3',
+      sourceNodeId: 'node1',
+      sourcePinId: 'out',
+      targetNodeId: 'custom1',
+      targetPinId: 'input1',
+    ));
+    
+    controller.addEdge(FlowEdge(
+      id: 'edge4',
+      sourceNodeId: 'custom1',
+      sourcePinId: 'output1',
+      targetNodeId: 'node3',
+      targetPinId: 'in',
     ));
   }
 
@@ -91,34 +141,6 @@ class _FlowChartExampleState extends State<FlowChartExample> {
           height: 600,
           child: FlowChart(controller: controller),
         ),
-      ),
-    );
-  }
-}
-
-// Example custom node widget
-class ExampleCustomNode extends StatelessWidget {
-  final FlowNode node;
-  const ExampleCustomNode({super.key, required this.node});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 160,
-      height: 60,
-      decoration: BoxDecoration(
-        color: Colors.purple.shade100,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.purple, width: 2),
-      ),
-      padding: const EdgeInsets.all(12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.star, color: Colors.purple, size: 28),
-          const SizedBox(width: 8),
-          Text('Custom Node!', style: TextStyle(color: Colors.purple.shade900, fontWeight: FontWeight.bold)),
-        ],
       ),
     );
   }
